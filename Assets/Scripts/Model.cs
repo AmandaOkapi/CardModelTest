@@ -14,7 +14,7 @@ public class Model
     public int getCol(){return col;}
     public Model(){
         row=4;
-        col=4;
+        col=5;
         cardGrid= new GridObject[row,col];
         possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5), new Card(6), new Card(7)  };
     }
@@ -30,7 +30,8 @@ public class Model
     public bool RemoveGridObject(int row, int col){
         cardGrid[row,col]=null;
         TranslateDown(row, col);
-        CreateNewCard(0,col);
+        Card newCard= CreateNewCard(0,col);
+        newCard.IncreaseCellsToFall();
         return true;
     }
 
@@ -43,6 +44,7 @@ public class Model
         }else{
             cardGrid[row,col]=cardGrid[row-1, col];
             cardGrid[row,col].setRowPos(row);
+            ((Card)cardGrid[row,col]).IncreaseCellsToFall();
             TranslateDown(row-1, col);
         }
     }
@@ -53,8 +55,9 @@ public class Model
         return true;
     }*/
 
-    private void CreateNewCard(int row, int col){
+    private Card CreateNewCard(int row, int col){
         cardGrid[row,col] = new Card(UnityEngine.Random.Range(0, possibleCards.Length), row, col);
+        return (Card)cardGrid[row,col];
     }
 
     public GridObject getCardAtIndex(int row, int col){

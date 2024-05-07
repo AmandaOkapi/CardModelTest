@@ -6,6 +6,15 @@ using UnityEngine.UI;
 public class Card : GridObject
 {
     private int id;
+
+    private int cellsToFall;
+
+    public void IncreaseCellsToFall(){cellsToFall++;}
+    public void DecreaseCellsToFall(){cellsToFall--;}
+
+    public void ResetCellsToFall(){cellsToFall=0;}
+
+    public int GetCellsToFall(){return cellsToFall;}
     public int getId(){return id;}
 
 
@@ -23,6 +32,7 @@ public class Card : GridObject
         this.rowPos = row;
         this.colPos = col;
         cardState=CardState.Idle;
+        cellsToFall=0;
     }
 
     public Card(int id){

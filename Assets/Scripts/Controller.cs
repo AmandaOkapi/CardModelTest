@@ -47,7 +47,9 @@ public class Controller : MonoBehaviour
                 cardsFlipped++;
             }
         }            
-//view.UpdateCards();
+        
+        //view.UpdateView(model);
+
     }
 
     
@@ -55,8 +57,10 @@ public class Controller : MonoBehaviour
     public bool checkFlippedCards(){
         if((firtCard.getCardBase().getId()== secondCard.getCardBase().getId()) && firtCard!=secondCard){
             model.RemoveGridObject(firtCard.getCardBase().getRowPos(), firtCard.getCardBase().getColPos());
-            model.RemoveGridObject(secondCard.getCardBase().getRowPos(), secondCard.getCardBase().getColPos());                
-            view.UpdateView(model);
+            model.RemoveGridObject(secondCard.getCardBase().getRowPos(), secondCard.getCardBase().getColPos());
+            view.UpdateCollumn(firtCard.getCardBase().getColPos(),model);
+            view.UpdateCollumn(secondCard.getCardBase().getColPos(),model);
+
             return true;
         }
         return false;

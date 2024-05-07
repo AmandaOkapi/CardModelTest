@@ -136,11 +136,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardData: {fileID: 11400000, guid: ce802e015842fed4aa7f8a18d8386044, type: 2}
-  id: 0
-  rowPos: 0
-  colPos: 0
   tempControllerLink: {fileID: 0}
   imageComponent: {fileID: 0}
+  fallSpeed: 0.5
 --- !u!1 &8405559099839079569
 GameObject:
   m_ObjectHideFlags: 0
