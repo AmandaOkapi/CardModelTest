@@ -44,7 +44,7 @@ public class Model
         }else{
             cardGrid[row,col]=cardGrid[row-1, col];
             cardGrid[row,col].setRowPos(row);
-            //((Card)cardGrid[row,col]).IncreaseCellsToFall();
+            ((Card)cardGrid[row,col]).IncreaseCellsToFall();
             TranslateDown(row-1, col);
         }
     }

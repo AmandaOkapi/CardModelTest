@@ -61,17 +61,16 @@ public class Controller : MonoBehaviour
             int mySecondCardRow=secondCard.getCardBase().getRowPos();
             int mySecondCardCol=secondCard.getCardBase().getColPos();
             //code straight from hell
-            model.CalculateRemoval(myFirstCardRow, myFirstCardCol);
-            view.RemoveCard(myFirstCardRow, myFirstCardCol);
-            view.UpdateCollumn(myFirstCardCol,model);
+            view.RemoveCard(myFirstCardRow, myFirstCardCol);            
             model.RemoveGridObject(myFirstCardRow, myFirstCardCol);
+            view.UpdateCollumn(myFirstCardCol,model);
             
-            model.CalculateRemoval(mySecondCardRow, mySecondCardCol);
             view.RemoveCard(mySecondCardRow, mySecondCardCol);
+            model.RemoveGridObject(mySecondCardRow, mySecondCardCol);    
             view.UpdateCollumn(mySecondCardCol,model);            
-            model.RemoveGridObject(mySecondCardRow, mySecondCardCol);            
+                    
 
-            view.UpdateCards(model);
+            //view.UpdateCards(model);
             return true;
         }
         return false;

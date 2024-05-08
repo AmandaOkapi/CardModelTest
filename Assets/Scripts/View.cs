@@ -90,19 +90,22 @@ public class View : MonoBehaviour
     public void UpdateCollumn(int col, Model model){
         //this is shit. gotta fix it
         for(int i=gridViewItems.GetLength(0)-1; i>=0; i--){
-            int myCellsToFall=((Card)model.getCardAtIndex(i,col)).GetCellsToFall();
-            if(myCellsToFall>0 && gridViewItems[i,col]!=null){
-                UnityEngine.Vector3 targetPos= new UnityEngine.Vector3(
-                    gridViewItems[i,col].localPosition.x,
-                    gridViewItems[i,col].localPosition.y-(myCellsToFall*(height/(model.getCol()+1))),
-                    gridViewItems[i,col].localPosition.z
-                ); 
-                Debug.Log("Sending "+i+","+col+" to "+targetPos);
-                gridViewItems[i,col].GetComponent<CardMono>().FallToPos(targetPos);
-                gridViewItems[i+myCellsToFall,col] = gridViewItems[i,col];
-                ((Card)model.getCardAtIndex(i,col)).ResetCellsToFall();
+            if(gridViewItems[i,col]!=null){
+                int myCellsToFall=gridViewItems[i,col].GetComponent<CardMono>().getCardBase().GetCellsToFall();
+                if(myCellsToFall>0){
+                    UnityEngine.Vector3 targetPos= new UnityEngine.Vector3(
+                        gridViewItems[i,col].localPosition.x,
+                        gridViewItems[i,col].localPosition.y-(myCellsToFall*(height/(model.getCol()+1))),
+                        gridViewItems[i,col].localPosition.z
+                    ); 
+                    Debug.Log("Sending "+i+","+col+" to "+targetPos);
+                    gridViewItems[i,col].GetComponent<CardMono>().FallToPos(targetPos);
+                    gridViewItems[i+myCellsToFall,col] = gridViewItems[i,col];
+                    gridViewItems[i,col].GetComponent<CardMono>().getCardBase().ResetCellsToFall();
 
+                }
             }
+
         }
         
     } 
