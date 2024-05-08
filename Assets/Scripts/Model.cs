@@ -31,7 +31,7 @@ public class Model
         cardGrid[row,col]=null;
         TranslateDown(row, col);
         Card newCard= CreateNewCard(0,col);
-        newCard.IncreaseCellsToFall();
+        //newCard.IncreaseCellsToFall();
         return true;
     }
 
@@ -44,11 +44,19 @@ public class Model
         }else{
             cardGrid[row,col]=cardGrid[row-1, col];
             cardGrid[row,col].setRowPos(row);
-            ((Card)cardGrid[row,col]).IncreaseCellsToFall();
+            //((Card)cardGrid[row,col]).IncreaseCellsToFall();
             TranslateDown(row-1, col);
         }
     }
 
+    public void CalculateRemoval(int row, int col){
+        if(row==0){
+            return;
+        }else{
+            ((Card)cardGrid[row-1,col]).IncreaseCellsToFall();
+            CalculateRemoval(row-1, col);
+        }
+    }
     /*
         public bool RemoveGridObject(GridObject obj){
         //translate down?

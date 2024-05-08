@@ -56,11 +56,22 @@ public class Controller : MonoBehaviour
 
     public bool checkFlippedCards(){
         if((firtCard.getCardBase().getId()== secondCard.getCardBase().getId()) && firtCard!=secondCard){
-            model.RemoveGridObject(firtCard.getCardBase().getRowPos(), firtCard.getCardBase().getColPos());
-            model.RemoveGridObject(secondCard.getCardBase().getRowPos(), secondCard.getCardBase().getColPos());
-            view.UpdateCollumn(firtCard.getCardBase().getColPos(),model);
-            view.UpdateCollumn(secondCard.getCardBase().getColPos(),model);
+            int myFirstCardRow=firtCard.getCardBase().getRowPos();
+            int myFirstCardCol=firtCard.getCardBase().getColPos();
+            int mySecondCardRow=secondCard.getCardBase().getRowPos();
+            int mySecondCardCol=secondCard.getCardBase().getColPos();
+            //code straight from hell
+            model.CalculateRemoval(myFirstCardRow, myFirstCardCol);
+            view.RemoveCard(myFirstCardRow, myFirstCardCol);
+            view.UpdateCollumn(myFirstCardCol,model);
+            model.RemoveGridObject(myFirstCardRow, myFirstCardCol);
+            
+            model.CalculateRemoval(mySecondCardRow, mySecondCardCol);
+            view.RemoveCard(mySecondCardRow, mySecondCardCol);
+            view.UpdateCollumn(mySecondCardCol,model);            
+            model.RemoveGridObject(mySecondCardRow, mySecondCardCol);            
 
+            view.UpdateCards(model);
             return true;
         }
         return false;
