@@ -23,9 +23,11 @@ public class CardMono : MonoBehaviour
     public void setCardBase(Card cardBase){ this.cardBase=cardBase;}
     public Card getCardBase(){return cardBase;}
 
-    [SerializeField] private GameObject fallingPrefab;
 
-    public UnityEngine.Vector3 deathVector;
+    [SerializeField] public int startingRow;
+
+    [SerializeField] public int startingCol;
+
     void Start()
     {
         imageComponent = GetComponent<UnityEngine.UI.Image>();
@@ -58,14 +60,14 @@ public class CardMono : MonoBehaviour
     }
 
 
-    IEnumerator TranslateOverTime(UnityEngine.Vector3 target, float time)
+    IEnumerator TranslateOverTime(UnityEngine.Vector3 target, float time) //0 references
     {
         UnityEngine.Vector3 startPosition = transform.localPosition;
         float elapsedTime = 0;
 
         while (elapsedTime < time)
         {
-            Debug.Log("Hello");
+            //Debug.Log("Hello");
             transform.localPosition = UnityEngine.Vector3.Lerp(startPosition, target, (elapsedTime / time));
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -76,13 +78,13 @@ public class CardMono : MonoBehaviour
     }           
 
 
-    public void OnDestroy(){
-            GameObject g=Instantiate(fallingPrefab);
-            g.transform.SetParent(transform.parent);
-            g.transform.localPosition=transform.localPosition;
-            g.transform.localScale=transform.localScale;
-        
-            g.GetComponent<FallingButton>().FallToPos(deathVector);
-            
-    } 
+    IEnumerator TranslateConstantSpeed(UnityEngine.Vector3 target, float speed){
+
+        while(UnityEngine.Vector3.Distance(transform.localPosition, target) > 0.001f){
+            transform.localPosition =UnityEngine.Vector3.MoveTowards(transform.localPosition, target, speed * Time.deltaTime);
+            yield return null;
+        }
+        transform.localPosition = target;
+
+    }
 }

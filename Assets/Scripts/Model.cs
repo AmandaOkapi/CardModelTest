@@ -14,8 +14,8 @@ public class Model
     public int getRow(){return row;}
     public int getCol(){return col;}
     public Model(){
-        row=4;
-        col=5;
+        row=7;
+        col=6;
         cardGrid= new GridObject[row,col];
         possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5), new Card(6), new Card(7)  };
     }
@@ -32,7 +32,7 @@ public class Model
         cardGrid[row,col]=null;
         TranslateDown(row, col);
         Card newCard= CreateNewCard(0,col);
-        //newCard.IncreaseCellsToFall();
+        newCard.IncreaseCellsToFall();
         PrintArray();
         return true;
     }
@@ -46,7 +46,9 @@ public class Model
         }else{
             cardGrid[row,col]=cardGrid[row-1, col];
             cardGrid[row,col].setRowPos(row);
-            ((Card)cardGrid[row,col]).IncreaseCellsToFall();
+            if(row<this.row){
+                ((Card)cardGrid[row,col]).IncreaseCellsToFall();
+            }
             TranslateDown(row-1, col);
         }
     }

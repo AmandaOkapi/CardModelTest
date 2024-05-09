@@ -38,8 +38,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.17368753, y: 0.90964097}
   m_AnchorMax: {x: 0.17368753, y: 0.90964097}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 166.2736, y: 125.497894}
+  m_AnchoredPosition: {x: -18.4691, y: 8.5242}
+  m_SizeDelta: {x: 129.3354, y: 108.4495}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5453230756130626144
 CanvasRenderer:
@@ -136,12 +136,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardData: {fileID: 11400000, guid: ce802e015842fed4aa7f8a18d8386044, type: 2}
-  debugMode: 0
+  debugMode: 1
   tempControllerLink: {fileID: 0}
   imageComponent: {fileID: 0}
-  fallSpeed: 0.5
-  fallingPrefab: {fileID: 4346448141216687527, guid: 77fb67c159ec9fd48b0f1bec6db880ba, type: 3}
-  deathVector: {x: 0, y: 0, z: 0}
+  fallSpeed: 0.55
+  startingRow: 0
+  startingCol: 0
 --- !u!1 &8405559099839079569
 GameObject:
   m_ObjectHideFlags: 0
