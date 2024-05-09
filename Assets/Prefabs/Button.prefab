@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardData: {fileID: 11400000, guid: ce802e015842fed4aa7f8a18d8386044, type: 2}
-  debugMode: 1
+  debugMode: 0
   tempControllerLink: {fileID: 0}
   imageComponent: {fileID: 0}
   fallSpeed: 0.55

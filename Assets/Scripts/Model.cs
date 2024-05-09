@@ -15,7 +15,7 @@ public class Model
     public int getCol(){return col;}
     public Model(){
         row=7;
-        col=6;
+        col=5;
         cardGrid= new GridObject[row,col];
         possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5), new Card(6), new Card(7)  };
     }
