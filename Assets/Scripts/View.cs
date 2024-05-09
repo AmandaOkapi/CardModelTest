@@ -39,14 +39,6 @@ public class View : MonoBehaviour
                 for(int j=0; j<model.getCol(); j++){
                     gridViewItems[i,j] = InstantiateCard(i,j,model);
                     //Debug.Log("Button " + i + ","+ j+ " is at" + gameObject.position);
-                        int x=i;
-                        int y=j;
-                    Transform gameObject=gridViewItems[i,j];     
-                    gameObject.GetComponent<Button>().onClick.AddListener(() =>{
-
-                        gameObject.GetComponent<CardMono>().flipCard();
-                        Debug.Log("Button " + i + ","+ j+ "clicked!");
-                    });
                 }
             }
         }
@@ -86,8 +78,36 @@ public class View : MonoBehaviour
         }
     }
 
-
+    public void UpdateCollumnTest(int col, Model model){
+        for(int i=0; i<gridViewItems.GetLength(0); i++){
+            if(gridViewItems[i,col].GetComponent<CardMono>().getCardBase().GetCellsToFall()>0){
+                UnityEngine.Vector3 targetPos= new UnityEngine.Vector3(
+                    gridViewItems[i,col].localPosition.x,
+                    gridViewItems[i,col].localPosition.y-(gridViewItems[i,col].GetComponent<CardMono>().getCardBase().GetCellsToFall()*(height/(model.getCol()+1))),
+                    gridViewItems[i,col].localPosition.z
+                    ); 
+                gridViewItems[i,col].GetComponent<CardMono>().deathVector=targetPos;
+            }else{
+                gridViewItems[i,col].GetComponent<CardMono>().deathVector=gridViewItems[i,col].transform.localPosition;
+            }                
+            if(gridViewItems[i,col]!=null){
+                    Destroy(gridViewItems[i,col].gameObject);
+                }
+                gridViewItems[i,col].GetComponent<CardMono>().getCardBase().ResetCellsToFall();
+                InstantiateCard(i,col, model);
+        }
+    }
     public void UpdateCollumn(int col, Model model){
+        Button[] cards = FindObjectsOfType<Button>();
+
+        // Loop through each GameObject and destroy it
+        foreach (Button card in cards)
+        {
+            if(card.tag== "Card"){
+                card.interactable = false;
+            }
+        }
+
         //this is shit. gotta fix it
         for(int i=gridViewItems.GetLength(0)-1; i>=0; i--){
             if(gridViewItems[i,col]!=null){
@@ -99,18 +119,25 @@ public class View : MonoBehaviour
                         gridViewItems[i,col].localPosition.z
                     ); 
                     Debug.Log("Sending "+i+","+col+" to "+targetPos);
-                    gridViewItems[i,col].GetComponent<CardMono>().FallToPos(targetPos);
-                    gridViewItems[i+myCellsToFall,col] = gridViewItems[i,col];
+                    gridViewItems[i,col].GetComponent<CardMono>().FallToPos(targetPos);                    
                     gridViewItems[i,col].GetComponent<CardMono>().getCardBase().ResetCellsToFall();
-
+                    //gridViewItems[i+myCellsToFall,col] = gridViewItems[i,col];
                 }
-            }
-
+            } 
         }
-        
-    } 
+        StartCoroutine(CallAfterDelay(2f, model)); // Call MyFunction after 2 seconds
 
+    } 
+    IEnumerator CallAfterDelay(float delay, Model model)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        RemakeView(model);
+    }
     public void ResetCard(int row, int col, Model model){
+        if(gridViewItems[row, col]!=null){
+            Destroy(gridViewItems[row,col].gameObject); 
+        }
         gridViewItems[row, col] = InstantiateCard(row, col, model);
     }
 
@@ -120,6 +147,12 @@ public class View : MonoBehaviour
         gridViewItems[i,j] = Instantiate(prefab, buttonParent);
         gridViewItems[i,j].localPosition = new UnityEngine.Vector3(xOffset*(j+1), -yOffset*(i+1),-5);
         gridViewItems[i,j].GetComponent<CardMono>().setCardBase(((Card)model.getCardAtIndex(i,j)));
+        
+        Transform gameObject=gridViewItems[i,j];     
+        gameObject.GetComponent<Button>().onClick.AddListener(() =>{
+            gameObject.GetComponent<CardMono>().flipCard();
+                Debug.Log("Button " + i + ","+ j+ "clicked!");
+            });
         return gridViewItems[i,j];
     }
     public void RemoveCard(int row, int col){

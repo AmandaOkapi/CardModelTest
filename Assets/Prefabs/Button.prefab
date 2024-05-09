@@ -136,9 +136,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardData: {fileID: 11400000, guid: ce802e015842fed4aa7f8a18d8386044, type: 2}
+  debugMode: 0
   tempControllerLink: {fileID: 0}
   imageComponent: {fileID: 0}
   fallSpeed: 0.5
+  fallingPrefab: {fileID: 4346448141216687527, guid: 77fb67c159ec9fd48b0f1bec6db880ba, type: 3}
+  deathVector: {x: 0, y: 0, z: 0}
 --- !u!1 &8405559099839079569
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,10 +12,9 @@ GameObject:
   - component: {fileID: 5453230756130626144}
   - component: {fileID: 3536321756876714430}
   - component: {fileID: 8395115644420133995}
-  - component: {fileID: 1991921758898839568}
-  - component: {fileID: 2267205238735546205}
+  - component: {fileID: 701353627628071015}
   m_Layer: 5
-  m_Name: Button 1
+  m_Name: FallingButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35,7 +34,7 @@ RectTransform:
   m_Children:
   - {fileID: 551563289881507372}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.17368753, y: 0.90964097}
   m_AnchorMax: {x: 0.17368753, y: 0.90964097}
@@ -70,8 +69,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 1466990461, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -124,7 +123,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1991921758898839568
+--- !u!114 &701353627628071015
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,29 +132,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4346448141216687527}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0266854dd7a25346bf7971198bb62b6, type: 3}
+  m_Script: {fileID: 11500000, guid: db1e4f91897b548478f29ab84e38ad13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardData: {fileID: 11400000, guid: ce802e015842fed4aa7f8a18d8386044, type: 2}
-  debugMode: 0
-  tempControllerLink: {fileID: 0}
-  imageComponent: {fileID: 0}
-  fallSpeed: 0
---- !u!111 &2267205238735546205
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4346448141216687527}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
+  fallSpeed: 0.4
 --- !u!1 &8405559099839079569
 GameObject:
   m_ObjectHideFlags: 0

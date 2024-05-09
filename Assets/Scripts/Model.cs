@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,6 +33,7 @@ public class Model
         TranslateDown(row, col);
         Card newCard= CreateNewCard(0,col);
         //newCard.IncreaseCellsToFall();
+        PrintArray();
         return true;
     }
 
@@ -73,7 +75,19 @@ public class Model
     }
 
 
-
+    void PrintArray()
+    {
+        String myString="";
+        for (int i = 0; i < cardGrid.GetLength(0); i++)
+        {
+            for (int j = 0; j < cardGrid.GetLength(1); j++)
+            {
+                myString+="myArray[" + i + "," + j + "] = " + ((Card)cardGrid[i, j]).getId();
+            }
+            myString+="\n";
+        } 
+        Debug.Log(myString);
+    }
     
 }
 

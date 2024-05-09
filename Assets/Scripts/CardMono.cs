@@ -13,6 +13,7 @@ public class CardMono : MonoBehaviour
 
     [SerializeField] private Card cardBase;
     
+    [SerializeField] bool debugMode;
 
     public Controller tempControllerLink;
     [Header ("View Related")]
@@ -22,7 +23,9 @@ public class CardMono : MonoBehaviour
     public void setCardBase(Card cardBase){ this.cardBase=cardBase;}
     public Card getCardBase(){return cardBase;}
 
+    [SerializeField] private GameObject fallingPrefab;
 
+    public UnityEngine.Vector3 deathVector;
     void Start()
     {
         imageComponent = GetComponent<UnityEngine.UI.Image>();
@@ -30,6 +33,7 @@ public class CardMono : MonoBehaviour
             imageComponent.sprite = cardData.cardBack;
         }
         tempControllerLink= GameObject.FindGameObjectWithTag("Controller").GetComponent<Controller>();
+
     }
 
     public void flipCard(){        
@@ -39,7 +43,9 @@ public class CardMono : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(debugMode){
+            imageComponent.sprite = cardData.cardImages[cardBase.getId()];
+        }
     }
 
     public void CreateDownWardsAnimation(float yPos){
@@ -68,4 +74,15 @@ public class CardMono : MonoBehaviour
         // Ensure exact positioning at the end
         transform.localPosition = target;
     }           
+
+
+    public void OnDestroy(){
+            GameObject g=Instantiate(fallingPrefab);
+            g.transform.SetParent(transform.parent);
+            g.transform.localPosition=transform.localPosition;
+            g.transform.localScale=transform.localScale;
+        
+            g.GetComponent<FallingButton>().FallToPos(deathVector);
+            
+    } 
 }
