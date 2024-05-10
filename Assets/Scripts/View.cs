@@ -7,11 +7,8 @@ public class View : MonoBehaviour
 {
     // Start is called before the first frame update
     public CardData cardDataView;
-
     [SerializeField] private RectTransform  pane;
     [SerializeField] private Transform prefab;
-    [SerializeField] private GameObject canvas;
-
     [SerializeField] private Transform buttonParent;
 
     private Transform[,] gridViewItems;
@@ -19,51 +16,19 @@ public class View : MonoBehaviour
     float width, height;
     void Start()
     {
-        float width = pane.rect.width;
-        float height = pane.rect.height;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        width = pane.rect.width;
+        height = pane.rect.height;
     }
 
     public void InitializeView(Model model){
         if(model!=null){
             gridViewItems = new Transform[model.getRow(), model.getCol()]; 
-            width = pane.rect.width;
-            height = pane.rect.height;
-
+            //width = pane.rect.width;
+            //height = pane.rect.height;
             for(int i=0; i<model.getRow(); i++){
                 for(int j=0; j<model.getCol(); j++){
                     gridViewItems[i,j] = InstantiateCard(i,j,model);
                     //Debug.Log("Button " + i + ","+ j+ " is at" + gameObject.position);
-                }
-            }
-        }
-    }
-
-    public void RemakeView(Model model){
-            Debug.Log("updating view");
-            ClearView();
-            InitializeView(model);
-    }
-
-    public void UpdateView(){
-
-    }
-    public void UpdateCards(Model model){
-        for(int i=0; i< gridViewItems.GetLength(0); i++){
-            for(int j=0; j< gridViewItems.GetLength(1); j++){
-                if(gridViewItems[i,j].gameObject==null){
-                    gridViewItems[i,j]=InstantiateCard(i,j,model);
-                    return;
-                }
-                if(gridViewItems[i,j].GetComponent<CardMono>().getCardBase() != ((Card)model.getCardAtIndex(i,j))){
-                    Destroy(gridViewItems[i,j].gameObject);
-                    gridViewItems[i,j]=InstantiateCard(i,j,model);
-                    return;
                 }
             }
         }
@@ -77,8 +42,13 @@ public class View : MonoBehaviour
             Destroy(card);
         }
     }
+    public void RemakeView(Model model){
+            Debug.Log("updating view");
+            ClearView();
+            InitializeView(model);
+    }
 
-    public void DeactuvateAllButtons(){
+    public void DeactivateAllButtons(){
         Button[] cards = FindObjectsOfType<Button>();
 
         // Loop through each GameObject and destroy it
@@ -89,42 +59,7 @@ public class View : MonoBehaviour
             }
         }
     }
-    public void UpdateCollumn(int col, Model model){
-        //this is shit. gotta fix it
-        //handle dropping translation
-        for(int i=gridViewItems.GetLength(0)-1; i>=0; i--){          
-            if(gridViewItems[i,col]!=null){
-                int myCellsToFall=gridViewItems[i,col].GetComponent<CardMono>().getCardBase().GetCellsToFall();
-                if(myCellsToFall>0){
-                    UnityEngine.Vector3 targetPos= new UnityEngine.Vector3(
-                        gridViewItems[i,col].localPosition.x,
-                        gridViewItems[i,col].localPosition.y-(myCellsToFall*(height/(model.getCol()+1))),                            
-                        gridViewItems[i,col].localPosition.z
-                        ); 
-                Debug.Log(gridViewItems[i,col].GetComponent<CardMono>().getCardBase().GetCellsToFall() + "Sending "+i+","+col+" to "+targetPos);
-                gridViewItems[i,col].GetComponent<CardMono>().FallToPos(targetPos);                    
-                gridViewItems[i,col].GetComponent<CardMono>().getCardBase().ResetCellsToFall();
-                gridViewItems[i+myCellsToFall,col] = gridViewItems[i,col];
-                gridViewItems[i,col]=null;
-                    }
-                }      
-            } 
-        for(int x=0; x<gridViewItems.GetLength(0); x++){          
-            if(gridViewItems[x,col]==null){
-                Debug.Log("Resetting " + x + "," + col);
-                ResetCard(x,col, model);
-            }
-        }      
-            //StartCoroutine(CallAfterDelay(2f, model)); // Call MyFunction after 2 seconds
-
-    }
-
-    IEnumerator CallAfterDelay(float delay, Model model)
-    {
-        yield return new WaitForSeconds(delay);
-        
-        RemakeView(model);
-    }
+    
     public void ResetCard(int row, int col, Model model){
         if(gridViewItems[row, col]!=null){
             Destroy(gridViewItems[row,col].gameObject); 
@@ -152,5 +87,44 @@ public class View : MonoBehaviour
         gridViewItems[row,col]=null;
     }
 
+    public void RemoveCard(int row, int col, Model model) {
+        RemoveCard(row,col);
+        UpdateCollumn(col, model);
+    }
+    private void UpdateCollumn(int col, Model model){
+        //this is shit
+        //handles dropping translation and generating new card
+        //must be called after removing a card object
+        //card objects check their linked base card to determine how many cells to fall
+        //then their position is updated to reflect the models position of the card
+        for(int i=gridViewItems.GetLength(0)-1; i>=0; i--){          
+            if(gridViewItems[i,col]!=null){
+                int myCellsToFall=gridViewItems[i,col].GetComponent<CardMono>().getCardBase().GetCellsToFall();
+                if(myCellsToFall>0){
+                    //get target vector
+                    UnityEngine.Vector3 targetPos= new UnityEngine.Vector3(
+                        gridViewItems[i,col].localPosition.x,
+                        gridViewItems[i,col].localPosition.y-(myCellsToFall*(height/(model.getCol()+1))),                            
+                        gridViewItems[i,col].localPosition.z
+                        ); 
+                    Debug.Log(gridViewItems[i,col].GetComponent<CardMono>().getCardBase().GetCellsToFall() + "Sending "+i+","+col+" to "+targetPos);
+                    //play the falling sequence
+                    gridViewItems[i,col].GetComponent<CardMono>().FallToPos(targetPos);                    
+                    gridViewItems[i,col].GetComponent<CardMono>().getCardBase().ResetCellsToFall();
+                    //reset local object grid
+                    gridViewItems[i+myCellsToFall,col] = gridViewItems[i,col];
+                    gridViewItems[i,col]=null;
+                    }
+                }      
+            } 
+
+        for(int x=0; x<gridViewItems.GetLength(0); x++){          
+            if(gridViewItems[x,col]==null){
+                Debug.Log("Resetting " + x + "," + col);
+                ResetCard(x,col, model);
+            }
+        }      
+
+    }
 
 }

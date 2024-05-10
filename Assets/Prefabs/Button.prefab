@@ -36,10 +36,10 @@ RectTransform:
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.17368753, y: 0.90964097}
-  m_AnchorMax: {x: 0.17368753, y: 0.90964097}
-  m_AnchoredPosition: {x: -18.4691, y: 8.5242}
-  m_SizeDelta: {x: 129.3354, y: 108.4495}
+  m_AnchorMin: {x: 0.3057427, y: 0.4028349}
+  m_AnchorMax: {x: 0.7018307, y: 0.59266984}
+  m_AnchoredPosition: {x: -1.2099991, y: 1.0800018}
+  m_SizeDelta: {x: 8.335403, y: 5.4494934}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5453230756130626144
 CanvasRenderer:
@@ -135,8 +135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0266854dd7a25346bf7971198bb62b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardData: {fileID: 11400000, guid: ce802e015842fed4aa7f8a18d8386044, type: 2}
   debugMode: 0
+  cardData: {fileID: 11400000, guid: ce802e015842fed4aa7f8a18d8386044, type: 2}
   tempControllerLink: {fileID: 0}
   imageComponent: {fileID: 3536321756876714430}
   fallSpeed: 0.55

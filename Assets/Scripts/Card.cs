@@ -9,43 +9,21 @@ public class Card : GridObject
 
     private int cellsToFall;
 
-    public void IncreaseCellsToFall(){cellsToFall++;}
-    public void DecreaseCellsToFall(){cellsToFall--;}
-
+    public void IncreaseCellsToFall(){cellsToFall+=1;}
     public void ResetCellsToFall(){cellsToFall=0;}
-
     public int GetCellsToFall(){return cellsToFall;}
     public int getId(){return id;}
-
-
-    public CardState cardState;
-
-    public enum CardState{
-        Idle,
-        Flipped,
-        Falling,
-        
-    }
 
     public Card(int id, int row, int col){
         this.id=id;
         this.rowPos = row;
         this.colPos = col;
-        cardState=CardState.Idle;
         cellsToFall=0;
     }
 
-    public Card(int id){
-        this.id=id;
-        this.rowPos = -1;
-        this.colPos = -1;
-        cardState=CardState.Idle;
-    }
-
+    public Card(int id):this(id,-1,-1){}
 
 }
-
-
 
 public abstract class GridObject
 {

@@ -9,12 +9,12 @@ using UnityEngine.UI;
 
 public class CardMono : MonoBehaviour
 {
+    [SerializeField] private bool debugMode;
+
     public CardData cardData;
 
     [SerializeField] private Card cardBase;
     
-    [SerializeField] bool debugMode;
-
     public Controller tempControllerLink;
     [Header ("View Related")]
     [SerializeField] public UnityEngine.UI.Image imageComponent;
@@ -29,14 +29,14 @@ public class CardMono : MonoBehaviour
         {
         imageComponent.sprite = cardData.cardBack;
     }else{
-        Debug.Log("cardData or imageComponent is null! ");
+        Debug.LogError("cardData is null! ");
     }
 
     }
 
     public void flipCard(){    
-tempControllerLink=GameObject.FindGameObjectWithTag("Controller").GetComponent<Controller>();        
-tempControllerLink.flipCard(this);
+        tempControllerLink=GameObject.FindGameObjectWithTag("Controller").GetComponent<Controller>();        
+        tempControllerLink.flipCard(this);
     }
 
     // Update is called once per frame
@@ -76,7 +76,6 @@ tempControllerLink.flipCard(this);
 
 
     IEnumerator TranslateConstantSpeed(UnityEngine.Vector3 target, float speed){
-
         while(UnityEngine.Vector3.Distance(transform.localPosition, target) > 0.001f){
             transform.localPosition =UnityEngine.Vector3.MoveTowards(transform.localPosition, target, speed * Time.deltaTime);
             yield return null;

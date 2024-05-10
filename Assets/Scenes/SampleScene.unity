@@ -335,7 +335,6 @@ MonoBehaviour:
   cardDataView: {fileID: 11400000, guid: ce802e015842fed4aa7f8a18d8386044, type: 2}
   pane: {fileID: 750611854}
   prefab: {fileID: 7464371237458058364, guid: 380204eb4c2f69a45a36d5b83055109b, type: 3}
-  canvas: {fileID: 645076503}
   buttonParent: {fileID: 750611854}
 --- !u!1 &669136686
 GameObject:
@@ -440,9 +439,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 58.371216, y: -490.47192}
+  m_AnchoredPosition: {x: -6.2390137, y: -79.28204}
   m_SizeDelta: {x: 185.0503, y: -603.9153}
-  m_Pivot: {x: -0.08488994, y: 1.0998007}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &750611855
 MonoBehaviour:
   m_ObjectHideFlags: 0
