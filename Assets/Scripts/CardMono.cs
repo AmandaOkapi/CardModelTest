@@ -17,29 +17,26 @@ public class CardMono : MonoBehaviour
 
     public Controller tempControllerLink;
     [Header ("View Related")]
-    public UnityEngine.UI.Image imageComponent;
+    [SerializeField] public UnityEngine.UI.Image imageComponent;
     [SerializeField] private float fallSpeed;
 
     public void setCardBase(Card cardBase){ this.cardBase=cardBase;}
     public Card getCardBase(){return cardBase;}
 
-
-    [SerializeField] public int startingRow;
-
-    [SerializeField] public int startingCol;
-
     void Start()
     {
-        imageComponent = GetComponent<UnityEngine.UI.Image>();
-        if(cardData !=null){
-            imageComponent.sprite = cardData.cardBack;
-        }
-        tempControllerLink= GameObject.FindGameObjectWithTag("Controller").GetComponent<Controller>();
+    if (cardData != null)
+        {
+        imageComponent.sprite = cardData.cardBack;
+    }else{
+        Debug.Log("cardData or imageComponent is null! ");
+    }
 
     }
 
-    public void flipCard(){        
-        tempControllerLink.flipCard(this);
+    public void flipCard(){    
+tempControllerLink=GameObject.FindGameObjectWithTag("Controller").GetComponent<Controller>();        
+tempControllerLink.flipCard(this);
     }
 
     // Update is called once per frame
