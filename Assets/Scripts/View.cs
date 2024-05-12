@@ -7,6 +7,8 @@ public class View : MonoBehaviour
 {
     // Start is called before the first frame update
     public CardData cardDataView;
+    [SerializeField] private UnityEngine.Vector2 cellSize = new UnityEngine.Vector2(100f,144f);
+
     [SerializeField] private RectTransform  pane;
     [SerializeField] private Transform prefab;
     [SerializeField] private Transform buttonParent;
@@ -68,10 +70,10 @@ public class View : MonoBehaviour
     }
 
     public Transform InstantiateCard(int i, int j, Model model){
-        float xOffset = width/(model.getRow() +1);
-        float yOffset = height/(model.getCol()+1);
+        float xOffset = width/(model.getCol());
+        float yOffset = height/(model.getRow());
         gridViewItems[i,j] = Instantiate(prefab, buttonParent);
-        gridViewItems[i,j].localPosition = new UnityEngine.Vector3(xOffset*(j+1), -yOffset*(i+1),-5);
+        gridViewItems[i,j].localPosition = new UnityEngine.Vector3(xOffset*(j), -yOffset*(i+1),-5);
         ((Card)model.getCardAtIndex(i,j)).ResetCellsToFall();
         gridViewItems[i,j].GetComponent<CardMono>().setCardBase(((Card)model.getCardAtIndex(i,j)));
         
@@ -91,7 +93,7 @@ public class View : MonoBehaviour
         RemoveCard(row,col);
         UpdateCollumn(col, model);
     }
-    private void UpdateCollumn(int col, Model model){
+    public void UpdateCollumn(int col, Model model){
         //this is shit
         //handles dropping translation and generating new card
         //must be called after removing a card object
@@ -104,7 +106,7 @@ public class View : MonoBehaviour
                     //get target vector
                     UnityEngine.Vector3 targetPos= new UnityEngine.Vector3(
                         gridViewItems[i,col].localPosition.x,
-                        gridViewItems[i,col].localPosition.y-(myCellsToFall*(height/(model.getCol()+1))),                            
+                        gridViewItems[i,col].localPosition.y-(myCellsToFall*(height/(model.getRow()))),                            
                         gridViewItems[i,col].localPosition.z
                         ); 
                     Debug.Log(gridViewItems[i,col].GetComponent<CardMono>().getCardBase().GetCellsToFall() + "Sending "+i+","+col+" to "+targetPos);

@@ -54,17 +54,25 @@ public class Controller : MonoBehaviour
         if((firtCard.getCardBase().getId()== secondCard.getCardBase().getId()) && firtCard!=secondCard){
             //code straight from hell            
 
-            int firstCardInitialRowPos = firtCard.getCardBase().getRowPos();
-            int firstCardInitialColPos = firtCard.getCardBase().getColPos();
-            int secondCardInitialRowPos = secondCard.getCardBase().getRowPos();
-            int secondCardInitialColPos = secondCard.getCardBase().getColPos();
+            // int firstCardInitialRowPos = firtCard.getCardBase().getRowPos();
+            // int firstCardInitialColPos = firtCard.getCardBase().getColPos();
+            // int secondCardInitialRowPos = secondCard.getCardBase().getRowPos();
+            // int secondCardInitialColPos = secondCard.getCardBase().getColPos();
 
+            // model.RemoveGridObject(firtCard.getCardBase().getRowPos(), firtCard.getCardBase().getColPos());
+            // model.RemoveGridObject(secondCard.getCardBase().getRowPos(), secondCard.getCardBase().getColPos());    
+            
+            // view.RemoveCard(firstCardInitialRowPos, firstCardInitialColPos, model);            
+            // view.RemoveCard(secondCardInitialRowPos, secondCardInitialColPos, model);
+            
+            view.RemoveCard(firtCard.getCardBase().getRowPos(), firtCard.getCardBase().getColPos());            
+            view.RemoveCard(secondCard.getCardBase().getRowPos(), secondCard.getCardBase().getColPos());
+            
             model.RemoveGridObject(firtCard.getCardBase().getRowPos(), firtCard.getCardBase().getColPos());
             model.RemoveGridObject(secondCard.getCardBase().getRowPos(), secondCard.getCardBase().getColPos());    
             
-            view.RemoveCard(firstCardInitialRowPos, firstCardInitialColPos, model);            
-            view.RemoveCard(secondCardInitialRowPos, secondCardInitialColPos, model);
-            
+            view.UpdateCollumn( firtCard.getCardBase().getColPos(),model);       
+            view.UpdateCollumn( secondCard.getCardBase().getColPos(), model);    
             return true;
         }
         return false;
