@@ -25,6 +25,7 @@ public class Card : GridObject
 
 }
 
+[System.Serializable]
 public abstract class GridObject
 {
     protected int rowPos;

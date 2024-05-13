@@ -2,32 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using Unity.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 public class View : MonoBehaviour
 {
     // Start is called before the first frame update
-    public CardData cardDataView;
-    
-
-    [SerializeField] private RectTransform  pane;
-    [SerializeField] private RectTransform  refPane;
-
+    public CardData cardDataView;    
     [SerializeField] private Transform prefab;
+    [SerializeField] private Transform[,] gridViewItems;
+
+    [Header ("Scaling")]    
+    [SerializeField] private bool maintainAspectRatio =true;
+    [SerializeField] private UnityEngine.Vector2 cardSize = new UnityEngine.Vector2(100f,144f);
+    [SerializeField] private RectTransform  pane;
+    [SerializeField] private RectTransform  refPane;    //a pane that stretches with the screen size acts as a "size goal" for our grid
     [SerializeField] private Transform buttonParent;
 
-    private Transform[,] gridViewItems;
 
-    private float screenMultiplier;
-    private UnityEngine.Vector2 cellSize = new UnityEngine.Vector2(100f,144f);
-    private float width, height;
     private float refWidth, refHeight;
 
     private UnityEngine.Vector2  scaleFactor;
     void Start()
     {
-        width = pane.rect.width;
-        height = pane.rect.height;
+        localWidth = pane.rect.width;
+        localHeight = pane.rect.height;
         refWidth=refPane.rect.width;
         refHeight=refPane.rect.height;
     }
@@ -38,23 +37,34 @@ public class View : MonoBehaviour
             int myCol = model.getCol();
             gridViewItems = new Transform[myRow, myCol]; 
             
-            //screen scaling...
-            //get the actual size as formatted/stretched by the canvas
-            pane.sizeDelta = new UnityEngine.Vector2(myCol*cellSize.x, myRow*cellSize.y);
-            width = pane.rect.width;
-            height = pane.rect.height;
+            //calculate and set the perfect dimensions for the grid based on the card pixel size
+            pane.sizeDelta = new UnityEngine.Vector2(myCol*cardSize.x, myRow*cardSize.y);
+            localWidth = pane.rect.width;
+            localHeight = pane.rect.height;
 
-            scaleFactor.x = refWidth/width;
-            scaleFactor.y = refHeight/height;
-
+            //populate the grid perfect sized grid with cards
             for(int i=0; i<myRow; i++){
                 for(int j=0; j<myCol; j++){
                     gridViewItems[i,j] = InstantiateCard(i,j,model);
                     //Debug.Log("Button " + i + ","+ j+ " is at" + gameObject.position);
                 }
             }
+            
+            //calculate scale factor based on the the refPane (local*scalefactor = ref) and scale down the grid if needed
+            scaleFactor.x = refWidth/localWidth;
+            scaleFactor.y = refHeight/localHeight;
+            
+            float scaleFactorAverage = Mathf.Min(scaleFactor.x, scaleFactor.y, 1);
+            if(maintainAspectRatio){
+                pane.localScale = new UnityEngine.Vector3(scaleFactorAverage, scaleFactorAverage, 1f);
+            }else{
+                pane.localScale = new UnityEngine.Vector3(scaleFactor.x, scaleFactor.y, 1f);
+            }
 
-            pane.localScale = new UnityEngine.Vector3(scaleFactor.x, scaleFactor.y, 1f);
+            //position code for the grid?
+            //Ensure top 2 rows are above?
+            //perhaps remove the two rows from the calcualtions? 
+
         }
     }
     private void ClearView(){
@@ -92,8 +102,8 @@ public class View : MonoBehaviour
     }
 
     public Transform InstantiateCard(int i, int j, Model model){
-        float xOffset = width/(model.getCol());
-        float yOffset = height/(model.getRow());
+        float xOffset = localWidth/(model.getCol());
+        float yOffset = localHeight/(model.getRow());
         gridViewItems[i,j] = Instantiate(prefab, buttonParent);
         gridViewItems[i,j].localPosition = new UnityEngine.Vector3(xOffset*(j), -yOffset*(i+1),-5);
         ((Card)model.getCardAtIndex(i,j)).ResetCellsToFall();
@@ -128,7 +138,7 @@ public class View : MonoBehaviour
                     //get target vector
                     UnityEngine.Vector3 targetPos= new UnityEngine.Vector3(
                         gridViewItems[i,col].localPosition.x,
-                        gridViewItems[i,col].localPosition.y-(myCellsToFall*(height/(model.getRow()))),                            
+                        gridViewItems[i,col].localPosition.y-(myCellsToFall*(localHeight/(model.getRow()))),                            
                         gridViewItems[i,col].localPosition.z
                         ); 
                     Debug.Log(gridViewItems[i,col].GetComponent<CardMono>().getCardBase().GetCellsToFall() + "Sending "+i+","+col+" to "+targetPos);
