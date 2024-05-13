@@ -1,38 +1,60 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 public class View : MonoBehaviour
 {
     // Start is called before the first frame update
     public CardData cardDataView;
-    [SerializeField] private UnityEngine.Vector2 cellSize = new UnityEngine.Vector2(100f,144f);
+    
 
     [SerializeField] private RectTransform  pane;
+    [SerializeField] private RectTransform  refPane;
+
     [SerializeField] private Transform prefab;
     [SerializeField] private Transform buttonParent;
 
     private Transform[,] gridViewItems;
 
-    float width, height;
+    private float screenMultiplier;
+    private UnityEngine.Vector2 cellSize = new UnityEngine.Vector2(100f,144f);
+    private float width, height;
+    private float refWidth, refHeight;
+
+    private UnityEngine.Vector2  scaleFactor;
     void Start()
     {
         width = pane.rect.width;
         height = pane.rect.height;
+        refWidth=refPane.rect.width;
+        refHeight=refPane.rect.height;
     }
 
     public void InitializeView(Model model){
         if(model!=null){
-            gridViewItems = new Transform[model.getRow(), model.getCol()]; 
-            //width = pane.rect.width;
-            //height = pane.rect.height;
-            for(int i=0; i<model.getRow(); i++){
-                for(int j=0; j<model.getCol(); j++){
+            int myRow = model.getRow();
+            int myCol = model.getCol();
+            gridViewItems = new Transform[myRow, myCol]; 
+            
+            //screen scaling...
+            //get the actual size as formatted/stretched by the canvas
+            pane.sizeDelta = new UnityEngine.Vector2(myCol*cellSize.x, myRow*cellSize.y);
+            width = pane.rect.width;
+            height = pane.rect.height;
+
+            scaleFactor.x = refWidth/width;
+            scaleFactor.y = refHeight/height;
+
+            for(int i=0; i<myRow; i++){
+                for(int j=0; j<myCol; j++){
                     gridViewItems[i,j] = InstantiateCard(i,j,model);
                     //Debug.Log("Button " + i + ","+ j+ " is at" + gameObject.position);
                 }
             }
+
+            pane.localScale = new UnityEngine.Vector3(scaleFactor.x, scaleFactor.y, 1f);
         }
     }
     private void ClearView(){
