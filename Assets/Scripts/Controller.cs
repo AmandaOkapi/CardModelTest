@@ -11,10 +11,14 @@ public class Controller : MonoBehaviour
     public static int cardsFlipped;
     public static CardMono firtCard;
     public static CardMono secondCard;
+
+    [SerializeField] private int serializedRow=4;
+    [SerializeField] private int serializedCol=4;
+
     // Start is called before the first frame update
     void Awake()
     {
-        model= new EliminationModel(); 
+        model= new EliminationModel(serializedRow, serializedCol); 
         model.PopulateGrid();
     }
 
