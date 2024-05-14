@@ -3,19 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[System.Serializable]
 public class Model 
 {
     private GridObject[,] cardGrid;
     private Card[] possibleCards;
 
-    private int row;
-    private int col;
+    [SerializeField] private int row=8;
+    [SerializeField] private int col=6;
 
     public int getRow(){return row;}
     public int getCol(){return col;}
     public Model(){
-        row=30;
-        col=20;
+        //row=30;
+        //col=20;
         cardGrid= new GridObject[row,col];
         possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5), new Card(6), new Card(7), new Card(8), new Card(9), new Card(10), new Card(11), new Card(12)};
     }
@@ -71,7 +73,7 @@ public class Model
     }
 
 
-    void PrintArray()
+    public void PrintArray()
     {
         String myString="";
         for (int i = 0; i < cardGrid.GetLength(0); i++)
@@ -87,4 +89,9 @@ public class Model
     
 }
 
+
+public class EliminationModel : Model{
+
+
+}
 

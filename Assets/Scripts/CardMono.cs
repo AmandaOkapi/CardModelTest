@@ -14,8 +14,9 @@ public class CardMono : MonoBehaviour
     public CardData cardData;
 
     [SerializeField] private Card cardBase;
+    [SerializeField] private Button buttonComponent;
+
     
-    public Controller tempControllerLink;
     [Header ("View Related")]
     [SerializeField] public UnityEngine.UI.Image imageComponent;
     [SerializeField] private float fallSpeed;
@@ -23,20 +24,26 @@ public class CardMono : MonoBehaviour
     public void setCardBase(Card cardBase){ this.cardBase=cardBase;}
     public Card getCardBase(){return cardBase;}
 
+    private Controller controllerLink;
+
     void Start()
     {
-    if (cardData != null)
-        {
-        imageComponent.sprite = cardData.cardBack;
-    }else{
-        Debug.LogError("cardData is null! ");
-    }
+        controllerLink=GameObject.FindGameObjectWithTag("Controller").GetComponent<Controller>();        
+        if (cardData != null)
+            {
+            imageComponent.sprite = cardData.cardBack;
+        }else{
+            Debug.LogError("cardData is null! ");
+        }
 
     }
 
-    public void flipCard(){    
-        tempControllerLink=GameObject.FindGameObjectWithTag("Controller").GetComponent<Controller>();        
-        tempControllerLink.flipCard(this);
+    public void flipCard(){
+        controllerLink.flipCard(this);
+    }
+
+    public void SetEnabled(bool x){
+        buttonComponent.enabled=x;
     }
 
     // Update is called once per frame

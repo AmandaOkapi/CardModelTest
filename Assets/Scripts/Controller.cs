@@ -27,22 +27,29 @@ public class Controller : MonoBehaviour
     {
         
     }
-    public void flipCard(CardMono card){        
 
+    //called by cardmono on click
+    public void flipCard(CardMono card){        
+        
         if(cardsFlipped==0){
+            card.SetEnabled(false);
             firtCard=card;        
             card.imageComponent.sprite= card.cardData.cardImages[card.getCardBase().getId()];        
             cardsFlipped++;
         }else if(cardsFlipped==1){
+            card.SetEnabled(false);
             secondCard=card;
             card.imageComponent.sprite= card.cardData.cardImages[card.getCardBase().getId()];
             cardsFlipped++;
         }else{
             cardsFlipped=0;
-            if(!checkFlippedCards()){
+            if(!checkFlippedCards()){            
+                firtCard.SetEnabled(true);
+                secondCard.SetEnabled(true);            
                 firtCard.imageComponent.sprite= firtCard.cardData.cardBack;
                 secondCard.imageComponent.sprite= secondCard.cardData.cardBack;
                 firtCard=card;
+                firtCard.SetEnabled(false);
                 card.imageComponent.sprite= card.cardData.cardImages[card.getCardBase().getId()];
                 cardsFlipped++;
             }
@@ -52,29 +59,22 @@ public class Controller : MonoBehaviour
 
     public bool checkFlippedCards(){
         if((firtCard.getCardBase().getId()== secondCard.getCardBase().getId()) && firtCard!=secondCard){
+            MatchFound(firtCard, secondCard);
+            return true;
+        }
+        return false;
+    }
+
+    private void MatchFound(CardMono firstCard, CardMono secondCard){
             //code straight from hell            
-
-            // int firstCardInitialRowPos = firtCard.getCardBase().getRowPos();
-            // int firstCardInitialColPos = firtCard.getCardBase().getColPos();
-            // int secondCardInitialRowPos = secondCard.getCardBase().getRowPos();
-            // int secondCardInitialColPos = secondCard.getCardBase().getColPos();
-
-            // model.RemoveGridObject(firtCard.getCardBase().getRowPos(), firtCard.getCardBase().getColPos());
-            // model.RemoveGridObject(secondCard.getCardBase().getRowPos(), secondCard.getCardBase().getColPos());    
-            
-            // view.RemoveCard(firstCardInitialRowPos, firstCardInitialColPos, model);            
-            // view.RemoveCard(secondCardInitialRowPos, secondCardInitialColPos, model);
-            
+            //must first be removed as the row, col positions are known, and updating the model will change them
             view.RemoveCard(firtCard.getCardBase().getRowPos(), firtCard.getCardBase().getColPos());            
             view.RemoveCard(secondCard.getCardBase().getRowPos(), secondCard.getCardBase().getColPos());
-            
+            //update the model and assign base card amounts to fall, note this changes the base cards row
             model.RemoveGridObject(firtCard.getCardBase().getRowPos(), firtCard.getCardBase().getColPos());
             model.RemoveGridObject(secondCard.getCardBase().getRowPos(), secondCard.getCardBase().getColPos());    
             
             view.UpdateCollumn( firtCard.getCardBase().getColPos(),model);       
             view.UpdateCollumn( secondCard.getCardBase().getColPos(), model);    
-            return true;
-        }
-        return false;
     }
 }

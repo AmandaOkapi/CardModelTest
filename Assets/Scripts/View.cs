@@ -20,6 +20,7 @@ public class View : MonoBehaviour
     [SerializeField] private Transform buttonParent;
 
 
+    private float localWidth, localHeight;
     private float refWidth, refHeight;
 
     private UnityEngine.Vector2  scaleFactor;

@@ -590,6 +590,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a07a9f4eb066734faa787dedcd6a7e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  model:
+    row: 9
+    col: 6
   view: {fileID: 645076508}
 --- !u!4 &1513151600
 Transform:
