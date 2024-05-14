@@ -14,7 +14,7 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        model= new Model(); 
+        model= new OriginalModel(); 
         model.PopulateGrid();
     }
 
