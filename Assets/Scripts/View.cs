@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -103,6 +104,9 @@ public class View : MonoBehaviour
     }
 
     public Transform InstantiateCard(int i, int j, Model model){
+        if(model.getCardAtIndex(i,j)==null){
+            return null;
+        }
         float xOffset = localWidth/(model.getCol());
         float yOffset = localHeight/(model.getRow());
         gridViewItems[i,j] = Instantiate(prefab, buttonParent);
