@@ -5,19 +5,27 @@ using Unity.Mathematics;
 using UnityEngine;
 
 public abstract class Model{
+    private bool matchThreeMode;
     protected GridObject[,] cardGrid;
     protected Card[] possibleCards;
 
-    private int row;
-    private int col;
+    protected int row;
+    protected int col;
 
     public int getRow(){return row;}
     public int getCol(){return col;}
+
+    public bool isMatchThreeMode(){return matchThreeMode;}
     public Model(int row, int col){
         this.row=row;
         this.col=col;
         cardGrid= new GridObject[row,col];
         possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5), new Card(6), new Card(7), new Card(8), new Card(9), new Card(10), new Card(11), new Card(12)};
+        matchThreeMode=false;
+    }
+
+    public Model(int row, int col, bool matchThreeMode) : this(row, col){
+        this.matchThreeMode=matchThreeMode;
     }
 
     public virtual void RemoveGridObject(int row, int col){
@@ -74,11 +82,16 @@ public abstract class Model{
 }
 
 public class OriginalModel :Model {
-    public OriginalModel(int row, int col) : base(row, col){
-        row=Mathf.Max(4, row);
-        possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5), new Card(6), new Card(7), new Card(8), new Card(9), new Card(10), new Card(11), new Card(12)};
+    public OriginalModel(int row, int col) : base(Mathf.Max(4, row), col){
+        InitializeOriginalModel();
+    }
+    public OriginalModel(int row, int col,bool matchThreeMode) : base(Mathf.Max(4, row), col, matchThreeMode){
+        InitializeOriginalModel();
     }
 
+    private void InitializeOriginalModel(){
+        possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5)};
+    }
     public override void RemoveGridObject(int row, int col){
         base.RemoveGridObject(row, col);
         Card newCard= CreateNewCard(0,col);
@@ -92,38 +105,45 @@ public class EliminationModel : Model{
     
     private Dictionary<Card, int> cardUsgae;
     public EliminationModel(int row, int col) : base(row, col){
-        possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5), new Card(6), new Card(7), new Card(8), new Card(9), new Card(10), new Card(11), new Card(12)};
-        
-        //temp code
-        cardUsgae = new Dictionary<Card, int>();
-        ContructDictionary();
-
+        InitializeEliminationModel();
     }
 
+    public EliminationModel(int row, int col, bool matchThreeMode) : base(row, col, matchThreeMode){ 
+        InitializeEliminationModel();
+        }
+
+    private void InitializeEliminationModel(){
+        possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5), new Card(6), new Card(7), new Card(8), new Card(9), new Card(10), new Card(11), new Card(12)};
+        cardUsgae = new Dictionary<Card, int>();
+        ContructDictionary();
+    }
 private void ContructDictionary(){
+    //this code can be better
         int totalCards = getCol()* getRow();
+        int setsSize = this.isMatchThreeMode()==true ? 3 : 2;
+
         //ensure an even numbert of cards
-        totalCards -= totalCards%2;
+        totalCards -= totalCards%setsSize;
         //determine how many unique cards to use, this may be changed later for balancing
         int max = this.possibleCards.Length;
-        if(possibleCards.Length*2 > totalCards){
+        if(possibleCards.Length*setsSize > totalCards){
             Debug.Log("special max");
-            max = totalCards/2;
+            max = totalCards/setsSize;
         } 
         Debug.Log("got here1");
         //add the possible cards to the dictionary
         for(int i=0; i<max; i++){
-            cardUsgae.Add(possibleCards[i], 2);
+            cardUsgae.Add(possibleCards[i], setsSize);
         }
         Debug.Log("got here2");
-        //every card was assinged a pair of 2, assign the remaining
-        int x = totalCards - max*2; 
-        for(int i=0; x>0; i++){
+        //every card was assinged a pair of setsSize, assign the remaining
+        int remainder = totalCards - max*setsSize; 
+        for(int i=0; remainder>0; i++){
             if(i>=possibleCards.Length){
                 i=0;
             }
-            cardUsgae[possibleCards[i]] +=2;
-            x-=2;
+            cardUsgae[possibleCards[i]] +=setsSize;
+            remainder-=setsSize;
         }
         Debug.Log("got here3");
 }

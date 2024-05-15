@@ -591,7 +591,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 645076508}
-  serializedRow: 3
+  cardsFlipped: 0
+  firstCard: {fileID: 0}
+  secondCard: {fileID: 0}
+  thirdCard: {fileID: 0}
+  serializedRow: 7
   serializedCol: 5
 --- !u!4 &1513151600
 Transform:
