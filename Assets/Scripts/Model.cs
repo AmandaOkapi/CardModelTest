@@ -6,6 +6,8 @@ using UnityEngine;
 
 public abstract class Model{
     private bool matchThreeMode;
+    protected bool hideTopRows;
+
     protected GridObject[,] cardGrid;
     protected Card[] possibleCards;
 
@@ -16,12 +18,15 @@ public abstract class Model{
     public int getCol(){return col;}
 
     public bool isMatchThreeMode(){return matchThreeMode;}
+    public bool isHideTopRows(){return hideTopRows;}
+
     public Model(int row, int col){
         this.row=row;
         this.col=col;
         cardGrid= new GridObject[row,col];
         possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5), new Card(6), new Card(7), new Card(8), new Card(9), new Card(10), new Card(11), new Card(12)};
         matchThreeMode=false;
+        hideTopRows=true;
     }
 
     public Model(int row, int col, bool matchThreeMode) : this(row, col){
@@ -91,6 +96,7 @@ public class OriginalModel :Model {
 
     private void InitializeOriginalModel(){
         possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5)};
+        hideTopRows=true;
     }
     public override void RemoveGridObject(int row, int col){
         base.RemoveGridObject(row, col);
@@ -116,6 +122,7 @@ public class EliminationModel : Model{
         possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5), new Card(6), new Card(7), new Card(8), new Card(9), new Card(10), new Card(11), new Card(12)};
         cardUsgae = new Dictionary<Card, int>();
         ContructDictionary();
+        hideTopRows=false;
     }
 private void ContructDictionary(){
     //this code can be better
@@ -164,4 +171,13 @@ private void ContructDictionary(){
 
         return (Card)cardGrid[row,col];
     }
+}
+
+
+public class WallModel : Model{
+    public WallModel() : base(5,9){
+
+    }
+
+
 }

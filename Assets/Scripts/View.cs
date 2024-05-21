@@ -19,7 +19,7 @@ public class View : MonoBehaviour
     [SerializeField] private RectTransform  pane;
     [SerializeField] private RectTransform  refPane;    //a pane that stretches with the screen size acts as a "size goal" for our grid
     [SerializeField] private Transform buttonParent;
-
+    [SerializeField] private RectTransform topRowHider;
 
     private float localWidth, localHeight;
     private float refWidth, refHeight;
@@ -27,10 +27,23 @@ public class View : MonoBehaviour
     private UnityEngine.Vector2  scaleFactor;
     void Start()
     {
+        NullChecks();
         localWidth = pane.rect.width;
         localHeight = pane.rect.height;
-        refWidth=refPane.rect.width;
-        refHeight=refPane.rect.height;
+        refWidth=refPane.rect.width *refPane.localScale.x;
+        refHeight=refPane.rect.height *refPane.localScale.y;
+    }
+
+    private void NullChecks(){
+        if(pane==null){
+            pane = GameObject.Find("GridPane").GetComponent<RectTransform>();
+        }
+        if(refPane==null){
+            refPane = GameObject.Find("ScalingGridPaneReference").GetComponent<RectTransform>();
+        }
+        if(buttonParent ==null){
+            buttonParent= GameObject.Find("GridPane").transform;
+        }
     }
 
     public void InitializeView(Model model){
@@ -52,23 +65,32 @@ public class View : MonoBehaviour
                 }
             }
             
-            //calculate scale factor based on the the refPane (local*scalefactor = ref) and scale down the grid if needed
+            //calculate scale factor based on the the refPane (want local*scalefactor = ref) and scale down the grid if needed
             scaleFactor.x = refWidth/localWidth;
             scaleFactor.y = refHeight/localHeight;
             
-            float scaleFactorAverage = Mathf.Min(scaleFactor.x, scaleFactor.y, 1);
+            float scaleFactorAverage = Mathf.Min(scaleFactor.x, scaleFactor.y, 1); //gives a max size
             if(maintainAspectRatio){
                 pane.localScale = new UnityEngine.Vector3(scaleFactorAverage, scaleFactorAverage, 1f);
             }else{
                 pane.localScale = new UnityEngine.Vector3(scaleFactor.x, scaleFactor.y, 1f);
             }
+            //center the screen
+            float newPosX = -(pane.rect.width *pane.localScale.x)/2;
+            float newPosY = (model.isHideTopRows()) ? (pane.rect.height * pane.localScale.y +2*(cardSize.y * pane.localScale.y ))/2: (pane.rect.height *pane.localScale.y )/2;
+            pane.localPosition = new UnityEngine.Vector3(newPosX, newPosY);
 
-            //position code for the grid?
-            //Ensure top 2 rows are above?
-            //perhaps remove the two rows from the calcualtions? 
+            if(model.isHideTopRows()){
+                RectTransform trh =Instantiate(topRowHider, buttonParent);
+                UnityEngine.Vector2 newSize = trh.sizeDelta;
+                newSize.y = 2 * cardSize.y* pane.localScale.y;
+                trh.sizeDelta = newSize;            
+            }
 
         }
     }
+
+
     private void ClearView(){
         GameObject[] cards = GameObject.FindGameObjectsWithTag("Card");
 
@@ -126,11 +148,8 @@ public class View : MonoBehaviour
         gridViewItems[row,col]=null;
     }
 
-    public void RemoveCard(int row, int col, Model model) {
-        RemoveCard(row,col);
-        UpdateCollumn(col, model);
-    }
-    public void UpdateCollumn(int col, Model model){
+
+    public void UpdateColumn(int col, Model model){
         //this is shit
         //handles dropping translation and generating new card
         //must be called after removing a card object

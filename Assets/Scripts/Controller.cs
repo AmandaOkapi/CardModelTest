@@ -17,11 +17,13 @@ public class Controller : MonoBehaviour
 
     [SerializeField] private int serializedRow=4;
     [SerializeField] private int serializedCol=4;
+    [SerializeField] private bool isMatchThreeMode=false;
+
 
     // Start is called before the first frame update
     void Awake()
     {
-        model= new EliminationModel(serializedRow, serializedCol, true); 
+        model= new OriginalModel(serializedRow, serializedCol, isMatchThreeMode); 
         model.PopulateGrid();
     }
 
@@ -108,8 +110,8 @@ private void ResetFlippedCards(CardMono card){
             model.RemoveGridObject(firstCard.getCardBase().getRowPos(), firstCard.getCardBase().getColPos());
             model.RemoveGridObject(secondCard.getCardBase().getRowPos(), secondCard.getCardBase().getColPos());    
             
-            view.UpdateCollumn( firstCard.getCardBase().getColPos(),model);       
-            view.UpdateCollumn( secondCard.getCardBase().getColPos(), model);    
+            view.UpdateColumn( firstCard.getCardBase().getColPos(),model);       
+            view.UpdateColumn( secondCard.getCardBase().getColPos(), model);    
     }
 
         private void MatchFound(CardMono firstCard, CardMono secondCard, CardMono thirdCard){
@@ -123,8 +125,8 @@ private void ResetFlippedCards(CardMono card){
             model.RemoveGridObject(secondCard.getCardBase().getRowPos(), secondCard.getCardBase().getColPos());    
             model.RemoveGridObject(thirdCard.getCardBase().getRowPos(), thirdCard.getCardBase().getColPos());    
 
-            view.UpdateCollumn( firstCard.getCardBase().getColPos(),model);       
-            view.UpdateCollumn( secondCard.getCardBase().getColPos(), model);    
-            view.UpdateCollumn( thirdCard.getCardBase().getColPos(), model);
+            view.UpdateColumn( firstCard.getCardBase().getColPos(),model);       
+            view.UpdateColumn( secondCard.getCardBase().getColPos(), model);    
+            view.UpdateColumn( thirdCard.getCardBase().getColPos(), model);
     }
 }
