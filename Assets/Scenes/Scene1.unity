@@ -411,6 +411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardDataView: {fileID: 11400000, guid: ce802e015842fed4aa7f8a18d8386044, type: 2}
   prefab: {fileID: 7464371237458058364, guid: 380204eb4c2f69a45a36d5b83055109b, type: 3}
+  wallPrefab: {fileID: 7464371237458058364, guid: 2acfd96023d82ab498664738f710695a, type: 3}
   maintainAspectRatio: 1
   cardSize: {x: 100, y: 144}
   pane: {fileID: 750611854}
@@ -525,8 +526,8 @@ MonoBehaviour:
   secondCard: {fileID: 0}
   thirdCard: {fileID: 0}
   serializedRow: 8
-  serializedCol: 10
-  isMatchThreeMode: 1
+  serializedCol: 6
+  isMatchThreeMode: 0
 --- !u!4 &1513151600
 Transform:
   m_ObjectHideFlags: 0

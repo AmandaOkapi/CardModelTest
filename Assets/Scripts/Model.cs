@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Model{
@@ -38,7 +39,7 @@ public abstract class Model{
         TranslateDown(row, col);
     }
 
-    protected virtual Card CreateNewCard(int row, int col){
+    protected virtual GridObject CreateNewGridObject(int row, int col){
         cardGrid[row,col] = new Card(UnityEngine.Random.Range(0, possibleCards.Length), row, col);
         return (Card)cardGrid[row,col];
     }
@@ -49,12 +50,12 @@ public abstract class Model{
     public void PopulateGrid(){
         for(int i=cardGrid.GetLength(0)-1; i>=0; i--){
             for(int j=cardGrid.GetLength(1)-1; j>=0; j--){
-                cardGrid[i,j]=CreateNewCard(i,j);
+                cardGrid[i,j]=CreateNewGridObject(i,j);
             }
         }
     }    
     
-    protected void TranslateDown(int row, int col){
+    protected virtual void TranslateDown(int row, int col){
         //recursion go brrrrrrrrrr
         if(row==0 ){
             cardGrid[row,col]=null;
@@ -66,7 +67,7 @@ public abstract class Model{
             }
             cardGrid[row,col].setRowPos(row);
             if(row<this.getRow()){
-                ((Card)cardGrid[row,col]).IncreaseCellsToFall();
+                (cardGrid[row,col]).IncreaseCellsToFall();
             }
             TranslateDown(row-1, col);
         }
@@ -78,7 +79,7 @@ public abstract class Model{
         {
             for (int j = 0; j < cardGrid.GetLength(1); j++)
             {
-                myString+="myArray[" + i + "," + j + "] = " + ((Card)cardGrid[i, j]).getId();
+                myString+="myArray[" + i + "," + j + "] = " + (cardGrid[i, j]).name;
             }
             myString+="\n";
         } 
@@ -100,7 +101,7 @@ public class OriginalModel :Model {
     }
     public override void RemoveGridObject(int row, int col){
         base.RemoveGridObject(row, col);
-        Card newCard= CreateNewCard(0,col);
+        Card newCard= (Card)CreateNewGridObject(0,col);
         newCard.IncreaseCellsToFall();
     }
 
@@ -154,7 +155,7 @@ private void ContructDictionary(){
         }
         Debug.Log("got here3");
 }
-    protected override Card CreateNewCard(int row, int col){
+    protected override GridObject CreateNewGridObject(int row, int col){
         int randomIndex = UnityEngine.Random.Range(0, cardUsgae.Count);
         List<Card> keys = new List<Card>(cardUsgae.Keys);
         if(keys.Count ==0){
@@ -175,9 +176,119 @@ private void ContructDictionary(){
 
 
 public class WallModel : Model{
-    public WallModel() : base(5,9){
 
+    private bool[,] wallMatrix;
+    
+    public WallModel(int row, int col, bool matchThreeMode) : base(row,col, matchThreeMode){
+        wallMatrix = new bool[row,col];
+        for (int i = 0; i < row; i++)
+        {
+            for (int j = 0; j < col; j++)
+            {
+                // Generate a random number between 0 and 99 (inclusive)
+                float randomNumber = UnityEngine.Random.value;
+                // Set the cell to true with a 10% chance
+                if (randomNumber < 0.3f) {
+                    wallMatrix[i, j] = true; 
+                }else{
+                    wallMatrix[i, j] = false;
+                }
+            
+            }
+        }
     }
 
+    protected override GridObject CreateNewGridObject(int row, int col)
+    {
+        if(wallMatrix[row,col]){
+            wallMatrix[row, col]=false;
+            return new Wall(row, col);
+        }
+        return base.CreateNewGridObject(row, col);
+    }
+    public override void RemoveGridObject(int row, int col){
+        if(getCardAtIndex(row,col) is Card){
+            if(row> 0){
+                if(cardGrid[row-1, col] !=null && cardGrid[row-1, col] is Wall){
+                    RemoveGridObject(row-1, col);
+                }
+            }
 
+            if(col> 0){
+                if(cardGrid[row, col-1] !=null && cardGrid[row, col-1] is Wall){
+                    RemoveGridObject(row, col-1);
+                }
+            }
+            if(col<cardGrid.GetLength(1)-1){
+                if(cardGrid[row, col+1] !=null && cardGrid[row, col+1] is Wall){
+                    RemoveGridObject(row, col+1);
+                }
+            }            
+            if(row<cardGrid.GetLength(0)-1){
+                if(cardGrid[row+1, col] !=null && cardGrid[row+1, col] is Wall){
+                    cardGrid[row,col]=null;
+                    TranslateDown(row, col); 
+                    RemoveGridObject(row+1, col);
+                    return;
+                }
+            }
+        }
+        cardGrid[row,col]=null;
+        TranslateDown(row, col);        
+        PrintArray();
+    }
+
+    public List<int[]> CalculateWallsToDestroy(int row1, int col1, int row2, int col2){
+        //graph theory is needed LOL
+        List<int[]> returnList = new List<int[]>();
+
+        TempFunction(row1, col1, returnList);
+        TempFunction(row2, col2, returnList);
+
+        return returnList;
+    }
+
+    private void TempFunction(int row, int col, List<int[]> arr){
+        Debug.Log("checking");
+        if(row> 0){
+            if( cardGrid[row-1, col] != null && cardGrid[row-1, col] is Wall){
+                arr.Add( new int[] {row-1, col}); 
+            }
+        }
+        if(row<cardGrid.GetLength(0)-1){
+            if(cardGrid[row+1, col] != null && cardGrid[row+1, col] is Wall){
+                arr.Add( new int[] {row+1, col}); 
+            }
+        }
+        if(col> 0){
+            if(cardGrid[row, col-1] != null && cardGrid[row, col-1] is Wall){
+                arr.Add(new int[] {row, col-1}); 
+            }
+        }
+        if(col<cardGrid.GetLength(1)-1){
+            if(cardGrid[row, col+1] != null && cardGrid[row, col+1] is Wall){
+                arr.Add(new int[] {row, col+1}); 
+            }
+        }
+
+    } 
+    protected override void TranslateDown(int row, int col){
+        //recursion go brrrrrrrrrr
+        if(row==0 ){
+            cardGrid[row,col]=null;
+            Card newCard= (Card)CreateNewGridObject(0,col);
+            newCard.IncreaseCellsToFall();
+            return;
+        }else{
+            cardGrid[row,col]=cardGrid[row-1, col];
+            if(cardGrid[row,col]==null ){
+                return;
+            }
+            cardGrid[row,col].setRowPos(row);
+            if(row<this.getRow()){
+                cardGrid[row,col].IncreaseCellsToFall();
+            }
+            TranslateDown(row-1, col);
+        }
+    }
 }

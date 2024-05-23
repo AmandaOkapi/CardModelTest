@@ -11,6 +11,8 @@ public class View : MonoBehaviour
     // Start is called before the first frame update
     public CardData cardDataView;    
     [SerializeField] private Transform prefab;
+    [SerializeField] private Transform wallPrefab;
+
     [SerializeField] private Transform[,] gridViewItems;
 
     [Header ("Scaling")]    
@@ -131,19 +133,34 @@ public class View : MonoBehaviour
         }
         float xOffset = localWidth/(model.getCol());
         float yOffset = localHeight/(model.getRow());
-        gridViewItems[i,j] = Instantiate(prefab, buttonParent);
-        gridViewItems[i,j].localPosition = new UnityEngine.Vector3(xOffset*(j), -yOffset*(i+1),-5);
-        ((Card)model.getCardAtIndex(i,j)).ResetCellsToFall();
-        gridViewItems[i,j].GetComponent<CardMono>().setCardBase(((Card)model.getCardAtIndex(i,j)));
-        
-        Transform gameObject=gridViewItems[i,j];     
-        gameObject.GetComponent<Button>().onClick.AddListener(() =>{
+        switch(model.getCardAtIndex(i,j)) 
+        {
+        case Card card:
+            gridViewItems[i,j] = Instantiate(prefab, buttonParent);        
+            Transform gameObject=gridViewItems[i,j];     
+            gameObject.GetComponent<Button>().onClick.AddListener(() =>{
             gameObject.GetComponent<CardMono>().flipCard();
                 Debug.Log("Button " + i + ","+ j+ "clicked!");
             });
+            break;
+        case Wall wall:
+            gridViewItems[i,j] = Instantiate(wallPrefab, buttonParent);
+            break;
+        default:
+            gridViewItems[i,j] = Instantiate(prefab, buttonParent);
+            break;
+        }
+        gridViewItems[i,j].localPosition = new UnityEngine.Vector3(xOffset*(j), -yOffset*(i+1),-5);
+        model.getCardAtIndex(i,j).ResetCellsToFall();
+        gridViewItems[i,j].GetComponent<GridObjectMono>().setCardBase(model.getCardAtIndex(i,j));
+        
+
         return gridViewItems[i,j];
     }
     public void RemoveCard(int row, int col){
+        if(gridViewItems[row,col] == null){
+            return;
+        }
         Destroy(gridViewItems[row,col].gameObject); 
         gridViewItems[row,col]=null;
     }
@@ -157,7 +174,7 @@ public class View : MonoBehaviour
         //then their position is updated to reflect the models position of the card
         for(int i=gridViewItems.GetLength(0)-1; i>=0; i--){          
             if(gridViewItems[i,col]!=null){
-                int myCellsToFall=gridViewItems[i,col].GetComponent<CardMono>().getCardBase().GetCellsToFall();
+                int myCellsToFall=gridViewItems[i,col].GetComponent<GridObjectMono>().getCardBase().GetCellsToFall();
                 if(myCellsToFall>0){
                     //get target vector
                     UnityEngine.Vector3 targetPos= new UnityEngine.Vector3(
@@ -165,10 +182,10 @@ public class View : MonoBehaviour
                         gridViewItems[i,col].localPosition.y-(myCellsToFall*(localHeight/(model.getRow()))),                            
                         gridViewItems[i,col].localPosition.z
                         ); 
-                    Debug.Log(gridViewItems[i,col].GetComponent<CardMono>().getCardBase().GetCellsToFall() + "Sending "+i+","+col+" to "+targetPos);
+                    Debug.Log(gridViewItems[i,col].GetComponent<GridObjectMono>().getCardBase().GetCellsToFall() + "Sending "+i+","+col+" to "+targetPos);
                     //play the falling sequence
-                    gridViewItems[i,col].GetComponent<CardMono>().FallToPos(targetPos);                    
-                    gridViewItems[i,col].GetComponent<CardMono>().getCardBase().ResetCellsToFall();
+                    gridViewItems[i,col].GetComponent<GridObjectMono>().FallToPos(targetPos);                    
+                    gridViewItems[i,col].GetComponent<GridObjectMono>().getCardBase().ResetCellsToFall();
                     //reset local object grid
                     gridViewItems[i+myCellsToFall,col] = gridViewItems[i,col];
                     gridViewItems[i,col]=null;
