@@ -49,6 +49,8 @@ public abstract class GridObject
     public void ResetCellsToFall(){cellsToFall=0;}
     public int GetCellsToFall(){return cellsToFall;}
 
+    public void SetCellsToFall(int cellsToFall){this.cellsToFall = cellsToFall;}
+
     public String name;
 
     public GridObject(){

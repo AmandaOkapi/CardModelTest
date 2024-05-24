@@ -116,24 +116,24 @@ private void ReenableFlippedCards(){
             view.RemoveCard(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
 
             List<int[]> list =((WallModel)model).CalculateWallsToDestroy(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos(), secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
-            int i=0;
-            while(i< list.Count){
+            for(int i=0; i<list.Count; i++){
                 view.RemoveCard(list[i][0], list[i][1]);
                 print("DELTED");
-                i++;
             }
 
+            if(model is WallModel){
+                ((WallModel)model).RemoveWalls();
+            }
             //update the model and assign base card amounts to fall, note this changes the base cards row
             model.RemoveGridObject(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());
             model.RemoveGridObject(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());    
             
-            view.UpdateColumn( firstCard.gridObjectMono.getCardBase().getColPos(),model);       
-            view.UpdateColumn( secondCard.gridObjectMono.getCardBase().getColPos(), model);    
+            //view.UpdateColumn( firstCard.gridObjectMono.getCardBase().getColPos(),model);       
+            //view.UpdateColumn( secondCard.gridObjectMono.getCardBase().getColPos(), model);    
             
-            i=0;
-            while(i< list.Count){
-                view.UpdateColumn(list[i][1], model);
-                i++;
+
+            for(int i=0; i<model.getCol(); i++){
+                view.UpdateColumn(i, model);
             }
     }
 

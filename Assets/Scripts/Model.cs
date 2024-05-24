@@ -79,7 +79,7 @@ public abstract class Model{
         {
             for (int j = 0; j < cardGrid.GetLength(1); j++)
             {
-                myString+="myArray[" + i + "," + j + "] = " + (cardGrid[i, j]).name;
+                myString+="   " + (cardGrid[i, j]).name;
             }
             myString+="\n";
         } 
@@ -206,40 +206,52 @@ public class WallModel : Model{
         }
         return base.CreateNewGridObject(row, col);
     }
-    public override void RemoveGridObject(int row, int col){
-        if(getCardAtIndex(row,col) is Card){
-            if(row> 0){
-                if(cardGrid[row-1, col] !=null && cardGrid[row-1, col] is Wall){
-                    RemoveGridObject(row-1, col);
-                }
-            }
+    public override void RemoveGridObject(int row, int col){        
+        PrintArray();
 
-            if(col> 0){
-                if(cardGrid[row, col-1] !=null && cardGrid[row, col-1] is Wall){
-                    RemoveGridObject(row, col-1);
-                }
-            }
-            if(col<cardGrid.GetLength(1)-1){
-                if(cardGrid[row, col+1] !=null && cardGrid[row, col+1] is Wall){
-                    RemoveGridObject(row, col+1);
-                }
-            }            
-            if(row<cardGrid.GetLength(0)-1){
-                if(cardGrid[row+1, col] !=null && cardGrid[row+1, col] is Wall){
-                    cardGrid[row,col]=null;
-                    TranslateDown(row, col); 
-                    RemoveGridObject(row+1, col);
-                    return;
-                }
-            }
-        }
+        // if(getCardAtIndex(row,col) is Card){
+        //     if(row> 0){
+        //         if(cardGrid[row-1, col] !=null && cardGrid[row-1, col] is Wall){
+        //             RemoveGridObject(row-1, col);
+        //         }
+        //     }
+
+        //     if(col> 0){
+        //         if(cardGrid[row, col-1] !=null && cardGrid[row, col-1] is Wall){
+        //             RemoveGridObject(row, col-1);
+        //         }
+        //     }
+        //     if(col<cardGrid.GetLength(1)-1){
+        //         if(cardGrid[row, col+1] !=null && cardGrid[row, col+1] is Wall){
+        //             RemoveGridObject(row, col+1);
+        //         }
+        //     }            
+        //     if(row<cardGrid.GetLength(0)-1){
+        //         if(cardGrid[row+1, col] !=null && cardGrid[row+1, col] is Wall){
+        //             cardGrid[row,col]=null;
+        //             TranslateDown(row, col); 
+        //             RemoveGridObject(row+1, col);
+        //             return;
+        //         }
+        //     }
+        // }
         cardGrid[row,col]=null;
         TranslateDown(row, col);        
-        PrintArray();
     }
 
+    public void RemoveWalls(){
+        foreach(Wall w in wallstoDestroy){
+            RemoveGridObject(w.getRowPos(), w.getColPos());
+        }
+    }
+
+    HashSet<Wall> wallstoDestroy= new HashSet<Wall>();
+
     public List<int[]> CalculateWallsToDestroy(int row1, int col1, int row2, int col2){
-        //graph theory is needed LOL
+        //graph theory wouldve helped lmao
+
+        wallstoDestroy= new HashSet<Wall>();
+
         List<int[]> returnList = new List<int[]>();
 
         TempFunction(row1, col1, returnList);
@@ -253,21 +265,26 @@ public class WallModel : Model{
         if(row> 0){
             if( cardGrid[row-1, col] != null && cardGrid[row-1, col] is Wall){
                 arr.Add( new int[] {row-1, col}); 
+                wallstoDestroy.Add((Wall)getCardAtIndex(row-1, col));
             }
         }
         if(row<cardGrid.GetLength(0)-1){
             if(cardGrid[row+1, col] != null && cardGrid[row+1, col] is Wall){
                 arr.Add( new int[] {row+1, col}); 
+                wallstoDestroy.Add((Wall)getCardAtIndex(row+1, col));
             }
         }
         if(col> 0){
             if(cardGrid[row, col-1] != null && cardGrid[row, col-1] is Wall){
                 arr.Add(new int[] {row, col-1}); 
+                wallstoDestroy.Add((Wall)getCardAtIndex(row, col-1));
             }
         }
         if(col<cardGrid.GetLength(1)-1){
             if(cardGrid[row, col+1] != null && cardGrid[row, col+1] is Wall){
                 arr.Add(new int[] {row, col+1}); 
+                wallstoDestroy.Add((Wall)getCardAtIndex(row, col+1));
+
             }
         }
 
