@@ -7,9 +7,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class CardMono : MonoBehaviour
+public class CardMono : MonoBehaviour, IGridObjectAppearance
 {
     [SerializeField] private bool debugMode;
+    [SerializeField] private Animator animator;
 
     public CardData cardData;
 
@@ -39,6 +40,7 @@ public class CardMono : MonoBehaviour
 
     public void flipCard(){
         controllerLink.flipCard(this);
+        animator.SetTrigger("Flip");
     }
 
     public void SetEnabled(bool x){
@@ -58,5 +60,8 @@ public class CardMono : MonoBehaviour
 
     }
 
+    public void Die(){
+        Destroy(gameObject);
+    }
 
 }

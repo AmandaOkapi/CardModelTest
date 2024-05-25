@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3536321756876714430}
   - component: {fileID: -993494719495995780}
   - component: {fileID: 8168180301789909216}
+  - component: {fileID: 3207144023962528981}
   m_Layer: 5
   m_Name: Wall
   m_TagString: Card
@@ -91,6 +92,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardData: {fileID: 11400000, guid: ce802e015842fed4aa7f8a18d8386044, type: 2}
+  animator: {fileID: 3207144023962528981}
+  destructionTime: 0.5
 --- !u!114 &8168180301789909216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,3 +107,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fallSpeed: 0
+--- !u!95 &3207144023962528981
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4346448141216687527}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 35f2979ef1ee46f4fabd93a58f22e199, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

@@ -26,7 +26,7 @@ public class View : MonoBehaviour
     private float localWidth, localHeight;
     private float refWidth, refHeight;
 
-    private UnityEngine.Vector2  scaleFactor;
+    private UnityEngine.Vector2 scaleFactor;
     void Start()
     {
         NullChecks();
@@ -99,7 +99,7 @@ public class View : MonoBehaviour
         // Loop through each GameObject and destroy it
         foreach (GameObject card in cards)
         {
-            Destroy(card);
+            MyDestroy(card);
         }
     }
     public void RemakeView(Model model){
@@ -122,7 +122,7 @@ public class View : MonoBehaviour
     
     public void ResetCard(int row, int col, Model model){
         if(gridViewItems[row, col]!=null){
-            Destroy(gridViewItems[row,col].gameObject); 
+            MyDestroy(gridViewItems[row,col].gameObject); 
         }
         gridViewItems[row, col] = InstantiateCard(row, col, model);
     }
@@ -139,6 +139,7 @@ public class View : MonoBehaviour
             gridViewItems[i,j] = Instantiate(prefab, buttonParent);        
             Transform gameObject=gridViewItems[i,j];     
             gameObject.GetComponent<Button>().onClick.AddListener(() =>{
+            //card flipped function
             gameObject.GetComponent<CardMono>().flipCard();
                 Debug.Log("Button " + i + ","+ j+ "clicked!");
             });
@@ -161,7 +162,7 @@ public class View : MonoBehaviour
         if(gridViewItems[row,col] == null){
             return;
         }
-        Destroy(gridViewItems[row,col].gameObject); 
+        MyDestroy(gridViewItems[row,col].gameObject); 
         gridViewItems[row,col]=null;
     }
 
@@ -202,4 +203,8 @@ public class View : MonoBehaviour
 
     }
 
+
+    private void MyDestroy(GameObject go){
+        go.GetComponent<GridObjectMono>().Die();
+    }
 }

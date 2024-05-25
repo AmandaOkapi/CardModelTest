@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GridObjectMono : MonoBehaviour
 {
+    private IGridObjectAppearance gridObjectAppearance;
+
     [SerializeField] private float fallSpeed;
 
     [SerializeField] private GridObject gridObjectBase;
@@ -14,6 +16,7 @@ public class GridObjectMono : MonoBehaviour
             //fallSpeed = GridObject.fallSpeed;
             fallSpeed=500;
         }
+        gridObjectAppearance = GetComponent<IGridObjectAppearance>();
     }
 
     public void FallToPos(UnityEngine.Vector3 target){
@@ -46,5 +49,9 @@ public class GridObjectMono : MonoBehaviour
         }
         transform.localPosition = target;
 
+    }
+
+    public void Die(){
+        gridObjectAppearance.Die();
     }
 }
