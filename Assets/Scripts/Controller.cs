@@ -8,6 +8,8 @@ public class Controller : MonoBehaviour
     //animation states? enum of staes??
     public Model model;
     public View view;
+
+    [SerializeField] private float timeToFlip;
     public int cardsFlipped;
     public CardMono firstCard;
     public CardMono secondCard;
@@ -31,32 +33,38 @@ public class Controller : MonoBehaviour
         view.InitializeView(model);
         
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
+    private IEnumerator changeCardImage(CardMono card){
+        float time = 0f;
+        card.AnimFlipCard();
+        card.PlayFlip();
+        while (time < timeToFlip)
+        {
+            time += Time.deltaTime;
+            yield return null;
+        }
+        card.imageComponent.sprite= card.cardData.cardImages[((Card)card.gridObjectMono.getCardBase()).getId()];        
+    }
     //called by cardmono on click
     public void flipCard(CardMono card){        
         //this is screaming to be refactored
         if(cardsFlipped==0){
             card.SetEnabled(false);
-            firstCard=card;        
-            card.imageComponent.sprite= card.cardData.cardImages[((Card)card.gridObjectMono.getCardBase()).getId()];        
+            firstCard=card;
+            StartCoroutine(changeCardImage(card));        
             cardsFlipped++;
         }else if(cardsFlipped==1){
             card.SetEnabled(false);
             secondCard=card;
-            card.imageComponent.sprite= card.cardData.cardImages[((Card)card.gridObjectMono.getCardBase()).getId()];
+            StartCoroutine(changeCardImage(card));        
             cardsFlipped++;
-            ReenableFlippedCards(); //this doesnt work 
         }else{
             if(model.isMatchThreeMode()){
                 if(cardsFlipped==3){
                     cardsFlipped=0;
                     if(!checkThreeFlippedCards()){
                         thirdCard.SetEnabled(true);
+                        thirdCard.PlayUnflipCard();
                         thirdCard.imageComponent.sprite= secondCard.cardData.cardBack;
                         ResetFlippedCards(card);
                     }                        
@@ -64,11 +72,11 @@ public class Controller : MonoBehaviour
                 } 
                 cardsFlipped++;               
                 card.SetEnabled(false);
-                card.imageComponent.sprite= card.cardData.cardImages[((Card)card.gridObjectMono.getCardBase()).getId()];
+                StartCoroutine(changeCardImage(card));        
                 thirdCard=card;
-                ReenableFlippedCards();
                 return;
             }
+
             //classic two matches
             cardsFlipped=0;
             if(!checkFlippedCards()){            
@@ -79,20 +87,17 @@ public class Controller : MonoBehaviour
 
 private void ResetFlippedCards(CardMono card){
     firstCard.SetEnabled(true);
+    firstCard.PlayUnflipCard();
     secondCard.SetEnabled(true);            
+    secondCard.PlayUnflipCard();
     firstCard.imageComponent.sprite= firstCard.cardData.cardBack;
     secondCard.imageComponent.sprite= secondCard.cardData.cardBack;
     firstCard=card;
-    firstCard.SetEnabled(false);
-    card.imageComponent.sprite= card.cardData.cardImages[((Card)card.gridObjectMono.getCardBase()).getId()];
+    card.SetEnabled(false);
+    StartCoroutine(changeCardImage(card));        
     cardsFlipped++;
 }
 
-private void ReenableFlippedCards(){
-    firstCard.SetEnabled(true);
-    secondCard.SetEnabled(true);
-    if(thirdCard!=null){thirdCard.SetEnabled(true);}
-}
     public bool checkFlippedCards(){
         if((((Card)firstCard.gridObjectMono.getCardBase()).getId()== ((Card)secondCard.gridObjectMono.getCardBase()).getId()) && firstCard!=secondCard){
             MatchFound(firstCard, secondCard);
@@ -114,26 +119,27 @@ private void ReenableFlippedCards(){
             //must first be removed as the row, col positions are known, and updating the model will change them
             view.RemoveCard(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());            
             view.RemoveCard(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
-
-            List<int[]> list =((WallModel)model).CalculateWallsToDestroy(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos(), secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
-            for(int i=0; i<list.Count; i++){
-                view.RemoveCard(list[i][0], list[i][1]);
-                print("DELTED");
-            }
-
             if(model is WallModel){
+                List<int[]> list =((WallModel)model).CalculateWallsToDestroy(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos(), secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
+                for(int i=0; i<list.Count; i++){
+                    view.RemoveCard(list[i][0], list[i][1]);
+                    print("DELTED");
+                }
+                
                 ((WallModel)model).RemoveWalls();
             }
+
             //update the model and assign base card amounts to fall, note this changes the base cards row
             model.RemoveGridObject(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());
-            model.RemoveGridObject(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());    
-            
-            //view.UpdateColumn( firstCard.gridObjectMono.getCardBase().getColPos(),model);       
-            //view.UpdateColumn( secondCard.gridObjectMono.getCardBase().getColPos(), model);    
-            
+            model.RemoveGridObject(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());            
 
-            for(int i=0; i<model.getCol(); i++){
-                view.UpdateColumn(i, model);
+            if(model is WallModel){
+                for(int i=0; i<model.getCol(); i++){
+                    view.UpdateColumn(i, model);
+                }
+            }else{
+                view.UpdateColumn( firstCard.gridObjectMono.getCardBase().getColPos(),model);       
+                view.UpdateColumn( secondCard.gridObjectMono.getCardBase().getColPos(), model);    
             }
     }
 
@@ -142,14 +148,30 @@ private void ReenableFlippedCards(){
             view.RemoveCard(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());            
             view.RemoveCard(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
             view.RemoveCard(thirdCard.gridObjectMono.getCardBase().getRowPos(), thirdCard.gridObjectMono.getCardBase().getColPos());
-
+            
+            if(model is WallModel){
+                List<int[]> list =((WallModel)model).CalculateWallsToDestroy(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos(), 
+                                                                                secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos(),
+                                                                                thirdCard.gridObjectMono.getCardBase().getRowPos(), thirdCard.gridObjectMono.getCardBase().getColPos());
+                for(int i=0; i<list.Count; i++){
+                    view.RemoveCard(list[i][0], list[i][1]);
+                    print("DELTED");
+                }
+                
+                ((WallModel)model).RemoveWalls();
+            }
             //update the model and assign base card amounts to fall, note this changes the base cards row
             model.RemoveGridObject(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());
             model.RemoveGridObject(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());    
             model.RemoveGridObject(thirdCard.gridObjectMono.getCardBase().getRowPos(), thirdCard.gridObjectMono.getCardBase().getColPos());    
-
-            view.UpdateColumn( firstCard.gridObjectMono.getCardBase().getColPos(),model);       
-            view.UpdateColumn( secondCard.gridObjectMono.getCardBase().getColPos(), model);    
-            view.UpdateColumn( thirdCard.gridObjectMono.getCardBase().getColPos(), model);
+            if(model is WallModel){
+                for(int i=0; i<model.getCol(); i++){
+                    view.UpdateColumn(i, model);
+                }
+            }else{
+                view.UpdateColumn( firstCard.gridObjectMono.getCardBase().getColPos(),model);       
+                view.UpdateColumn( secondCard.gridObjectMono.getCardBase().getColPos(), model);    
+                view.UpdateColumn( thirdCard.gridObjectMono.getCardBase().getColPos(), model);
+            }
     }
 }

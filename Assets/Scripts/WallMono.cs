@@ -6,6 +6,7 @@ public class WallMono : MonoBehaviour, IGridObjectAppearance
 {
     public CardData cardData;
     [SerializeField] private Animator animator;
+    [SerializeField] private AudioSource audioSource;
 
     [SerializeField] private float destructionTime;
     void Start()
@@ -21,6 +22,7 @@ public class WallMono : MonoBehaviour, IGridObjectAppearance
 
     public void Die(){
         animator.SetTrigger("Die");
+        audioSource.Play();
         StartCoroutine(DestroyAfterAnimation());
     }
 

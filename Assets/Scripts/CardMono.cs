@@ -10,7 +10,6 @@ using UnityEngine.UI;
 public class CardMono : MonoBehaviour, IGridObjectAppearance
 {
     [SerializeField] private bool debugMode;
-    [SerializeField] private Animator animator;
 
     public CardData cardData;
 
@@ -22,6 +21,9 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
     [Header ("View Related")]
     [SerializeField] public UnityEngine.UI.Image imageComponent;
 
+    [Header ("Card Appearance Related")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private AudioSource audioSource;
 
 
     private Controller controllerLink;
@@ -38,11 +40,21 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
 
     }
 
-    public void flipCard(){
+    public void flipCard(){        
         controllerLink.flipCard(this);
-        animator.SetTrigger("Flip");
     }
 
+    //Animations
+    public void AnimFlipCard(){animator.SetTrigger("Flip");}
+
+    public void AnimReflipCard(){animator.SetTrigger("Reflip");}
+    public void PlayUnflipCard(){animator.SetTrigger("Unflip");}
+
+    //Sounds /Audio
+
+    public void PlayFlip(){
+        audioSource.Play();
+    } 
     public void SetEnabled(bool x){
         buttonComponent.enabled=x;
     }

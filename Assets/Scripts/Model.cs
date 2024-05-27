@@ -259,7 +259,12 @@ public class WallModel : Model{
 
         return returnList;
     }
+    public List<int[]> CalculateWallsToDestroy(int row1, int col1, int row2, int col2, int row3, int col3){
+        List<int[]> returnList = CalculateWallsToDestroy(row1, col1, row2, col2);
+        TempFunction(row3, col3, returnList);
 
+        return returnList;
+    }
     private void TempFunction(int row, int col, List<int[]> arr){
         Debug.Log("checking");
         if(row> 0){
