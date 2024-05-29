@@ -14,7 +14,9 @@ public class View : MonoBehaviour
     [SerializeField] private Transform wallPrefab;
 
     [SerializeField] private Transform[,] gridViewItems;
-
+    [Header ("Reveal Settings")]    
+    [SerializeField] private float delay;
+    [SerializeField] private float revealTime;
     [Header ("Scaling")]    
     [SerializeField] private bool maintainAspectRatio =true;
     [SerializeField] private UnityEngine.Vector2 cardSize = new UnityEngine.Vector2(100f,144f);
@@ -78,16 +80,16 @@ public class View : MonoBehaviour
                 pane.localScale = new UnityEngine.Vector3(scaleFactor.x, scaleFactor.y, 1f);
             }
             //center the screen
-            float newPosX = -(pane.rect.width *pane.localScale.x)/2;
-            float newPosY = (model.isHideTopRows()) ? (pane.rect.height * pane.localScale.y +2*(cardSize.y * pane.localScale.y ))/2: (pane.rect.height *pane.localScale.y )/2;
-            pane.localPosition = new UnityEngine.Vector3(newPosX, newPosY);
+            // float newPosX = -(pane.rect.width *pane.localScale.x)/2;
+            // float newPosY = (model.isHideTopRows()) ? (pane.rect.height * pane.localScale.y +2*(cardSize.y * pane.localScale.y ))/2: (pane.rect.height *pane.localScale.y )/2;
+            // pane.localPosition = new UnityEngine.Vector3(newPosX, newPosY);
 
-            if(model.isHideTopRows()){
-                RectTransform trh =Instantiate(topRowHider, buttonParent);
-                UnityEngine.Vector2 newSize = trh.sizeDelta;
-                newSize.y = 2 * cardSize.y* pane.localScale.y;
-                trh.sizeDelta = newSize;            
-            }
+            // if(model.isHideTopRows()){
+            //     RectTransform trh =Instantiate(topRowHider, buttonParent);
+            //     UnityEngine.Vector2 newSize = trh.sizeDelta;
+            //     newSize.y = 2 * cardSize.y* pane.localScale.y;
+            //     trh.sizeDelta = newSize;            
+            // }
 
         }
     }
@@ -206,5 +208,54 @@ public class View : MonoBehaviour
 
     private void MyDestroy(GameObject go){
         go.GetComponent<GridObjectMono>().Die();
+    }
+
+
+
+    public void RevealRow(int row){
+        StartCoroutine(RevealRowCards(row));
+    }
+    public void RevealCol(int col){
+        StartCoroutine(RevealColCards(col));
+    }
+
+    IEnumerator RevealRowCards(int row){
+        EnableButtons(false);
+        for(int i=0; i<gridViewItems.GetLength(1); i++){
+            if(gridViewItems[row, i] !=null){
+                if(gridViewItems[row, i].gameObject.tag =="Card"){
+                    StartCoroutine(RevealCard(gridViewItems[row, i].GetComponent<CardMono>()));
+                    yield return new WaitForSeconds(delay);
+                }
+            }
+        }
+        yield return new WaitForSeconds(delay+ revealTime);
+        EnableButtons(true);
+    }
+    IEnumerator RevealColCards(int col){
+        EnableButtons(false);
+        for(int i=0; i<gridViewItems.GetLength(0); i++){
+            if(gridViewItems[i, col] !=null){
+                if(gridViewItems[i, col].gameObject.tag =="Card"){
+                    StartCoroutine(RevealCard(gridViewItems[i, col].GetComponent<CardMono>()));
+                    yield return new WaitForSeconds(delay);
+                }
+            }
+        }
+        yield return new WaitForSeconds(delay+ revealTime);
+        EnableButtons(true);
+    }
+    IEnumerator RevealCard(CardMono card){
+        card.ShowflipCard();
+        yield return new WaitForSeconds(revealTime);
+        card.ShowUnflipCard();
+    }
+
+
+    private void EnableButtons(bool x){
+        GameObject[] buttons = GameObject.FindGameObjectsWithTag("Card");
+        foreach(GameObject b in buttons){
+            b.GetComponent<CardMono>().SetEnabled(x);
+        }
     }
 }

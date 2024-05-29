@@ -25,7 +25,7 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        model= new WallModel(serializedRow, serializedCol, isMatchThreeMode); 
+        model= new WallModelElimination(serializedRow, serializedCol, isMatchThreeMode); 
         model.PopulateGrid();
     }
 
@@ -34,29 +34,19 @@ public class Controller : MonoBehaviour
         
     }
 
-    private IEnumerator changeCardImage(CardMono card){
-        float time = 0f;
-        card.AnimFlipCard();
-        card.PlayFlip();
-        while (time < timeToFlip)
-        {
-            time += Time.deltaTime;
-            yield return null;
-        }
-        card.imageComponent.sprite= card.cardData.cardImages[((Card)card.gridObjectMono.getCardBase()).getId()];        
-    }
+
     //called by cardmono on click
     public void flipCard(CardMono card){        
         //this is screaming to be refactored
         if(cardsFlipped==0){
             card.SetEnabled(false);
             firstCard=card;
-            StartCoroutine(changeCardImage(card));        
+            card.ShowflipCard();
             cardsFlipped++;
         }else if(cardsFlipped==1){
             card.SetEnabled(false);
             secondCard=card;
-            StartCoroutine(changeCardImage(card));        
+            card.ShowflipCard();
             cardsFlipped++;
         }else{
             if(model.isMatchThreeMode()){
@@ -64,15 +54,14 @@ public class Controller : MonoBehaviour
                     cardsFlipped=0;
                     if(!checkThreeFlippedCards()){
                         thirdCard.SetEnabled(true);
-                        thirdCard.PlayUnflipCard();
-                        thirdCard.imageComponent.sprite= secondCard.cardData.cardBack;
+                        thirdCard.ShowUnflipCard();
                         ResetFlippedCards(card);
                     }                        
                     return;
                 } 
                 cardsFlipped++;               
                 card.SetEnabled(false);
-                StartCoroutine(changeCardImage(card));        
+                card.ShowflipCard();
                 thirdCard=card;
                 return;
             }
@@ -87,14 +76,12 @@ public class Controller : MonoBehaviour
 
 private void ResetFlippedCards(CardMono card){
     firstCard.SetEnabled(true);
-    firstCard.PlayUnflipCard();
+    firstCard.ShowUnflipCard();
     secondCard.SetEnabled(true);            
-    secondCard.PlayUnflipCard();
-    firstCard.imageComponent.sprite= firstCard.cardData.cardBack;
-    secondCard.imageComponent.sprite= secondCard.cardData.cardBack;
+    secondCard.ShowUnflipCard();
     firstCard=card;
     card.SetEnabled(false);
-    StartCoroutine(changeCardImage(card));        
+    card.ShowflipCard();
     cardsFlipped++;
 }
 
@@ -173,5 +160,15 @@ private void ResetFlippedCards(CardMono card){
                 view.UpdateColumn( secondCard.gridObjectMono.getCardBase().getColPos(), model);    
                 view.UpdateColumn( thirdCard.gridObjectMono.getCardBase().getColPos(), model);
             }
+    }
+
+
+    public void RevealRow(){
+        int row = Random.Range(0, model.getRow());
+        view.RevealRow(row);
+    }
+    public void RevealCol(){
+        int col = Random.Range(0, model.getCol());
+        view.RevealCol(col);
     }
 }

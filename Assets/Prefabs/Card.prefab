@@ -142,6 +142,7 @@ MonoBehaviour:
   buttonComponent: {fileID: 8395115644420133995}
   gridObjectMono: {fileID: 7217890551567380530}
   imageComponent: {fileID: 4445433392774608215}
+  timeToFlip: 0.1
   animator: {fileID: 6443738146599447166}
   audioSource: {fileID: -2706551505992145941}
 --- !u!114 &7217890551567380530

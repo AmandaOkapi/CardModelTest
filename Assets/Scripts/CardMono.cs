@@ -22,6 +22,7 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
     [SerializeField] public UnityEngine.UI.Image imageComponent;
 
     [Header ("Card Appearance Related")]
+    [SerializeField] private float timeToFlip;
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource audioSource;
 
@@ -44,11 +45,34 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
         controllerLink.flipCard(this);
     }
 
+    public void ShowflipCard(){    
+        StartCoroutine(changeCardImage(cardData.cardImages[((Card)gridObjectMono.getCardBase()).getId()]));    
+        AnimFlipCard();
+        PlayFlip();
+    }
+
+    public void ShowUnflipCard(){    
+        StartCoroutine(changeCardImage(cardData.cardBack));    
+        AnimUnflipCard();
+        PlayFlip();
+    }
+    private IEnumerator changeCardImage(Sprite image){
+        float time = 0f;
+
+        while (time < timeToFlip)
+        {
+            time += Time.deltaTime;
+            yield return null;
+        }
+        imageComponent.sprite= image;        
+    }
+
+    
     //Animations
     public void AnimFlipCard(){animator.SetTrigger("Flip");}
 
     public void AnimReflipCard(){animator.SetTrigger("Reflip");}
-    public void PlayUnflipCard(){animator.SetTrigger("Unflip");}
+    public void AnimUnflipCard(){animator.SetTrigger("Unflip");}
 
     //Sounds /Audio
 
