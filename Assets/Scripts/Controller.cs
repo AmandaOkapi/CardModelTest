@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Array2DEditor;
 public class Controller : MonoBehaviour
 {
     //public CardData cardDataController;
@@ -16,7 +16,7 @@ public class Controller : MonoBehaviour
 
     public CardMono thirdCard;
 
-    [SerializeField] private List<List<ListWrapper>> customWall;
+    [SerializeField] private Array2DEditor.Array2DBool serializedCustomWall = null;    
     [SerializeField] private int serializedRow=4;
     [SerializeField] private int serializedCol=4;
     [SerializeField] private bool isMatchThreeMode;
@@ -25,7 +25,22 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        model= new WallModelDestroyWalls(serializedRow, serializedCol, isMatchThreeMode); 
+        if(serializedCustomWall !=null){
+            bool[,] customWall = new bool[serializedCustomWall.GridSize.y, serializedCustomWall.GridSize.x];
+            Debug.Log("rows " + customWall.GetLength(0) + " cols " + customWall.GetLength(1));
+            //convert to bool[,]
+            for (var y = 0; y < serializedCustomWall.GridSize.y; y++)
+            {
+                for (var x = 0; x < serializedCustomWall.GridSize.x; x++)
+                {
+                    Debug.Log(y+ " " +x + " " +serializedCustomWall.GetCell(x,y));
+                    customWall[y,x] = serializedCustomWall.GetCell(x,y);
+                }
+            }
+            model= new WallModelDestroyWalls(customWall.GetLength(0), customWall.GetLength(1), isMatchThreeMode, customWall ); 
+        }else{
+            model= new WallModelDestroyWalls(serializedRow, serializedCol, isMatchThreeMode); 
+        }
         model.PopulateGrid();
     }
 

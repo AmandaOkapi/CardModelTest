@@ -438,10 +438,12 @@ public class WallModelDestroyWalls : WallModel{
     }
 
     public WallModelDestroyWalls(int row, int col, bool[,] customWallMatrix) : base(row,col, customWallMatrix){
+        
         FixWallMatrix();
     }
 
     public WallModelDestroyWalls(int row, int col, bool matchThreeMode, bool[,] customWallMatrix) : base(row,col, matchThreeMode, customWallMatrix){
+        
         FixWallMatrix();
     }
     
