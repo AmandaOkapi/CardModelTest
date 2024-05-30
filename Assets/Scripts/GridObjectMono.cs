@@ -20,7 +20,8 @@ public class GridObjectMono : MonoBehaviour
     }
 
     public void FallToPos(UnityEngine.Vector3 target){
-        StartCoroutine(TranslateConstantSpeed(target, fallSpeed));
+        View.cardsFalling++;
+        StartCoroutine(TranslateConstantSpeed(target, 500));
     }
 
 
@@ -39,6 +40,7 @@ public class GridObjectMono : MonoBehaviour
 
         // Ensure exact positioning at the end
         transform.localPosition = target;
+        View.cardsFalling--;
     }           
 
 
@@ -48,7 +50,7 @@ public class GridObjectMono : MonoBehaviour
             yield return null;
         }
         transform.localPosition = target;
-
+        View.cardsFalling--;
     }
 
     public void Die(){

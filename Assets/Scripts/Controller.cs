@@ -25,7 +25,7 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        model= new WallModelElimination(serializedRow, serializedCol, isMatchThreeMode); 
+        model= new WallModelDestroyWalls(serializedRow, serializedCol, isMatchThreeMode); 
         model.PopulateGrid();
     }
 
@@ -37,6 +37,9 @@ public class Controller : MonoBehaviour
 
     //called by cardmono on click
     public void flipCard(CardMono card){        
+        if(View.cardsFalling>0){
+            return;
+        }
         //this is screaming to be refactored
         if(cardsFlipped==0){
             card.SetEnabled(false);
@@ -164,11 +167,11 @@ private void ResetFlippedCards(CardMono card){
 
 
     public void RevealRow(){
-        int row = Random.Range(0, model.getRow());
+        int row = Random.Range(model.getRowsToHide(), model.getRow());
         view.RevealRow(row);
     }
     public void RevealCol(){
         int col = Random.Range(0, model.getCol());
-        view.RevealCol(col);
+        view.RevealCol(col, model);
     }
 }

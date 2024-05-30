@@ -20,6 +20,8 @@ public abstract class Model{
     public int getRowsToHide(){return rowsToHide;}
 
     public bool isMatchThreeMode(){return matchThreeMode;}
+    public bool isHideTopRows(){return hideTopRows;}
+
     public Model(int row, int col, int rowsToHide, bool hideTopRows){
         this.row=row;
         this.col=col;
@@ -184,7 +186,7 @@ public abstract class WallModel : Model{
     protected bool[,] wallMatrix;
 
     static bool hideTopRows=true;
-    static int rowsToHide =2;
+    static int rowsToHide =4;
 
     static float wallRarity =0.3f;
 
