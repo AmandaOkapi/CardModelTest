@@ -16,7 +16,7 @@ public class Controller : MonoBehaviour
 
     public CardMono thirdCard;
 
-
+    [SerializeField] private List<List<ListWrapper>> customWall;
     [SerializeField] private int serializedRow=4;
     [SerializeField] private int serializedCol=4;
     [SerializeField] private bool isMatchThreeMode;
