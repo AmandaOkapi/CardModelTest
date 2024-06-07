@@ -16,11 +16,15 @@ public class Controller : MonoBehaviour
 
     public CardMono thirdCard=null;
 
+    [Header ("Level Editor? Ain't no way")]
     [SerializeField] private Array2DEditor.Array2DBool serializedCustomWall = null;    
+    [SerializeField] private List<int> customPossibleCards;
     [SerializeField] private int serializedRow=4;
     [SerializeField] private int serializedCol=4;
     [SerializeField] private bool isMatchThreeMode;
-
+    
+    [Header ("Score")]
+    [SerializeField] private float gameTime;
     private Score score;
 
 
@@ -28,6 +32,8 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        levelNumber = PlayerPrefs.GetInt("levelNumber");
+
         if(levelNumber<0){
             if(serializedCustomWall !=null && serializedCustomWall.GridSize.y>1 ){
                 bool[,] customWall = new bool[serializedCustomWall.GridSize.y, serializedCustomWall.GridSize.x];
@@ -46,8 +52,12 @@ public class Controller : MonoBehaviour
                 model= new WallModelDestroyWalls(serializedRow, serializedCol, isMatchThreeMode); 
             }
 
-            score = new Score(30, new DestroyAllXWalls(((WallModel)model).GetWallCount()),
-                new GetXMatches(6));
+            if(customPossibleCards.Count>0){
+                model.SetPossibleCards(customPossibleCards);
+            }
+
+            score = new Score(gameTime, new DestroyAllXWalls(((WallModel)model).GetWallCount()),
+                new GetXMatches(20));
 
         }
 
@@ -55,7 +65,6 @@ public class Controller : MonoBehaviour
 
     void Start(){
         Debug.Log("Game sStart");
-        levelNumber = PlayerPrefs.GetInt("levelNumber");
         if(levelNumber>=0){
             model = LevelDataBase.levels[levelNumber].model;
             score = LevelDataBase.levels[levelNumber].score;

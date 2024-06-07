@@ -34,6 +34,16 @@ public abstract class Model{
         matchThreeMode=false;
     }
 
+    public void SetPossibleCards(List<int> customPossibleCards){
+        Card[] newArr = new Card[customPossibleCards.Count];
+        for(int i=0; i<customPossibleCards.Count; i++){
+            newArr[i]=new Card(customPossibleCards[i]);
+        }
+        SetPossibleCards(newArr);
+    }
+    public virtual void SetPossibleCards(Card[] possibleCards){
+        this.possibleCards=possibleCards;
+    }
     public Model(int row, int col, int rowsToHide, bool hideTopRows, bool matchThreeMode) : this(row, col, rowsToHide, hideTopRows){
         this.matchThreeMode=matchThreeMode;
     }
@@ -135,7 +145,11 @@ public class EliminationModel : Model{
         }
 
     private void InitializeEliminationModel(){
-        possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5), new Card(6), new Card(7), new Card(8), new Card(9), new Card(10), new Card(11), new Card(12)};
+        cardUsgae = new Dictionary<Card, int>();
+        ContructDictionary();
+    }
+
+    public override void SetPossibleCards(Card[] possibleCards){
         cardUsgae = new Dictionary<Card, int>();
         ContructDictionary();
     }
@@ -193,7 +207,7 @@ public abstract class WallModel : Model{
     protected bool[,] wallMatrix;
     static bool hideTopRows=true;
     static int rowsToHide =4;
-    static float wallRarity =0.3f;
+    static float wallRarity =0.25f;
     protected int wallCount;
 
     public int GetWallCount(){
@@ -362,7 +376,9 @@ public class WallModelElimination : WallModel{
 
     }
 
-
+    public override void SetPossibleCards(Card[] possibleCards){
+        this.possibleCards=possibleCards;
+    }
     private void ContructDictionary(){
         //this code can be better
             int totalCards = getCol()* getRow();

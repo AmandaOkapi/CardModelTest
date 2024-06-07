@@ -18,33 +18,50 @@ public class LevelDataBase : MonoBehaviour
     {
         List<Level> returnList = new List<Level>();
         
-        WallModelDestroyWalls model = new WallModelDestroyWalls(7, 6, false);
-        int wallCount = model.GetWallCount();
+        WallModelDestroyWalls model0 = new WallModelDestroyWalls(15, 6, false);
+        model0.SetPossibleCards(new List<int>{0,1,2,3,4,5,6,7,8,9,10});
+        int wallCount = model0.GetWallCount();
         DestroyAllXWalls destroyAllXWalls = new DestroyAllXWalls(wallCount);
-        GetXMatches getXMatches = new GetXMatches(25);
+        GetXMatches getXMatches = new GetXMatches(20);
         returnList.Add(new Level{
-            model = model,
-            score = new Score(135, destroyAllXWalls, getXMatches)
+            model = model0,
+            score = new Score(0, destroyAllXWalls, getXMatches)
         });
         
-        model = new WallModelDestroyWalls(10, 4, false);
-        wallCount = model.GetWallCount();
-        destroyAllXWalls = new DestroyAllXWalls(wallCount);
-        getXMatches = new GetXMatches(25);
+        OriginalModel model1 = new OriginalModel(12, 6, false);
+        model1.SetPossibleCards(new List<int>{0,1,2,3,4,5});
         returnList.Add(new Level{
-            model = model,
-            score = new Score(60, destroyAllXWalls, getXMatches)
+            model = model1,
+            score = new Score(90, new GetXMatches(30), new GetXCombo(2))
         });
         
-        model = new WallModelDestroyWalls(14, 4, false);
-        wallCount = model.GetWallCount();
-        destroyAllXWalls = new DestroyAllXWalls(wallCount);
-        getXMatches = new GetXMatches(25);
+        EliminationModel model2= new EliminationModel(9,7,false);
+        model2.SetPossibleCards(new List<int>{0,1,2,3,4,5,6,7,8,9,10});
         returnList.Add(new Level{
-            model = model,
-            score = new Score(150, destroyAllXWalls, getXMatches)
+            model = model2,
+            score = new Score(0, new GetXMatches(31))
         });
 
+        WallModelOriginal model3= new WallModelOriginal(16,6,false);
+        model3.SetPossibleCards(new List<int>{0,1,2,3,4,5,6,7,8});
+        returnList.Add(new Level{
+            model = model3,
+            score = new Score(153, new DestroyXWalls(13), new GetXMatches(20))
+        });
+
+        WallModelElimination model4= new WallModelElimination(13,6,false);
+        model4.SetPossibleCards(new List<int>{0,1,2,3,4,5,6,7,8});
+        returnList.Add(new Level{
+            model = model4,
+            score = new Score(0,new GetXMatches(25))
+        });
+
+        EliminationModel model5= new EliminationModel(13,5,true);
+        model5.SetPossibleCards(new List<int>{0,1,2,3,4,5,6,7,8,9,10,11});
+        returnList.Add(new Level{
+            model = model5,
+            score = new Score(200,new GetXMatches(21))
+        });
         return returnList;
     }
     // Start is called before the first frame update

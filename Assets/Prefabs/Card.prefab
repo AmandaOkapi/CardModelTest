@@ -137,7 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0266854dd7a25346bf7971198bb62b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
+  debugMode: 0
   cardData: {fileID: 11400000, guid: ce802e015842fed4aa7f8a18d8386044, type: 2}
   buttonComponent: {fileID: 8395115644420133995}
   gridObjectMono: {fileID: 7217890551567380530}

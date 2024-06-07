@@ -22,7 +22,7 @@ public class ScoreManager : MonoBehaviour
 
     [Header ("Canvas elements")]
     [SerializeField] private GameObject timerOver;
-
+    [SerializeField] private GameObject earlyWin;
 
     // Start is called before the first frame update
     private int matchesFound, wallsDestoyed, combo;
@@ -54,10 +54,20 @@ public class ScoreManager : MonoBehaviour
         EventManager.InitializeView+=SetupScoreView;
     }
 
+    void OnDisable()
+    {
+        EventManager.MatchFoundEvent -= MatchFound;
+        EventManager.WallDestroyed -= WallsDestoryed;
+        EventManager.MatchFailed -= MatchFailed;   
+        EventManager.GameTimer -= GameTimer;   
+        EventManager.InitializeView -= SetupScoreView;
+    }
     private void GameTimer(float time){
         gameTime=time;
         Debug.Log("Time Start!!");
-        StartCoroutine(timer());   
+        if(time>0){
+            StartCoroutine(timer());   
+        }
     }
 
     private IEnumerator timer(){
@@ -70,34 +80,7 @@ public class ScoreManager : MonoBehaviour
         }
         Debug.Log("Times Up!!");
         timerOver.SetActive(true);
-        bool win =true;
-        foreach(ScoreRequirements sr in myScoreRequirments){
-            switch(sr){
-                case(GetXPoints getXPoints):
-                    win= getXPoints.CheckConditional(points);
-                    break;
-                case(DestroyXWalls destroyXWalls):
-                    win= destroyXWalls.CheckConditional(wallsDestoyed);
-                    break;
-                case(DestroyAllXWalls destroyAllXWalls):
-                    win= destroyAllXWalls.CheckConditional(wallsDestoyed);
-                    break;
-                case(GetXMatches getXMatches):
-                    win= getXMatches.CheckConditional(points);
-                    break;
-                case(GetXCombo getXCombo):
-                    win= getXCombo.CheckConditional(combo);
-                    break;
-            }            
-            if(win==false){
-                timerOver.GetComponentInChildren<TextMeshProUGUI>().text = "Time's up \n You Lose!";
-                break;
-            }
-        }
-
-        if(win){
-            timerOver.GetComponentInChildren<TextMeshProUGUI>().text = "Time's up \n You Win!";
-        }
+        Invoke("GameOver", 1f);
     } 
     private void MatchFound(int id1){
         matchesFound++;
@@ -113,7 +96,9 @@ public class ScoreManager : MonoBehaviour
             }
         }
         UpdateScoreView();
-
+        if(CheckWinConditions()){
+            earlyWin.SetActive(true);
+        }
         //accurracy shit
         if (cardsSeen.ContainsKey(id1)){
             if(cardsSeen[id1]>1){
@@ -228,6 +213,44 @@ public class ScoreManager : MonoBehaviour
         if(scoreText!=null){
             scoreText.text = points.ToString();
         }
+    }
+
+    private void GameOver(){
+        timerOver.SetActive(true);
+
+        if(CheckWinConditions()){
+            timerOver.GetComponentInChildren<TextMeshProUGUI>().text = "Time's Up! \n You Win!";    
+            }else{
+            timerOver.GetComponentInChildren<TextMeshProUGUI>().text = "Time's Up! \n You Lose!";
+        }
+    }
+
+    private bool CheckWinConditions(){
+        bool win =true;
+        foreach(ScoreRequirements sr in myScoreRequirments){
+            switch(sr){
+                case(GetXPoints getXPoints):
+                    win= getXPoints.CheckConditional(points);
+                    break;
+                case(DestroyXWalls destroyXWalls):
+                    win= destroyXWalls.CheckConditional(wallsDestoyed);
+                    break;
+                case(DestroyAllXWalls destroyAllXWalls):
+                    win= destroyAllXWalls.CheckConditional(wallsDestoyed);
+                    break;
+                case(GetXMatches getXMatches):
+                    win= getXMatches.CheckConditional(matchesFound);
+                    break;
+                case(GetXCombo getXCombo):
+                    win= getXCombo.CheckConditional(combo);
+                    break;
+            }       
+            if(win== false){
+                return win;
+            }     
+        }
+        //should be true here
+        return win;
     }
 }
 
