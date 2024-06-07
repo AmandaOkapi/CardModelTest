@@ -5,19 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class SceneManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    public void ChangeScene(string sceneName){
+        PlayerPrefs.SetInt("levelNumber", -1);
+        PlayerPrefs.Save();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    //MARK: TEST
-    public void ChangeScene(string sceneName){
-        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+    public void GenerateScene(int levelNumber){
+        PlayerPrefs.SetInt("levelNumber", levelNumber);
+        PlayerPrefs.Save();
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GenerativeScene");
     }
 }

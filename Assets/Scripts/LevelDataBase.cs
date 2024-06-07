@@ -26,15 +26,24 @@ public class LevelDataBase : MonoBehaviour
             model = model,
             score = new Score(135, destroyAllXWalls, getXMatches)
         });
+        
         model = new WallModelDestroyWalls(10, 4, false);
         wallCount = model.GetWallCount();
         destroyAllXWalls = new DestroyAllXWalls(wallCount);
         getXMatches = new GetXMatches(25);
         returnList.Add(new Level{
             model = model,
-            score = new Score(135, destroyAllXWalls, getXMatches)
+            score = new Score(60, destroyAllXWalls, getXMatches)
         });
-
+        
+        model = new WallModelDestroyWalls(14, 4, false);
+        wallCount = model.GetWallCount();
+        destroyAllXWalls = new DestroyAllXWalls(wallCount);
+        getXMatches = new GetXMatches(25);
+        returnList.Add(new Level{
+            model = model,
+            score = new Score(150, destroyAllXWalls, getXMatches)
+        });
 
         return returnList;
     }

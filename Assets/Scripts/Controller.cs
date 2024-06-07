@@ -55,7 +55,7 @@ public class Controller : MonoBehaviour
 
     void Start(){
         Debug.Log("Game sStart");
-
+        levelNumber = PlayerPrefs.GetInt("levelNumber");
         if(levelNumber>=0){
             model = LevelDataBase.levels[levelNumber].model;
             score = LevelDataBase.levels[levelNumber].score;
