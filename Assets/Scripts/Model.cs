@@ -22,6 +22,8 @@ public abstract class Model{
     public bool isMatchThreeMode(){return matchThreeMode;}
     public bool isHideTopRows(){return hideTopRows;}
 
+    public Score score;
+    
     public Model(int row, int col, int rowsToHide, bool hideTopRows){
         this.row=row;
         this.col=col;
@@ -42,6 +44,7 @@ public abstract class Model{
     }
 
     protected virtual GridObject CreateNewGridObject(int row, int col){
+        //Debug.Log("Hello from WallModel CreateNewGridObject");
         cardGrid[row,col] = new Card(UnityEngine.Random.Range(0, possibleCards.Length), row, col);
         return cardGrid[row,col];
     }
@@ -82,7 +85,12 @@ public abstract class Model{
         {
             for (int j = 0; j < cardGrid.GetLength(1); j++)
             {
-                myString+="myArray[" + i + "," + j + "] = " + ((Card)cardGrid[i, j]).getId();
+                if(cardGrid[i, j]==null){
+                    myString+="myArray[" + i + "," + j + "] = " + "null";
+                }else{
+                    myString+="myArray[" + i + "," + j + "] = " + cardGrid[i, j].name;
+                }
+
             }
             myString+="\n";
         } 
@@ -182,23 +190,30 @@ private void ContructDictionary(){
 
 
 public abstract class WallModel : Model{
-
     protected bool[,] wallMatrix;
-
     static bool hideTopRows=true;
     static int rowsToHide =4;
-
     static float wallRarity =0.3f;
-
     protected int wallCount;
 
-
+    public int GetWallCount(){
+        return wallCount;
+    }
+    private void FixWallMatrix(){
+        for(int i=0; i< getRowsToHide(); i++){
+            for(int j=0; j< col; j++){
+                wallMatrix[i,j]=false;
+            }
+        }
+    }
     public WallModel(int row, int col, bool[,] customWallMatrix) : base(row,col, rowsToHide, hideTopRows){
         wallMatrix= customWallMatrix;
+        FixWallMatrix();
         CountWalls(); // set wallCount
     }
     public WallModel(int row, int col, bool matchThreeMode, bool[,] customWallMatrix) : base(row,col, rowsToHide,hideTopRows, matchThreeMode){
         wallMatrix =customWallMatrix;
+        FixWallMatrix();
         CountWalls(); // set wallCount
     }
     public WallModel(int row, int col) : base(row,col, rowsToHide,hideTopRows){
@@ -226,8 +241,6 @@ public abstract class WallModel : Model{
         }
     }
 
-
-
     private void CreateWallMatrix(){
         Debug.Log("ROWS TO HIDE " + getRowsToHide());
         wallMatrix = new bool[row,col];
@@ -253,14 +266,14 @@ public abstract class WallModel : Model{
 
     protected override GridObject CreateNewGridObject(int row, int col)
     {
-
         if(wallMatrix[row,col] ){
             wallMatrix[row, col]=false;
             return new Wall(row, col);
         }else{
             float randomNumber = UnityEngine.Random.value;
                 if (randomNumber < wallRarity) {
-                    return new Wall(row, col);
+                    cardGrid[row,col]= new Wall(row, col);
+                    return cardGrid[row,col];
                 }
         }
         return base.CreateNewGridObject(row, col);
@@ -295,27 +308,30 @@ public abstract class WallModel : Model{
         Debug.Log("checking");
         if(row> 0){
             if( cardGrid[row-1, col] != null && cardGrid[row-1, col] is Wall){
-                arr.Add( new int[] {row-1, col}); 
-                wallstoDestroy.Add((Wall)getCardAtIndex(row-1, col));
+                if (wallstoDestroy.Add((Wall)getCardAtIndex(row-1, col))){
+                    arr.Add( new int[] {row-1, col});   
+                }
             }
         }
         if(row<cardGrid.GetLength(0)-1){
             if(cardGrid[row+1, col] != null && cardGrid[row+1, col] is Wall){
-                arr.Add( new int[] {row+1, col}); 
-                wallstoDestroy.Add((Wall)getCardAtIndex(row+1, col));
+                if(wallstoDestroy.Add((Wall)getCardAtIndex(row+1, col))){
+                    arr.Add( new int[] {row+1, col}); 
+                }
             }
         }
         if(col> 0){
             if(cardGrid[row, col-1] != null && cardGrid[row, col-1] is Wall){
-                arr.Add(new int[] {row, col-1}); 
-                wallstoDestroy.Add((Wall)getCardAtIndex(row, col-1));
+                if(wallstoDestroy.Add((Wall)getCardAtIndex(row, col-1))){
+                    arr.Add(new int[] {row, col-1}); 
+                }
             }
         }
         if(col<cardGrid.GetLength(1)-1){
             if(cardGrid[row, col+1] != null && cardGrid[row, col+1] is Wall){
-                arr.Add(new int[] {row, col+1}); 
-                wallstoDestroy.Add((Wall)getCardAtIndex(row, col+1));
-
+                if(wallstoDestroy.Add((Wall)getCardAtIndex(row, col+1))){
+                    arr.Add(new int[] {row, col+1}); 
+                }
             }
         }
 
@@ -380,6 +396,7 @@ public class WallModelElimination : WallModel{
 
     protected override GridObject CreateNewGridObject(int row, int col)
     {
+        
         if(wallMatrix[row,col] ){
             wallMatrix[row, col]=false;
             return new Wall(row, col);
@@ -419,10 +436,11 @@ public class WallModelOriginal : WallModel{
     public WallModelOriginal(int row, int col, bool matchThreeMode, bool[,] customWallMatrix) : base(row,col, matchThreeMode, customWallMatrix){
     }
     public override void RemoveGridObject(int row, int col){
-        base.RemoveGridObject(row, col);
+        cardGrid[row,col]=null;
+        TranslateDown(row, col);        
         GridObject newGridObject= CreateNewGridObject(0,col);
         newGridObject.IncreaseCellsToFall();
-    
+        PrintArray();
     }
 
 }
@@ -430,30 +448,18 @@ public class WallModelOriginal : WallModel{
 
 public class WallModelDestroyWalls : WallModel{
     public WallModelDestroyWalls(int row, int col) : base(row,col){
-        FixWallMatrix();
     }
 
     public WallModelDestroyWalls(int row, int col, bool matchThreeMode) : base(row,col, matchThreeMode){
-        FixWallMatrix();
     }
 
     public WallModelDestroyWalls(int row, int col, bool[,] customWallMatrix) : base(row,col, customWallMatrix){
-        
-        FixWallMatrix();
     }
 
     public WallModelDestroyWalls(int row, int col, bool matchThreeMode, bool[,] customWallMatrix) : base(row,col, matchThreeMode, customWallMatrix){
-        
-        FixWallMatrix();
     }
     
-    private void FixWallMatrix(){
-        for(int i=0; i< getRowsToHide(); i++){
-            for(int j=0; j< col; j++){
-                wallMatrix[i,j]=false;
-            }
-        }
-    }
+
     protected override GridObject CreateNewGridObject(int row, int col){
         if(wallMatrix[row,col]){
             wallMatrix[row, col]=false;

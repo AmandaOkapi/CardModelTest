@@ -11,48 +11,77 @@ public class Controller : MonoBehaviour
 
     [SerializeField] private float timeToFlip;
     public int cardsFlipped;
-    public CardMono firstCard;
-    public CardMono secondCard;
+    public CardMono firstCard=null;
+    public CardMono secondCard=null;
 
-    public CardMono thirdCard;
+    public CardMono thirdCard=null;
 
     [SerializeField] private Array2DEditor.Array2DBool serializedCustomWall = null;    
     [SerializeField] private int serializedRow=4;
     [SerializeField] private int serializedCol=4;
     [SerializeField] private bool isMatchThreeMode;
 
+    private Score score;
 
+
+    public int levelNumber;
     // Start is called before the first frame update
     void Awake()
     {
-        if(serializedCustomWall !=null){
-            bool[,] customWall = new bool[serializedCustomWall.GridSize.y, serializedCustomWall.GridSize.x];
-            Debug.Log("rows " + customWall.GetLength(0) + " cols " + customWall.GetLength(1));
-            //convert to bool[,]
-            for (var y = 0; y < serializedCustomWall.GridSize.y; y++)
-            {
-                for (var x = 0; x < serializedCustomWall.GridSize.x; x++)
+        if(levelNumber<0){
+            if(serializedCustomWall !=null && serializedCustomWall.GridSize.y>1 ){
+                bool[,] customWall = new bool[serializedCustomWall.GridSize.y, serializedCustomWall.GridSize.x];
+                Debug.Log("rows " + customWall.GetLength(0) + " cols " + customWall.GetLength(1));
+                //convert to bool[,]
+                
+                for (var y = 0; y < serializedCustomWall.GridSize.y; y++)
                 {
-                    Debug.Log(y+ " " +x + " " +serializedCustomWall.GetCell(x,y));
-                    customWall[y,x] = serializedCustomWall.GetCell(x,y);
+                    for (var x = 0; x < serializedCustomWall.GridSize.x; x++)
+                    {
+                        customWall[y,x] = serializedCustomWall.GetCell(x,y);
+                    }
                 }
+                model= new WallModelDestroyWalls(customWall.GetLength(0), customWall.GetLength(1), isMatchThreeMode, customWall ); 
+            }else{
+                model= new WallModelDestroyWalls(serializedRow, serializedCol, isMatchThreeMode); 
             }
-            model= new WallModelDestroyWalls(customWall.GetLength(0), customWall.GetLength(1), isMatchThreeMode, customWall ); 
-        }else{
-            model= new WallModelDestroyWalls(serializedRow, serializedCol, isMatchThreeMode); 
+
+            score = new Score(30, new DestroyAllXWalls(((WallModel)model).GetWallCount()),
+                new GetXMatches(6));
+
         }
-        model.PopulateGrid();
+
     }
 
     void Start(){
-        view.InitializeView(model);
-        
-    }
+        Debug.Log("Game sStart");
 
+        if(levelNumber>=0){
+            model = LevelDataBase.levels[levelNumber].model;
+            score = LevelDataBase.levels[levelNumber].score;
+        }
+        model.PopulateGrid();        
+
+        view.InitializeView(model);
+
+        if(score!=null){
+            model.score=score;        
+            if (score.GetGameTime()>0){
+                Debug.Log("Event Start!!");
+            }       
+            Invoke("RunAfterStart", 0f);
+        }     
+
+
+    }
+    private void RunAfterStart(){
+        EventManager.StartGameTimer(model.score.GetGameTime());
+        EventManager.StartInitializeView(model.score);
+    }
 
     //called by cardmono on click
     public void flipCard(CardMono card){        
-        if(View.cardsFalling>0){
+        if(View.cardsFalling>0 || view.IsPowerUpPlaying()){
             return;
         }
         //this is screaming to be refactored
@@ -106,16 +135,23 @@ private void ResetFlippedCards(CardMono card){
     public bool checkFlippedCards(){
         if((((Card)firstCard.gridObjectMono.getCardBase()).getId()== ((Card)secondCard.gridObjectMono.getCardBase()).getId()) && firstCard!=secondCard){
             MatchFound(firstCard, secondCard);
+            Debug.Log("hello from check flipped cards");
+            EventManager.StartMatchFoundEvent(firstCard.gridObjectMono.getCardBase().getId());
             return true;
         }
+        EventManager.StartMatchFailed(firstCard.gridObjectMono.getCardBase().getId(), secondCard.gridObjectMono.getCardBase().getId());
         return false;
     }
 
     public bool checkThreeFlippedCards(){
         if((((Card)firstCard.gridObjectMono.getCardBase()).getId()== ((Card)secondCard.gridObjectMono.getCardBase()).getId()) && (((Card)firstCard.gridObjectMono.getCardBase()).getId()== ((Card)thirdCard.gridObjectMono.getCardBase()).getId()) && firstCard!=secondCard && firstCard!=thirdCard && secondCard!=thirdCard){
             MatchFound(firstCard, secondCard, thirdCard);
+            Debug.Log("hello from check 3 flipped cards");
+            EventManager.StartMatchFoundEvent(firstCard.gridObjectMono.getCardBase().getId() );
+            Debug.Log("returned");
             return true;
         }
+        EventManager.StartMatchThreeFaileddEvent(firstCard.gridObjectMono.getCardBase().getId(), secondCard.gridObjectMono.getCardBase().getId(), thirdCard.gridObjectMono.getCardBase().getId());
         return false;
     }
 
@@ -128,7 +164,8 @@ private void ResetFlippedCards(CardMono card){
                 List<int[]> list =((WallModel)model).CalculateWallsToDestroy(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos(), secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
                 for(int i=0; i<list.Count; i++){
                     view.RemoveCard(list[i][0], list[i][1]);
-                    print("DELTED");
+                    EventManager.StartWallDestroyedEvent();
+                    print("DELETED "+ list[i][0] + " "+ list[i][1]);
                 }
                 
                 ((WallModel)model).RemoveWalls();
@@ -182,10 +219,39 @@ private void ResetFlippedCards(CardMono card){
 
 
     public void RevealRow(){
+        if (firstCard != null && firstCard.gameObject != null)
+        {
+            firstCard.ShowUnflipCard();
+        }
+
+        if (secondCard != null && secondCard.gameObject != null)
+        {
+            secondCard.ShowUnflipCard();
+        }
+
+        if (thirdCard != null && thirdCard.gameObject != null)
+        {
+            thirdCard.ShowUnflipCard();
+        }
+        
         int row = Random.Range(model.getRowsToHide(), model.getRow());
         view.RevealRow(row);
     }
     public void RevealCol(){
+        if (firstCard != null && firstCard.gameObject != null)
+        {
+            firstCard.ShowUnflipCard();
+        }
+
+        if (secondCard != null && secondCard.gameObject != null)
+        {
+            secondCard.ShowUnflipCard();
+        }
+
+        if (thirdCard != null && thirdCard.gameObject != null)
+        {
+            thirdCard.ShowUnflipCard();
+        }
         int col = Random.Range(0, model.getCol());
         view.RevealCol(col, model);
     }

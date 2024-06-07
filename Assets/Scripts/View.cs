@@ -23,11 +23,15 @@ public class View : MonoBehaviour
     [SerializeField] private RectTransform  refPane;    //a pane that stretches with the screen size acts as a "size goal" for our grid
     [SerializeField] private Transform buttonParent;
     [SerializeField] private RectTransform topRowHider;
+    [SerializeField] private DynamicFontSizeAdjuster dynamicFontSizeAdjuster;
 
     public static float cardsFalling;
     private float localWidth, localHeight;
     private float refWidth, refHeight;
 
+    private bool powerUpPlaying =false;
+
+    public bool IsPowerUpPlaying(){return powerUpPlaying;}
     private UnityEngine.Vector2 scaleFactor;
     void Start()
     {
@@ -51,49 +55,47 @@ public class View : MonoBehaviour
     }
 
     public void InitializeView(Model model){
-        if(model!=null){
-            int myRow = model.getRow();
-            int myCol = model.getCol();
-            gridViewItems = new Transform[myRow, myCol]; 
+        int myRow = model.getRow();
+        int myCol = model.getCol();
+        gridViewItems = new Transform[myRow, myCol]; 
             
-            //calculate and set the perfect dimensions for the grid based on the card pixel size
-            pane.sizeDelta = new UnityEngine.Vector2(myCol*cardSize.x, myRow*cardSize.y);
-            localWidth = pane.rect.width;
-            localHeight = pane.rect.height;
+        //calculate and set the perfect dimensions for the grid based on the card pixel size
+        pane.sizeDelta = new UnityEngine.Vector2(myCol*cardSize.x, myRow*cardSize.y);
+        localWidth = pane.rect.width;
+        localHeight = pane.rect.height;
 
-            //populate the grid perfect sized grid with cards
-            for(int i=0; i<myRow; i++){
-                for(int j=0; j<myCol; j++){
-                    gridViewItems[i,j] = InstantiateCard(i,j,model);
-                    //Debug.Log("Button " + i + ","+ j+ " is at" + gameObject.position);
+        //populate the grid perfect sized grid with cards
+        for(int i=0; i<myRow; i++){
+            for(int j=0; j<myCol; j++){
+                gridViewItems[i,j] = InstantiateCard(i,j,model);
+                //Debug.Log("Button " + i + ","+ j+ " is at" + gameObject.position);                
                 }
-            }
-            
-            //calculate scale factor based on the the refPane (want local*scalefactor = ref) and scale down the grid if needed
-            scaleFactor.x = refWidth/localWidth;
-            scaleFactor.y = refHeight/localHeight;
-            
-            float scaleFactorAverage = Mathf.Min(scaleFactor.x, scaleFactor.y, 1); //gives a max size
-            if(maintainAspectRatio){
-                pane.localScale = new UnityEngine.Vector3(scaleFactorAverage, scaleFactorAverage, 1f);
-            }else{
-                pane.localScale = new UnityEngine.Vector3(scaleFactor.x, scaleFactor.y, 1f);
-            }
-            //center the screen
-            float newPosX = -(pane.rect.width *pane.localScale.x)/2;
-            float newPosY = (model.isHideTopRows()) ? (pane.rect.height * pane.localScale.y +(model.getRowsToHide())*(cardSize.y * pane.localScale.y ))/2: (pane.rect.height *pane.localScale.y )/2;
-            pane.localPosition = new UnityEngine.Vector3(newPosX, newPosY);
-
-            if(model.isHideTopRows()){
-                //UnityEngine.Vector2 newSize = new UnityEngine.Vector2(topRowHider.sizeDelta.x , ((model.getRowsToHide()) * cardSize.y* pane.localScale.y));
-                topRowHider.offsetMin = new UnityEngine.Vector2(topRowHider.offsetMin.x, model.getRow()*cardSize.y -((model.getRowsToHide()) * cardSize.y));
-
-                //topRowHider.sizeDelta = newSize;
-            }else{
-                topRowHider.sizeDelta = new UnityEngine.Vector2(0,0);
-            }
-
         }
+            
+        //calculate scale factor based on the the refPane (want local*scalefactor = ref) and scale down the grid if needed
+        scaleFactor.x = refWidth/localWidth;
+        scaleFactor.y = refHeight/localHeight;
+            
+        float scaleFactorAverage = Mathf.Min(scaleFactor.x, scaleFactor.y, 1); //gives a max size
+        if(maintainAspectRatio){
+            pane.localScale = new UnityEngine.Vector3(scaleFactorAverage, scaleFactorAverage, 1f);
+        }else{
+            pane.localScale = new UnityEngine.Vector3(scaleFactor.x, scaleFactor.y, 1f);
+        }
+        //center the screen
+        float newPosX = -(pane.rect.width *pane.localScale.x)/2;
+        float newPosY = (model.isHideTopRows()) ? (pane.rect.height * pane.localScale.y +(model.getRowsToHide())*(cardSize.y * pane.localScale.y ))/2: (pane.rect.height *pane.localScale.y )/2;
+        pane.localPosition = new UnityEngine.Vector3(newPosX, newPosY);
+
+        if(model.getRowsToHide()>0){
+            //UnityEngine.Vector2 newSize = new UnityEngine.Vector2(topRowHider.sizeDelta.x , ((model.getRowsToHide()) * cardSize.y* pane.localScale.y));
+            topRowHider.offsetMin = new UnityEngine.Vector2(topRowHider.offsetMin.x, model.getRow()*cardSize.y -((model.getRowsToHide()) * cardSize.y));
+
+            //topRowHider.sizeDelta = newSize;
+        }else{
+            topRowHider.gameObject.SetActive(false);;
+        } 
+        dynamicFontSizeAdjuster?.AdjustFontSize(pane.sizeDelta.x);
     }
 
 
@@ -187,7 +189,7 @@ public class View : MonoBehaviour
                         gridViewItems[i,col].localPosition.y-(myCellsToFall*(localHeight/(model.getRow()))),                            
                         gridViewItems[i,col].localPosition.z
                         ); 
-                    Debug.Log(gridViewItems[i,col].GetComponent<GridObjectMono>().getCardBase().GetCellsToFall() + "Sending "+i+","+col+" to "+targetPos);
+                    //Debug.Log(gridViewItems[i,col].GetComponent<GridObjectMono>().getCardBase().GetCellsToFall() + "Sending "+i+","+col+" to "+targetPos);
                     //play the falling sequence
                     gridViewItems[i,col].GetComponent<GridObjectMono>().FallToPos(targetPos);
                     gridViewItems[i,col].GetComponent<GridObjectMono>().getCardBase().ResetCellsToFall();
@@ -201,7 +203,7 @@ public class View : MonoBehaviour
         int index=0;
         for(int row=gridViewItems.GetLength(0)-1; row>=0; row--){          
             if(gridViewItems[row,col]==null){
-                Debug.Log("Resetting " + row + "," + col);
+                //Debug.Log("Resetting " + row + "," + col);
                 InstantiateCard(row, col, model);
                 if(gridViewItems[row, col] !=null){
                     //stop the pop-in
@@ -239,7 +241,7 @@ public class View : MonoBehaviour
 
     IEnumerator RevealRowCards(int row){
         float myRevealTime = AdjustRevealTime(CardsInRow(row));
-        EnableButtons(false);
+        powerUpPlaying =true;
         for(int i=0; i<gridViewItems.GetLength(1); i++){
             if(gridViewItems[row, i] !=null){
                 if(gridViewItems[row, i].gameObject.tag =="Card"){
@@ -248,12 +250,12 @@ public class View : MonoBehaviour
                 }
             }
         }
-        yield return new WaitForSeconds((delay)/2+ revealTime);
-        EnableButtons(true);
+        yield return new WaitForSeconds((delay)+ revealTime);
+        powerUpPlaying = false;
     }
     IEnumerator RevealColCards(int col, Model model){
         float myRevealTime =AdjustRevealTime(gridViewItems.GetLength(0) - model.getRowsToHide());
-        EnableButtons(false);
+        powerUpPlaying=true;
         for(int i=model.getRowsToHide(); i<gridViewItems.GetLength(0); i++){
             if(gridViewItems[i, col] !=null){
                 if(gridViewItems[i, col].gameObject.tag =="Card"){
@@ -262,8 +264,8 @@ public class View : MonoBehaviour
                 }
             }
         }
-        yield return new WaitForSeconds((delay)/2+ revealTime);
-        EnableButtons(true);
+        yield return new WaitForSeconds((delay) + revealTime);
+        powerUpPlaying = false;
     }
     IEnumerator RevealCard(CardMono card, float myRevealTime){
         card.ShowflipCard();
@@ -272,7 +274,7 @@ public class View : MonoBehaviour
     }
 
     private float AdjustRevealTime(int cardsToReveal){
-        return Mathf.Max(revealTime, (delay * cardsToReveal) +(cardsToReveal*0.10f));
+        return Mathf.Max(revealTime, (delay * cardsToReveal) +(cardsToReveal*0.15f));
     }
 
     private int CardsInRow(int row){

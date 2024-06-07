@@ -6,12 +6,10 @@ using UnityEngine.UI;
 
 public class Card : GridObject
 {
-    private int id;
+    
 
-    public int getId(){return id;}
 
-    public Card(int id, int row, int col):base(){
-        this.id=id;
+    public Card(int id, int row, int col):base(id){
         this.rowPos = row;
         this.colPos = col;
         name= id.ToString();
@@ -24,7 +22,7 @@ public class Card : GridObject
 }
 
 public class Wall : GridObject {
-    public Wall(int row, int col) {
+    public Wall(int row, int col) :base(-1) {
         this.rowPos = row;
         this.colPos = col;
         name="W";
@@ -33,6 +31,9 @@ public class Wall : GridObject {
 [System.Serializable]
 public abstract class GridObject
 {
+    private int id;    
+    public int getId(){return id;}
+
     public static float fallSpeed = 0.5f; 
     protected int rowPos;
     protected int colPos;
@@ -53,7 +54,8 @@ public abstract class GridObject
 
     public String name;
 
-    public GridObject(){
+    public GridObject(int id){
+        this.id=id;
         cellsToFall=0;
     }
 }
