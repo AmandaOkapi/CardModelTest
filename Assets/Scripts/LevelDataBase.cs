@@ -18,7 +18,7 @@ public class LevelDataBase : MonoBehaviour
     {
         List<Level> returnList = new List<Level>();
         
-        WallModelDestroyWalls model0 = new WallModelDestroyWalls(15, 6, false);
+        WallModelDestroyWalls model0 = new WallModelDestroyWalls(15, 6, true);
         model0.SetPossibleCards(new List<int>{0,1,2,3,4,5,6,7,8,9,10});
         int wallCount = model0.GetWallCount();
         DestroyAllXWalls destroyAllXWalls = new DestroyAllXWalls(wallCount);
@@ -29,7 +29,7 @@ public class LevelDataBase : MonoBehaviour
         });
         
         OriginalModel model1 = new OriginalModel(12, 6, false);
-        model1.SetPossibleCards(new List<int>{0,1,2,3,4,5});
+        model1.SetPossibleCards(new List<int>{0,1,2,3,4,5,6,7,8,9,10});
         returnList.Add(new Level{
             model = model1,
             score = new Score(90, new GetXMatches(30), new GetXCombo(2))
@@ -61,6 +61,22 @@ public class LevelDataBase : MonoBehaviour
         returnList.Add(new Level{
             model = model5,
             score = new Score(200,new GetXMatches(21))
+        });
+
+
+        OriginalModel model6 = new OriginalModel(11, 5, false);
+        model6.SetPossibleCards(new List<int>{0,1,2,3,4,5,6,7});
+        returnList.Add(new Level{
+            model = model6,
+            score = new Score(169, new GetXMatches(30), new GetXCombo(2))
+        });
+
+
+        OriginalModel model7 = new OriginalModel(11, 5, false);
+        model7.SetPossibleCards(new List<int>{5,8});
+        returnList.Add(new Level{
+            model = model7,
+            score = new Score(169, new GetXMatches(30), new GetXCombo(2))
         });
         return returnList;
     }

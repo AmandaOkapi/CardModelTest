@@ -134,12 +134,12 @@ public class View : MonoBehaviour
     }
 
     public Transform InstantiateCard(int i, int j, Model model){
-        if(model.getCardAtIndex(i,j)==null){
+        if(model.getObjectAtIndex(i,j)==null){
             return null;
         }
         float xOffset = localWidth/(model.getCol());
         float yOffset = localHeight/(model.getRow());
-        switch(model.getCardAtIndex(i,j)) 
+        switch(model.getObjectAtIndex(i,j)) 
         {
         case Card card:
             gridViewItems[i,j] = Instantiate(prefab, buttonParent);        
@@ -158,8 +158,8 @@ public class View : MonoBehaviour
             break;
         }
         gridViewItems[i,j].localPosition = new UnityEngine.Vector3(xOffset*(j), -yOffset*(i+1),-5);
-        model.getCardAtIndex(i,j).ResetCellsToFall();
-        gridViewItems[i,j].GetComponent<GridObjectMono>().setCardBase(model.getCardAtIndex(i,j));
+        model.getObjectAtIndex(i,j).ResetCellsToFall();
+        gridViewItems[i,j].GetComponent<GridObjectMono>().setCardBase(model.getObjectAtIndex(i,j));
         
 
         return gridViewItems[i,j];
@@ -231,7 +231,11 @@ public class View : MonoBehaviour
     }
 
 
-
+    public void RevealAll(){
+        foreach(GameObject card in GameObject.FindGameObjectsWithTag("Card")){
+            StartCoroutine(RevealCard(card.GetComponent<CardMono>(), 4.9f, false));
+        }
+    }
     public void RevealRow(int row){
         StartCoroutine(RevealRowCards(row));
     }
@@ -243,9 +247,10 @@ public class View : MonoBehaviour
         float myRevealTime = AdjustRevealTime(CardsInRow(row));
         powerUpPlaying =true;
         for(int i=0; i<gridViewItems.GetLength(1); i++){
+            Debug.Log("Hi from Reveal Row");
             if(gridViewItems[row, i] !=null){
                 if(gridViewItems[row, i].gameObject.tag =="Card"){
-                    StartCoroutine(RevealCard(gridViewItems[row, i].GetComponent<CardMono>() , myRevealTime));
+                    StartCoroutine(RevealCard(gridViewItems[row, i].GetComponent<CardMono>() , myRevealTime, true));
                     yield return new WaitForSeconds(delay);
                 }
             }
@@ -259,7 +264,7 @@ public class View : MonoBehaviour
         for(int i=model.getRowsToHide(); i<gridViewItems.GetLength(0); i++){
             if(gridViewItems[i, col] !=null){
                 if(gridViewItems[i, col].gameObject.tag =="Card"){
-                    StartCoroutine(RevealCard(gridViewItems[i, col].GetComponent<CardMono>() , myRevealTime));
+                    StartCoroutine(RevealCard(gridViewItems[i, col].GetComponent<CardMono>() , myRevealTime, true));
                     yield return new WaitForSeconds(delay);
                 }
             }
@@ -267,12 +272,12 @@ public class View : MonoBehaviour
         yield return new WaitForSeconds((delay) + revealTime);
         powerUpPlaying = false;
     }
-    IEnumerator RevealCard(CardMono card, float myRevealTime){
-        card.ShowflipCard();
+
+    IEnumerator RevealCard(CardMono card, float myRevealTime, bool playSound){
+        card.ShowflipCard(playSound);
         yield return new WaitForSeconds(myRevealTime);
         card.ShowUnflipCard();
     }
-
     private float AdjustRevealTime(int cardsToReveal){
         return Mathf.Max(revealTime, (delay * cardsToReveal) +(cardsToReveal*0.15f));
     }

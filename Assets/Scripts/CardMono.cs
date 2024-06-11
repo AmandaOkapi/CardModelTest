@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
-using Microsoft.Unity.VisualStudio.Editor;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.UI;
@@ -44,11 +43,19 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
     public void flipCard(){        
         controllerLink.flipCard(this);
     }
-
-    public void ShowflipCard(){    
+    // public void flipCard(int rowPos, int colPos){        
+    //     controllerLink.flipCard(rowPos, colPos);
+    // }
+    public void ShowflipCard(bool playSound){    
         StartCoroutine(changeCardImage(cardData.cardImages[((Card)gridObjectMono.getCardBase()).getId()]));    
         AnimFlipCard();
-        PlayFlip();
+        if(playSound){
+            PlayFlip();
+        }
+    }
+
+    public void ShowflipCard(){
+        ShowflipCard(true);
     }
 
     public void ShowUnflipCard(){    

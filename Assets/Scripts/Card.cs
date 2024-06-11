@@ -7,18 +7,28 @@ using UnityEngine.UI;
 public class Card : GridObject
 {
     
+    private int timesSeen;
 
+    private bool isFlipped;
 
     public Card(int id, int row, int col):base(id){
         this.rowPos = row;
         this.colPos = col;
+        timesSeen=0;
         name= id.ToString();
+        isFlipped=false;
     }
 
     public Card(int id):this(id,-1,-1){}
 
     private List<int[]> wallConnections;
-
+    public void IncreaseTimesSeen(){ timesSeen++;}
+    public void flipModelCard(bool flip){
+        if(flip){
+            timesSeen++;
+        }
+        isFlipped=flip;
+    }
 }
 
 public class Wall : GridObject {

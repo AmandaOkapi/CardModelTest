@@ -9,6 +9,7 @@ public class Controller : MonoBehaviour
     public Model model;
     public View view;
 
+    public GameObject badIdea;
     [SerializeField] private float timeToFlip;
     public int cardsFlipped;
     public CardMono firstCard=null;
@@ -64,6 +65,7 @@ public class Controller : MonoBehaviour
     }
 
     void Start(){
+        badIdea.SetActive(false);
         Debug.Log("Game sStart");
         if(levelNumber>=0){
             model = LevelDataBase.levels[levelNumber].model;
@@ -97,48 +99,72 @@ public class Controller : MonoBehaviour
         if(cardsFlipped==0){
             card.SetEnabled(false);
             firstCard=card;
+            ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
             card.ShowflipCard();
             cardsFlipped++;
         }else if(cardsFlipped==1){
             card.SetEnabled(false);
             secondCard=card;
+            ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
             card.ShowflipCard();
             cardsFlipped++;
+            if(!model.isMatchThreeMode()){
+                badIdea.SetActive(true);
+            }
         }else{
-            if(model.isMatchThreeMode()){
-                if(cardsFlipped==3){
-                    cardsFlipped=0;
-                    if(!checkThreeFlippedCards()){
-                        thirdCard.SetEnabled(true);
-                        thirdCard.ShowUnflipCard();
-                        ResetFlippedCards(card);
-                    }                        
-                    return;
-                } 
-                cardsFlipped++;               
-                card.SetEnabled(false);
-                card.ShowflipCard();
-                thirdCard=card;
-                return;
-            }
+            //questionable match 3 code
+                    card.SetEnabled(false);
+                    ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
+                    thirdCard=card;
+                    card.ShowflipCard();
+                    cardsFlipped++;                    
+                    badIdea.SetActive(true);    
 
-            //classic two matches
-            cardsFlipped=0;
-            if(!checkFlippedCards()){            
-                ResetFlippedCards(card);
-            }
+            // //classic two matches
+            // cardsFlipped=0;
+            // if(!checkFlippedCards()){   
+            //     ResetFlippedCards();
+            // }
         }            
     }
 
-private void ResetFlippedCards(CardMono card){
+    public void BadIdeaPressed(GameObject gameObject){
+        gameObject.SetActive(false);
+        cardsFlipped=0;
+            if(model.isMatchThreeMode()){
+                if(!checkThreeFlippedCards()){
+                    thirdCard.SetEnabled(true);
+                    thirdCard.ShowUnflipCard();
+                    ResetFlippedCards();
+                }     
+            }else{            
+                if(!checkFlippedCards()){   
+                    ResetFlippedCards();
+                }
+            }
+
+    }
+    public void flipCard(int rowPos, int colPos){ 
+        if(View.cardsFalling>0 || view.IsPowerUpPlaying()){
+            return;
+        }
+        Card newCard = (Card)model.getObjectAtIndex(rowPos,colPos);
+
+    }       
+
+private void ResetFlippedCards(){
     firstCard.SetEnabled(true);
+    ((Card)(firstCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);
     firstCard.ShowUnflipCard();
-    secondCard.SetEnabled(true);            
+    secondCard.SetEnabled(true);        
+    ((Card)(secondCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);    
     secondCard.ShowUnflipCard();
-    firstCard=card;
-    card.SetEnabled(false);
-    card.ShowflipCard();
-    cardsFlipped++;
+    if(thirdCard!=null){
+        thirdCard.SetEnabled(true);        
+        ((Card)(thirdCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);    
+        thirdCard.ShowUnflipCard();
+        thirdCard=null;
+    }
 }
 
     public bool checkFlippedCards(){
@@ -228,25 +254,24 @@ private void ResetFlippedCards(CardMono card){
 
 
     public void RevealRow(){
-        if (firstCard != null && firstCard.gameObject != null)
-        {
-            firstCard.ShowUnflipCard();
-        }
-
-        if (secondCard != null && secondCard.gameObject != null)
-        {
-            secondCard.ShowUnflipCard();
-        }
-
-        if (thirdCard != null && thirdCard.gameObject != null)
-        {
-            thirdCard.ShowUnflipCard();
-        }
+        UnflipCurrentlyFlippedCards();
         
         int row = Random.Range(model.getRowsToHide(), model.getRow());
         view.RevealRow(row);
     }
     public void RevealCol(){
+        UnflipCurrentlyFlippedCards();
+        int col = Random.Range(0, model.getCol());
+        view.RevealCol(col, model);
+    }
+
+        public void RevealAll(){
+        UnflipCurrentlyFlippedCards();
+        
+        view.RevealAll();
+    }
+
+    private void UnflipCurrentlyFlippedCards(){
         if (firstCard != null && firstCard.gameObject != null)
         {
             firstCard.ShowUnflipCard();
@@ -261,7 +286,5 @@ private void ResetFlippedCards(CardMono card){
         {
             thirdCard.ShowUnflipCard();
         }
-        int col = Random.Range(0, model.getCol());
-        view.RevealCol(col, model);
     }
 }

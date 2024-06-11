@@ -59,7 +59,7 @@ public abstract class Model{
         return cardGrid[row,col];
     }
 
-    public GridObject getCardAtIndex(int row, int col){
+    public GridObject getObjectAtIndex(int row, int col){
         return cardGrid[row,col];
     }    
     public void PopulateGrid(){
@@ -322,28 +322,28 @@ public abstract class WallModel : Model{
         Debug.Log("checking");
         if(row> 0){
             if( cardGrid[row-1, col] != null && cardGrid[row-1, col] is Wall){
-                if (wallstoDestroy.Add((Wall)getCardAtIndex(row-1, col))){
+                if (wallstoDestroy.Add((Wall)getObjectAtIndex(row-1, col))){
                     arr.Add( new int[] {row-1, col});   
                 }
             }
         }
         if(row<cardGrid.GetLength(0)-1){
             if(cardGrid[row+1, col] != null && cardGrid[row+1, col] is Wall){
-                if(wallstoDestroy.Add((Wall)getCardAtIndex(row+1, col))){
+                if(wallstoDestroy.Add((Wall)getObjectAtIndex(row+1, col))){
                     arr.Add( new int[] {row+1, col}); 
                 }
             }
         }
         if(col> 0){
             if(cardGrid[row, col-1] != null && cardGrid[row, col-1] is Wall){
-                if(wallstoDestroy.Add((Wall)getCardAtIndex(row, col-1))){
+                if(wallstoDestroy.Add((Wall)getObjectAtIndex(row, col-1))){
                     arr.Add(new int[] {row, col-1}); 
                 }
             }
         }
         if(col<cardGrid.GetLength(1)-1){
             if(cardGrid[row, col+1] != null && cardGrid[row, col+1] is Wall){
-                if(wallstoDestroy.Add((Wall)getCardAtIndex(row, col+1))){
+                if(wallstoDestroy.Add((Wall)getObjectAtIndex(row, col+1))){
                     arr.Add(new int[] {row, col+1}); 
                 }
             }
