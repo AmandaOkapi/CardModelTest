@@ -1098,9 +1098,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8e51019601db274ea40b3629ded0a4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardDataView: {fileID: 11400000, guid: ce802e015842fed4aa7f8a18d8386044, type: 2}
   prefab: {fileID: 7464371237458058364, guid: 380204eb4c2f69a45a36d5b83055109b, type: 3}
   wallPrefab: {fileID: 7464371237458058364, guid: 2acfd96023d82ab498664738f710695a, type: 3}
+  LuckyMatchPrefab: {fileID: 1032998739610857962, guid: 7aa49fe6a4985e343ae473b874c7a27c, type: 3}
   delay: 0.2
   revealTime: 1.6
   maintainAspectRatio: 1

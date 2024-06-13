@@ -27,6 +27,10 @@ public class EventManager : MonoBehaviour
         MatchThreeFoundEvent?.Invoke(id1, id2, id3);
     }
     
+    public static event Action LuckyMatchFound;
+    public static void StartLuckyMatchFound(){
+        LuckyMatchFound?.Invoke();
+    }
     public static event Action<float> GameTimer;
     public static void StartGameTimer(float time){
         GameTimer?.Invoke(time);

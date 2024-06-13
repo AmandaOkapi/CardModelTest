@@ -14,12 +14,6 @@ public class WallMono : MonoBehaviour, IGridObjectAppearance
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void Die(){
         animator.SetTrigger("Die");
         audioSource.Play();

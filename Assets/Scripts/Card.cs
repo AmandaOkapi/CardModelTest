@@ -29,6 +29,10 @@ public class Card : GridObject
         }
         isFlipped=flip;
     }
+
+    public int GetTimesSeen(){
+        return timesSeen;
+    }
 }
 
 public class Wall : GridObject {

@@ -2,6 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+notes
+    OriginalModel
+        rowsToHide =2;
+    EliminationModel
+        rowsToHide =0;
+    WallModel
+        rowsToHide =4; (all types)
+        Types
+        WallModelOriginal
+        WallModelElimination
+        WallModelDestroyWalls
+
+*/
 public class LevelDataBase : MonoBehaviour
 {
     public static List<Level> levels;
@@ -78,6 +92,13 @@ public class LevelDataBase : MonoBehaviour
             model = model7,
             score = new Score(169, new GetXMatches(30), new GetXCombo(2))
         });
+
+        OriginalModel model8 = new OriginalModel(32, 20, false);
+        model8.SetPossibleCards((new List<int>{0,1,2,3,4,5,6,7,8,9,10,11}));
+        returnList.Add(new Level{
+            model = model8,
+            score = new Score(2000, new GetXMatches(100), new GetXCombo(2))
+        });
         return returnList;
     }
     // Start is called before the first frame update
@@ -86,9 +107,5 @@ public class LevelDataBase : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

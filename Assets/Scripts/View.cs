@@ -8,31 +8,43 @@ using UnityEngine;
 using UnityEngine.UI;
 public class View : MonoBehaviour
 {
-    public CardData cardDataView;    
+    
+    private Transform[,] gridViewItems;
+    
+    [Header ("Prefabs")]    
     [SerializeField] private Transform prefab;
     [SerializeField] private Transform wallPrefab;
+    [Header ("Extra Elements")]
+    [SerializeField] private GameObject LuckyMatchPrefab;
+    
+    [Header ("Adjustable Stats")]
 
-    [SerializeField] private Transform[,] gridViewItems;
     [Header ("Reveal Settings")]    
     [SerializeField] private float delay;
     [SerializeField] private float revealTime;
     [Header ("Scaling")]    
     [SerializeField] private bool maintainAspectRatio =true;
-    [SerializeField] private UnityEngine.Vector2 cardSize = new UnityEngine.Vector2(100f,144f);
+    [SerializeField] public static UnityEngine.Vector2 cardSize = new UnityEngine.Vector2(100f,144f);
     [SerializeField] private RectTransform  pane;
     [SerializeField] private RectTransform  refPane;    //a pane that stretches with the screen size acts as a "size goal" for our grid
     [SerializeField] private Transform buttonParent;
     [SerializeField] private RectTransform topRowHider;
     [SerializeField] private DynamicFontSizeAdjuster dynamicFontSizeAdjuster;
-
-    public static float cardsFalling;
+    private UnityEngine.Vector2 scaleFactor;
     private float localWidth, localHeight;
     private float refWidth, refHeight;
-
+    
+    //gameState
+    public static float cardsFalling;
     private bool powerUpPlaying =false;
 
+    private bool frenzy=false;
+
+
+
     public bool IsPowerUpPlaying(){return powerUpPlaying;}
-    private UnityEngine.Vector2 scaleFactor;
+    public bool IsFrenzy(){return frenzy;}
+
     void Start()
     {
         NullChecks();
@@ -147,7 +159,7 @@ public class View : MonoBehaviour
             gameObject.GetComponent<Button>().onClick.AddListener(() =>{
             //card flipped function
             gameObject.GetComponent<CardMono>().flipCard();
-                Debug.Log("Button " + i + ","+ j+ "clicked!");
+                //Debug.Log("Button " + i + ","+ j+ "clicked!");
             });
             break;
         case Wall wall:
@@ -232,10 +244,9 @@ public class View : MonoBehaviour
 
 
     public void RevealAll(){
-        foreach(GameObject card in GameObject.FindGameObjectsWithTag("Card")){
-            StartCoroutine(RevealCard(card.GetComponent<CardMono>(), 4.9f, false));
-        }
+        StartCoroutine(RevealAllCards());
     }
+
     public void RevealRow(int row){
         StartCoroutine(RevealRowCards(row));
     }
@@ -255,7 +266,7 @@ public class View : MonoBehaviour
                 }
             }
         }
-        yield return new WaitForSeconds((delay)+ revealTime);
+        yield return new WaitForSeconds((delay)+ myRevealTime);
         powerUpPlaying = false;
     }
     IEnumerator RevealColCards(int col, Model model){
@@ -269,17 +280,27 @@ public class View : MonoBehaviour
                 }
             }
         }
-        yield return new WaitForSeconds((delay) + revealTime);
+        yield return new WaitForSeconds((delay) + myRevealTime);
         powerUpPlaying = false;
     }
 
+    IEnumerator RevealAllCards(){
+        //powerUpPlaying=true;
+        frenzy=true;
+        foreach(GameObject card in GameObject.FindGameObjectsWithTag("Card")){
+            StartCoroutine(RevealCard(card.GetComponent<CardMono>(), 4.9f, false));
+        }
+        yield return new WaitForSeconds(4.9f);
+        frenzy=false;
+        //powerUpPlaying=false;
+    }
     IEnumerator RevealCard(CardMono card, float myRevealTime, bool playSound){
         card.ShowflipCard(playSound);
         yield return new WaitForSeconds(myRevealTime);
         card.ShowUnflipCard();
     }
     private float AdjustRevealTime(int cardsToReveal){
-        return Mathf.Max(revealTime, (delay * cardsToReveal) +(cardsToReveal*0.15f));
+        return Mathf.Max(revealTime, (delay * cardsToReveal) +Mathf.Min((cardsToReveal*0.15f), 1.5f));
     }
 
     private int CardsInRow(int row){
@@ -297,4 +318,15 @@ public class View : MonoBehaviour
             b.GetComponent<CardMono>().SetEnabled(x);
         }
     }
+
+    public void InstantiateLuckyMatch(UnityEngine.Vector3 pos){
+        GameObject luckyMatch = Instantiate(LuckyMatchPrefab, pos, UnityEngine.Quaternion.identity, transform );
+        float scaleFactorAverage = Mathf.Min(scaleFactor.x, scaleFactor.y, 1); //gives a max size
+        if(maintainAspectRatio){
+            luckyMatch.transform.localScale = new UnityEngine.Vector3(scaleFactorAverage, scaleFactorAverage, 1f);
+        }else{
+            luckyMatch.transform.localScale = new UnityEngine.Vector3(scaleFactor.x, scaleFactor.y, 1f);
+        }    
+    }
+
 }

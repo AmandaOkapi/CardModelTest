@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Array2DEditor;
+using Unity.VisualScripting;
 public class Controller : MonoBehaviour
 {
     //public CardData cardDataController;
@@ -95,6 +96,40 @@ public class Controller : MonoBehaviour
         if(View.cardsFalling>0 || view.IsPowerUpPlaying()){
             return;
         }
+
+        if(view.IsFrenzy()){
+            if(cardsFlipped==0){
+                card.SetEnabled(false);
+                firstCard=card;
+                ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
+                card.ShowFrenzy(true);
+                cardsFlipped++;
+            }else if(cardsFlipped==1){
+                card.SetEnabled(false);
+                secondCard=card;
+                ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
+                card.ShowFrenzy(true);
+                cardsFlipped++;
+                if(!model.isMatchThreeMode()){
+                    badIdea.SetActive(true);
+                }
+            }else{
+                //questionable match 3 code
+                        card.SetEnabled(false);
+                        ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
+                        thirdCard=card;
+                        card.ShowFrenzy(true);
+                        cardsFlipped++;                    
+                        badIdea.SetActive(true);    
+
+                // //classic two matches
+                // cardsFlipped=0;
+                // if(!checkFlippedCards()){   
+                //     ResetFlippedCards();
+                // }
+            }
+            return;
+        }
         //this is screaming to be refactored
         if(cardsFlipped==0){
             card.SetEnabled(false);
@@ -119,29 +154,24 @@ public class Controller : MonoBehaviour
                     card.ShowflipCard();
                     cardsFlipped++;                    
                     badIdea.SetActive(true);    
-
-            // //classic two matches
-            // cardsFlipped=0;
-            // if(!checkFlippedCards()){   
-            //     ResetFlippedCards();
-            // }
         }            
     }
 
     public void BadIdeaPressed(GameObject gameObject){
         gameObject.SetActive(false);
         cardsFlipped=0;
-            if(model.isMatchThreeMode()){
-                if(!checkThreeFlippedCards()){
-                    thirdCard.SetEnabled(true);
-                    thirdCard.ShowUnflipCard();
-                    ResetFlippedCards();
-                }     
-            }else{            
-                if(!checkFlippedCards()){   
-                    ResetFlippedCards();
-                }
+
+        if(model.isMatchThreeMode()){
+            if(!checkThreeFlippedCards()){
+                thirdCard.SetEnabled(true);
+                thirdCard.ShowUnflipCard();
+                ResetFlippedCards();
+            }     
+        }else{            
+            if(!checkFlippedCards()){   
+                ResetFlippedCards();
             }
+        }
 
     }
     public void flipCard(int rowPos, int colPos){ 
@@ -153,6 +183,21 @@ public class Controller : MonoBehaviour
     }       
 
 private void ResetFlippedCards(){
+        if(view.IsFrenzy()){
+            firstCard.SetEnabled(true);
+            ((Card)(firstCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);
+            firstCard.ShowFrenzy(false);
+            secondCard.SetEnabled(true);        
+            ((Card)(secondCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);    
+            secondCard.ShowFrenzy(false);
+            if(thirdCard!=null){
+                thirdCard.SetEnabled(true);        
+                ((Card)(thirdCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);    
+                thirdCard.ShowFrenzy(false);
+                thirdCard=null;
+            }
+            return;            
+        }
     firstCard.SetEnabled(true);
     ((Card)(firstCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);
     firstCard.ShowUnflipCard();
@@ -168,10 +213,19 @@ private void ResetFlippedCards(){
 }
 
     public bool checkFlippedCards(){
-        if((((Card)firstCard.gridObjectMono.getCardBase()).getId()== ((Card)secondCard.gridObjectMono.getCardBase()).getId()) && firstCard!=secondCard){
+        Card fc = (Card)firstCard.gridObjectMono.getCardBase();
+        Card sc = (Card)secondCard.gridObjectMono.getCardBase();
+        if((fc.getId()== sc.getId()) && firstCard!=secondCard){            
+            //check for lucky match
+            if(fc.GetTimesSeen() == 1 && sc.GetTimesSeen() == 1){
+                Debug.Log("starting lucky match");
+                view.InstantiateLuckyMatch(secondCard.transform.position);
+                EventManager.StartLuckyMatchFound();
+            }
             MatchFound(firstCard, secondCard);
-            Debug.Log("hello from check flipped cards");
+            //Debug.Log("hello from check flipped cards");
             EventManager.StartMatchFoundEvent(firstCard.gridObjectMono.getCardBase().getId());
+
             return true;
         }
         EventManager.StartMatchFailed(firstCard.gridObjectMono.getCardBase().getId(), secondCard.gridObjectMono.getCardBase().getId());
@@ -179,11 +233,20 @@ private void ResetFlippedCards(){
     }
 
     public bool checkThreeFlippedCards(){
-        if((((Card)firstCard.gridObjectMono.getCardBase()).getId()== ((Card)secondCard.gridObjectMono.getCardBase()).getId()) && (((Card)firstCard.gridObjectMono.getCardBase()).getId()== ((Card)thirdCard.gridObjectMono.getCardBase()).getId()) && firstCard!=secondCard && firstCard!=thirdCard && secondCard!=thirdCard){
+        Card fc = (Card)firstCard.gridObjectMono.getCardBase();
+        Card sc = (Card)secondCard.gridObjectMono.getCardBase();
+        Card tc = (Card)thirdCard.gridObjectMono.getCardBase();
+
+        if((fc.getId()== (sc.getId()) && (fc.getId()== tc.getId()) && firstCard!=secondCard && firstCard!=thirdCard && secondCard!=thirdCard)){
+            //check for lucky match
+            if(fc.GetTimesSeen() == 1 && sc.GetTimesSeen() == 1 && tc.GetTimesSeen()==1){
+                view.InstantiateLuckyMatch(thirdCard.transform.position);
+                EventManager.StartLuckyMatchFound();
+            }
             MatchFound(firstCard, secondCard, thirdCard);
             Debug.Log("hello from check 3 flipped cards");
             EventManager.StartMatchFoundEvent(firstCard.gridObjectMono.getCardBase().getId() );
-            Debug.Log("returned");
+
             return true;
         }
         EventManager.StartMatchThreeFaileddEvent(firstCard.gridObjectMono.getCardBase().getId(), secondCard.gridObjectMono.getCardBase().getId(), thirdCard.gridObjectMono.getCardBase().getId());

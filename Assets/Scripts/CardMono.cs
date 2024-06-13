@@ -20,6 +20,9 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
     [Header ("View Related")]
     [SerializeField] public UnityEngine.UI.Image imageComponent;
 
+    [SerializeField] public GameObject frenzy;
+
+
     [Header ("Card Appearance Related")]
     [SerializeField] private float timeToFlip;
     [SerializeField] private Animator animator;
@@ -88,6 +91,10 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
     } 
     public void SetEnabled(bool x){
         buttonComponent.enabled=x;
+    }
+
+    public void ShowFrenzy(bool x){
+        frenzy.SetActive(x);
     }
 
     // Update is called once per frame
