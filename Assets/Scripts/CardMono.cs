@@ -61,10 +61,12 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
         ShowflipCard(true);
     }
 
-    public void ShowUnflipCard(){    
+    public void ShowUnflipCard(bool playSound){    
         StartCoroutine(changeCardImage(cardData.cardBack));    
         AnimUnflipCard();
-        PlayFlip();
+        if(playSound){
+            PlayFlip();
+        }    
     }
     private IEnumerator changeCardImage(Sprite image){
         float time = 0f;

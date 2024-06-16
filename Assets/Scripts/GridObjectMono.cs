@@ -6,22 +6,22 @@ public class GridObjectMono : MonoBehaviour
 {
     private IGridObjectAppearance gridObjectAppearance;
 
-    [SerializeField] private float fallSpeed;
+    public static float fallSpeed =500f;
+    public static float defaultFallspeed =500f;
+    public static float frenzyFallspeed =1000f;
 
     [SerializeField] private GridObject gridObjectBase;
-    public void setCardBase(GridObject gridObjectBase){ this.gridObjectBase=gridObjectBase;}
+    public void SetCardBase(GridObject gridObjectBase){ this.gridObjectBase=gridObjectBase;}
+
     public GridObject getCardBase(){return gridObjectBase;}
     private void Start(){
-        if(fallSpeed==0){
-            //fallSpeed = GridObject.fallSpeed;
-            fallSpeed=500;
-        }
+        fallSpeed = defaultFallspeed;
         gridObjectAppearance = GetComponent<IGridObjectAppearance>();
     }
 
     public void FallToPos(UnityEngine.Vector3 target){
         View.cardsFalling++;
-        StartCoroutine(TranslateConstantSpeed(target, 500));
+        StartCoroutine(TranslateConstantSpeed(target, fallSpeed));
     }
 
 

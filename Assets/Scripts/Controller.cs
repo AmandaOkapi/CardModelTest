@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Array2DEditor;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 public class Controller : MonoBehaviour
 {
     //public CardData cardDataController;
@@ -10,7 +11,7 @@ public class Controller : MonoBehaviour
     public Model model;
     public View view;
 
-    public GameObject badIdea;
+    public GameObject resetFlipGuard;
     [SerializeField] private float timeToFlip;
     public int cardsFlipped;
     public CardMono firstCard=null;
@@ -29,8 +30,14 @@ public class Controller : MonoBehaviour
     [SerializeField] private float gameTime;
     private Score score;
 
+    public PowerUp revealRow, revealCol, frenzy;
+    private PowerUp currentPowerUp;
+
+    [SerializeField] private List<PowerUp> powerUps;
+
 
     public int levelNumber;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -66,7 +73,7 @@ public class Controller : MonoBehaviour
     }
 
     void Start(){
-        badIdea.SetActive(false);
+        resetFlipGuard.SetActive(false);
         Debug.Log("Game sStart");
         if(levelNumber>=0){
             model = LevelDataBase.levels[levelNumber].model;
@@ -83,7 +90,7 @@ public class Controller : MonoBehaviour
             }       
             Invoke("RunAfterStart", 0f);
         }     
-
+        currentPowerUp = powerUps[UnityEngine.Random.Range(0, powerUps.Count)];
 
     }
     private void RunAfterStart(){
@@ -111,7 +118,7 @@ public class Controller : MonoBehaviour
                 card.ShowFrenzy(true);
                 cardsFlipped++;
                 if(!model.isMatchThreeMode()){
-                    badIdea.SetActive(true);
+                    resetFlipGuard.SetActive(true);
                 }
             }else{
                 //questionable match 3 code
@@ -120,7 +127,7 @@ public class Controller : MonoBehaviour
                         thirdCard=card;
                         card.ShowFrenzy(true);
                         cardsFlipped++;                    
-                        badIdea.SetActive(true);    
+                        resetFlipGuard.SetActive(true);    
 
                 // //classic two matches
                 // cardsFlipped=0;
@@ -144,7 +151,7 @@ public class Controller : MonoBehaviour
             card.ShowflipCard();
             cardsFlipped++;
             if(!model.isMatchThreeMode()){
-                badIdea.SetActive(true);
+                resetFlipGuard.SetActive(true);
             }
         }else{
             //questionable match 3 code
@@ -153,18 +160,18 @@ public class Controller : MonoBehaviour
                     thirdCard=card;
                     card.ShowflipCard();
                     cardsFlipped++;                    
-                    badIdea.SetActive(true);    
+                    resetFlipGuard.SetActive(true);    
         }            
     }
 
-    public void BadIdeaPressed(GameObject gameObject){
-        gameObject.SetActive(false);
+    public void FlipGuardPressed(){
+        resetFlipGuard.SetActive(false);
         cardsFlipped=0;
 
         if(model.isMatchThreeMode()){
             if(!checkThreeFlippedCards()){
                 thirdCard.SetEnabled(true);
-                thirdCard.ShowUnflipCard();
+                thirdCard.ShowUnflipCard(true);
                 ResetFlippedCards();
             }     
         }else{            
@@ -200,14 +207,14 @@ private void ResetFlippedCards(){
         }
     firstCard.SetEnabled(true);
     ((Card)(firstCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);
-    firstCard.ShowUnflipCard();
+    firstCard.ShowUnflipCard(true);
     secondCard.SetEnabled(true);        
     ((Card)(secondCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);    
-    secondCard.ShowUnflipCard();
+    secondCard.ShowUnflipCard(true);
     if(thirdCard!=null){
         thirdCard.SetEnabled(true);        
         ((Card)(thirdCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);    
-        thirdCard.ShowUnflipCard();
+        thirdCard.ShowUnflipCard(true);
         thirdCard=null;
     }
 }
@@ -315,39 +322,54 @@ private void ResetFlippedCards(){
             }
     }
 
-
-    public void RevealRow(){
+    public void playPowerUp(){        
         UnflipCurrentlyFlippedCards();
-        
-        int row = Random.Range(model.getRowsToHide(), model.getRow());
-        view.RevealRow(row);
-    }
-    public void RevealCol(){
-        UnflipCurrentlyFlippedCards();
-        int col = Random.Range(0, model.getCol());
-        view.RevealCol(col, model);
+        currentPowerUp?.Activate(view, model);
+        currentPowerUp = powerUps[UnityEngine.Random.Range(0, powerUps.Count)];
+        currentPowerUp.EnterNewPowerUp(view);
     }
 
-        public void RevealAll(){
-        UnflipCurrentlyFlippedCards();
-        
-        view.RevealAll();
+    public void playPowerUp(string powerUpName ){        
+        PowerUp powerUpToActivate = null;
+
+        switch (powerUpName.ToLower())
+        {
+            case "revealrow":
+                powerUpToActivate = revealRow;
+                break;
+            case "revealcol":
+                powerUpToActivate = revealCol;
+                break;
+            case "frenzy":
+                powerUpToActivate = frenzy;
+                break;
+            default:
+                Debug.LogError("Unknown power-up name: " + powerUpName);
+                return;
+        }
+        if (powerUpToActivate != null)
+        {
+            UnflipCurrentlyFlippedCards();
+            powerUpToActivate.Activate(view, model);
+        }
     }
 
     private void UnflipCurrentlyFlippedCards(){
         if (firstCard != null && firstCard.gameObject != null)
         {
-            firstCard.ShowUnflipCard();
+            firstCard.ShowUnflipCard(false);
         }
 
         if (secondCard != null && secondCard.gameObject != null)
         {
-            secondCard.ShowUnflipCard();
+            secondCard.ShowUnflipCard(false);
         }
 
         if (thirdCard != null && thirdCard.gameObject != null)
         {
-            thirdCard.ShowUnflipCard();
+            thirdCard.ShowUnflipCard(false);
         }
     }
+
+
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
-public class LuckyMatchAppe : MonoBehaviour
+public class LuckyMatchAppearance : MonoBehaviour
 {
     [SerializeField] private Vector2 offset;
     [SerializeField] private float fallSpeed;

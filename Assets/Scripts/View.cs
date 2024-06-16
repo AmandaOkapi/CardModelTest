@@ -16,12 +16,16 @@ public class View : MonoBehaviour
     [SerializeField] private Transform wallPrefab;
     [Header ("Extra Elements")]
     [SerializeField] private GameObject LuckyMatchPrefab;
+    [SerializeField] private GameObject PowerUpSlider;
+
     
     [Header ("Adjustable Stats")]
 
     [Header ("Reveal Settings")]    
     [SerializeField] private float delay;
     [SerializeField] private float revealTime;
+    [SerializeField] private float frenzyTime;
+
     [Header ("Scaling")]    
     [SerializeField] private bool maintainAspectRatio =true;
     [SerializeField] public static UnityEngine.Vector2 cardSize = new UnityEngine.Vector2(100f,144f);
@@ -37,7 +41,6 @@ public class View : MonoBehaviour
     //gameState
     public static float cardsFalling;
     private bool powerUpPlaying =false;
-
     private bool frenzy=false;
 
 
@@ -171,7 +174,7 @@ public class View : MonoBehaviour
         }
         gridViewItems[i,j].localPosition = new UnityEngine.Vector3(xOffset*(j), -yOffset*(i+1),-5);
         model.getObjectAtIndex(i,j).ResetCellsToFall();
-        gridViewItems[i,j].GetComponent<GridObjectMono>().setCardBase(model.getObjectAtIndex(i,j));
+        gridViewItems[i,j].GetComponent<GridObjectMono>().SetCardBase(model.getObjectAtIndex(i,j));
         
 
         return gridViewItems[i,j];
@@ -242,7 +245,9 @@ public class View : MonoBehaviour
         go.GetComponent<GridObjectMono>().Die();
     }
 
-
+    public void ResetPowerUpSlider(PowerUp powerUp){
+        PowerUpSlider.GetComponent<PowerUpSlider>().StartWaitForPowerUpToEndAndThenReset(this, powerUp);
+    }
     public void RevealAll(){
         StartCoroutine(RevealAllCards());
     }
@@ -256,6 +261,7 @@ public class View : MonoBehaviour
 
     IEnumerator RevealRowCards(int row){
         float myRevealTime = AdjustRevealTime(CardsInRow(row));
+        PowerUpSlider.GetComponent<PowerUpSlider>().StartDepleteSlider(myRevealTime  + delay*gridViewItems.GetLength(1));
         powerUpPlaying =true;
         for(int i=0; i<gridViewItems.GetLength(1); i++){
             Debug.Log("Hi from Reveal Row");
@@ -271,6 +277,7 @@ public class View : MonoBehaviour
     }
     IEnumerator RevealColCards(int col, Model model){
         float myRevealTime =AdjustRevealTime(gridViewItems.GetLength(0) - model.getRowsToHide());
+        PowerUpSlider.GetComponent<PowerUpSlider>().StartDepleteSlider(myRevealTime  + delay*gridViewItems.GetLength(1));
         powerUpPlaying=true;
         for(int i=model.getRowsToHide(); i<gridViewItems.GetLength(0); i++){
             if(gridViewItems[i, col] !=null){
@@ -287,17 +294,24 @@ public class View : MonoBehaviour
     IEnumerator RevealAllCards(){
         //powerUpPlaying=true;
         frenzy=true;
+        PowerUpSlider.GetComponent<PowerUpSlider>().StartDepleteSlider(frenzyTime);
+        GridObjectMono.fallSpeed = GridObjectMono.frenzyFallspeed;
         foreach(GameObject card in GameObject.FindGameObjectsWithTag("Card")){
-            StartCoroutine(RevealCard(card.GetComponent<CardMono>(), 4.9f, false));
+            StartCoroutine(RevealCard(card.GetComponent<CardMono>(), frenzyTime, false));
         }
-        yield return new WaitForSeconds(4.9f);
+        yield return new WaitForSeconds(frenzyTime);
+        GridObjectMono.fallSpeed = GridObjectMono.defaultFallspeed;
         frenzy=false;
         //powerUpPlaying=false;
     }
     IEnumerator RevealCard(CardMono card, float myRevealTime, bool playSound){
         card.ShowflipCard(playSound);
+        ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
         yield return new WaitForSeconds(myRevealTime);
-        card.ShowUnflipCard();
+        if(card!=null){
+            card.ShowUnflipCard(false);
+            ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);
+        }
     }
     private float AdjustRevealTime(int cardsToReveal){
         return Mathf.Max(revealTime, (delay * cardsToReveal) +Mathf.Min((cardsToReveal*0.15f), 1.5f));

@@ -359,7 +359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b183498131586bd408ab3e21ba5db3ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: {x: -10, y: -72}
+  offset: {x: -10, y: -36}
   fallSpeed: 5
   fadeSpeed: 1.5
   startingAlpha: 2.5
