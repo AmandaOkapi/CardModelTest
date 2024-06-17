@@ -24,10 +24,9 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
 
 
     [Header ("Card Appearance Related")]
-    [SerializeField] private float timeToFlip;
+    public static float Time_To_Flip;
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource audioSource;
-
 
     private Controller controllerLink;
 
@@ -71,7 +70,7 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
     private IEnumerator changeCardImage(Sprite image){
         float time = 0f;
 
-        while (time < timeToFlip)
+        while (time < Time_To_Flip)
         {
             time += Time.deltaTime;
             yield return null;

@@ -43,8 +43,6 @@ public class View : MonoBehaviour
     private bool powerUpPlaying =false;
     private bool frenzy=false;
 
-
-
     public bool IsPowerUpPlaying(){return powerUpPlaying;}
     public bool IsFrenzy(){return frenzy;}
 
@@ -246,23 +244,26 @@ public class View : MonoBehaviour
     }
 
     public void ResetPowerUpSlider(PowerUp powerUp){
-        PowerUpSlider.GetComponent<PowerUpSlider>().StartWaitForPowerUpToEndAndThenReset(this, powerUp);
+        PowerUpSlider.GetComponent<PowerUpSlider>().ResetSlider(powerUp);
     }
-    public void RevealAll(){
-        StartCoroutine(RevealAllCards());
-    }
-
-    public void RevealRow(int row){
-        StartCoroutine(RevealRowCards(row));
-    }
-    public void RevealCol(int col, Model model){
-        StartCoroutine(RevealColCards(col, model));
+    public void RevealAll( float startDelay){
+        StartCoroutine(RevealAllCards( startDelay));
     }
 
-    IEnumerator RevealRowCards(int row){
-        float myRevealTime = AdjustRevealTime(CardsInRow(row));
-        PowerUpSlider.GetComponent<PowerUpSlider>().StartDepleteSlider(myRevealTime  + delay*gridViewItems.GetLength(1));
+    public void RevealRow(int row, float startDelay){
+        StartCoroutine(RevealRowCards(row, startDelay));
+    }
+    public void RevealCol(int col, Model model, float startDelay){
+        StartCoroutine(RevealColCards(col, model , startDelay));
+    }
+
+    IEnumerator RevealRowCards(int row, float startDelay){
         powerUpPlaying =true;
+        float myRevealTime = AdjustRevealTime(CardsInRow(row));                
+        yield return new WaitForSeconds(startDelay);
+
+        PowerUpSlider.GetComponent<PowerUpSlider>().StartDepleteSlider(myRevealTime  + delay*gridViewItems.GetLength(1));
+
         for(int i=0; i<gridViewItems.GetLength(1); i++){
             Debug.Log("Hi from Reveal Row");
             if(gridViewItems[row, i] !=null){
@@ -275,10 +276,11 @@ public class View : MonoBehaviour
         yield return new WaitForSeconds((delay)+ myRevealTime);
         powerUpPlaying = false;
     }
-    IEnumerator RevealColCards(int col, Model model){
-        float myRevealTime =AdjustRevealTime(gridViewItems.GetLength(0) - model.getRowsToHide());
-        PowerUpSlider.GetComponent<PowerUpSlider>().StartDepleteSlider(myRevealTime  + delay*gridViewItems.GetLength(1));
+    IEnumerator RevealColCards(int col, Model model, float startDelay){        
         powerUpPlaying=true;
+        yield return new WaitForSeconds(startDelay);
+        float myRevealTime =AdjustRevealTime(gridViewItems.GetLength(0) - model.getRowsToHide());
+        PowerUpSlider.GetComponent<PowerUpSlider>().StartDepleteSlider(myRevealTime  + delay*gridViewItems.GetLength(0));
         for(int i=model.getRowsToHide(); i<gridViewItems.GetLength(0); i++){
             if(gridViewItems[i, col] !=null){
                 if(gridViewItems[i, col].gameObject.tag =="Card"){
@@ -291,9 +293,10 @@ public class View : MonoBehaviour
         powerUpPlaying = false;
     }
 
-    IEnumerator RevealAllCards(){
+    IEnumerator RevealAllCards( float startDelay){
         //powerUpPlaying=true;
         frenzy=true;
+        yield return new WaitForSeconds(startDelay);
         PowerUpSlider.GetComponent<PowerUpSlider>().StartDepleteSlider(frenzyTime);
         GridObjectMono.fallSpeed = GridObjectMono.frenzyFallspeed;
         foreach(GameObject card in GameObject.FindGameObjectsWithTag("Card")){

@@ -23,7 +23,6 @@ public class ScoreManager : MonoBehaviour
     [Header ("Canvas elements")]
     [SerializeField] private GameObject timerOver;
     [SerializeField] private GameObject earlyWin;
-    [SerializeField] private PowerUpSlider powerUpSlider;
 
 
     private int matchesFound, wallsDestoyed, combo;
@@ -34,14 +33,12 @@ public class ScoreManager : MonoBehaviour
 
     private float timePassed;
 
-    private float sliderValue;
 
     [Header ("Adjustabe points amounts")]
 
     [SerializeField] private int scoreIncreaseAmount;
     [SerializeField] private int wallScoreIncreaseAmount;
 
-    [SerializeField] private float sliderNoMatch, sliderYesMatch;
     public Dictionary<int, int> cardsSeen = new Dictionary<int, int>();
     
 
@@ -92,8 +89,6 @@ public class ScoreManager : MonoBehaviour
         matchesFound++;
         combo++;
         points += scoreIncreaseAmount;
-        sliderValue+=sliderYesMatch;
-        powerUpSlider.SetSliderValue(sliderValue);
         UpdateMainScoreText();
 
         foreach(ScoreRequirements sr in myScoreRequirments){
@@ -152,9 +147,6 @@ public class ScoreManager : MonoBehaviour
 
     private void MatchFailed(int id1, int id2){
         combo = 0;  
-        sliderValue+=sliderNoMatch;
-        powerUpSlider.SetSliderValue(sliderValue);
-
         if(myScoreRequirments==null){
             Debug.Log("Null score from match failed");
             return;

@@ -30,10 +30,7 @@ public class Controller : MonoBehaviour
     [SerializeField] private float gameTime;
     private Score score;
 
-    public PowerUp revealRow, revealCol, frenzy;
-    private PowerUp currentPowerUp;
 
-    [SerializeField] private List<PowerUp> powerUps;
 
 
     public int levelNumber;
@@ -90,7 +87,6 @@ public class Controller : MonoBehaviour
             }       
             Invoke("RunAfterStart", 0f);
         }     
-        currentPowerUp = powerUps[UnityEngine.Random.Range(0, powerUps.Count)];
 
     }
     private void RunAfterStart(){
@@ -322,53 +318,29 @@ private void ResetFlippedCards(){
             }
     }
 
-    public void playPowerUp(){        
-        UnflipCurrentlyFlippedCards();
-        currentPowerUp?.Activate(view, model);
-        currentPowerUp = powerUps[UnityEngine.Random.Range(0, powerUps.Count)];
-        currentPowerUp.EnterNewPowerUp(view);
-    }
 
-    public void playPowerUp(string powerUpName ){        
-        PowerUp powerUpToActivate = null;
 
-        switch (powerUpName.ToLower())
-        {
-            case "revealrow":
-                powerUpToActivate = revealRow;
-                break;
-            case "revealcol":
-                powerUpToActivate = revealCol;
-                break;
-            case "frenzy":
-                powerUpToActivate = frenzy;
-                break;
-            default:
-                Debug.LogError("Unknown power-up name: " + powerUpName);
-                return;
-        }
-        if (powerUpToActivate != null)
-        {
-            UnflipCurrentlyFlippedCards();
-            powerUpToActivate.Activate(view, model);
-        }
-    }
 
-    private void UnflipCurrentlyFlippedCards(){
+    public void UnflipCurrentlyFlippedCards(){
+        //fix it so unflipped cards dont flip again for powerups
         if (firstCard != null && firstCard.gameObject != null)
         {
             firstCard.ShowUnflipCard(false);
+            firstCard.SetEnabled(true);
         }
 
         if (secondCard != null && secondCard.gameObject != null)
         {
             secondCard.ShowUnflipCard(false);
+            secondCard.SetEnabled(true);
         }
 
         if (thirdCard != null && thirdCard.gameObject != null)
         {
             thirdCard.ShowUnflipCard(false);
+            thirdCard.SetEnabled(true);
         }
+        cardsFlipped=0;
     }
 
 
