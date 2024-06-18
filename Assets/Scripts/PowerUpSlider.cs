@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class PowerUpSlider : MonoBehaviour
 {
+    //cursed code ahead proceed at your own risk
     public Slider slider;
     public Image fill;
     public Gradient gradient;
@@ -21,6 +22,7 @@ public class PowerUpSlider : MonoBehaviour
     public void SetNextPowerUp(PowerUp powerUp){nextPowerUp = powerUp;}
     private Coroutine fillCoroutine; 
 
+    //for testing :>
     public PowerUp revealRow, revealCol, frenzy;
     [SerializeField] private PowerUp startingPowerUp;
 
@@ -93,30 +95,31 @@ public class PowerUpSlider : MonoBehaviour
         float invokeTime =(controller.cardsFlipped >0)? CardMono.Time_To_Flip +0.5f :0.5f;
         currentPowerUp?.Activate(controller.view, controller.model, invokeTime);
     }
-    // public void PlayCurrentPowerUp(string powerUpName ){        
-    //     PowerUp powerUpToActivate = null;
+    public void PlayDebugPowerUp(string powerUpName ){        
+        PowerUp powerUpToActivate = null;
 
-    //     switch (powerUpName.ToLower())
-    //     {
-    //         case "revealrow":
-    //             powerUpToActivate = revealRow;
-    //             break;
-    //         case "revealcol":
-    //             powerUpToActivate = revealCol;
-    //             break;
-    //         case "frenzy":
-    //             powerUpToActivate = frenzy;
-    //             break;
-    //         default:
-    //             Debug.LogError("Unknown power-up name: " + powerUpName);
-    //             return;
-    //     }
-    //     if (powerUpToActivate != null)
-    //     {
-    //         UnflipCurrentlyFlippedCards();
-    //         powerUpToActivate.Activate(view, model);
-    //     }
-    // }
+        switch (powerUpName.ToLower())
+        {
+            case "revealrow":
+                powerUpToActivate = revealRow;
+                break;
+            case "revealcol":
+                powerUpToActivate = revealCol;
+                break;
+            case "frenzy":
+                powerUpToActivate = frenzy;
+                break;
+            default:
+                Debug.LogError("Unknown power-up name: " + powerUpName);
+                return;
+        }
+        if (powerUpToActivate != null)
+        {
+            Controller controller = GameObject.Find("Controller").GetComponent<Controller>();
+            float invokeTime =(controller.cardsFlipped >0)? CardMono.Time_To_Flip +0.5f :0.5f;
+            powerUpToActivate.Activate(controller.view, controller.model, invokeTime);
+        }
+    }
     private IEnumerator FillUpSlider(float target){
         while(slider.value< target ){
             Debug.Log("filling");

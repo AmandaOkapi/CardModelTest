@@ -44,6 +44,7 @@ public class LevelDataBase : MonoBehaviour
         
         OriginalModel model1 = new OriginalModel(12, 6, false);
         model1.SetPossibleCards(new List<int>{0,1,2,3,4,5,6,7,8,9,10});
+        model1.AddGlass(50f);
         returnList.Add(new Level{
             model = model1,
             score = new Score(90, new GetXMatches(30), new GetXCombo(2))

@@ -1400,6 +1400,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 7464371237458058364, guid: 380204eb4c2f69a45a36d5b83055109b, type: 3}
   wallPrefab: {fileID: 7464371237458058364, guid: 2acfd96023d82ab498664738f710695a, type: 3}
+  glassPrefab: {fileID: 8698818020490240477, guid: 8fa5cce0305df454c96610f65e7a05a0, type: 3}
   LuckyMatchPrefab: {fileID: 1032998739610857962, guid: 7aa49fe6a4985e343ae473b874c7a27c, type: 3}
   PowerUpSlider: {fileID: 689238943}
   delay: 0.2
@@ -1409,6 +1410,7 @@ MonoBehaviour:
   pane: {fileID: 2129183309}
   refPane: {fileID: 1214881816}
   buttonParent: {fileID: 53558986}
+  glassParent: {fileID: 1007053791}
   topRowHider: {fileID: 203348527}
   dynamicFontSizeAdjuster: {fileID: 536404677}
 --- !u!1 &669136686
@@ -1655,7 +1657,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 2.5299988, y: 103.5}
+  m_AnchoredPosition: {x: -0.0050156, y: 133.27}
   m_SizeDelta: {x: 591.33997, y: 42.446777}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &689238945
@@ -1719,9 +1721,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f492ba3415bb0b04ca4338639a945c1c, type: 2}
   - {fileID: 11400000, guid: 8b91ec030ebdbd24781bda63d640d879, type: 2}
   - {fileID: 11400000, guid: e6d7d4f3d067fc141974212c94974612, type: 2}
-  revealRow: {fileID: 0}
-  revealCol: {fileID: 0}
-  frenzy: {fileID: 0}
+  revealRow: {fileID: 11400000, guid: 8b91ec030ebdbd24781bda63d640d879, type: 2}
+  revealCol: {fileID: 11400000, guid: f492ba3415bb0b04ca4338639a945c1c, type: 2}
+  frenzy: {fileID: 11400000, guid: e6d7d4f3d067fc141974212c94974612, type: 2}
   startingPowerUp: {fileID: 11400000, guid: 8b91ec030ebdbd24781bda63d640d879, type: 2}
 --- !u!114 &689238947
 MonoBehaviour:
@@ -2066,7 +2068,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3, y: -472}
+  m_AnchoredPosition: {x: 0.9999666, y: -667}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &995531554
@@ -2113,9 +2115,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1513151599}
-        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
-        m_MethodName: playPowerUp
+      - m_Target: {fileID: 689238946}
+        m_TargetAssemblyTypeName: PowerUpSlider, Assembly-CSharp
+        m_MethodName: PlayDebugPowerUp
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2123,6 +2125,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: frenzy
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1513151599}
+        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
+        m_MethodName: UnflipCurrentlyFlippedCards
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &995531555
@@ -2163,6 +2177,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 995531552}
   m_CullTransparentMesh: 1
+--- !u!1 &1007053790
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1007053791}
+  m_Layer: 5
+  m_Name: GlassParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1007053791
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1007053790}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2129183309}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1068270292
 GameObject:
   m_ObjectHideFlags: 0
@@ -2335,7 +2385,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 195, y: -472}
+  m_AnchoredPosition: {x: 193, y: -667}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1089345757
@@ -2364,7 +2414,7 @@ MonoBehaviour:
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
+    m_ColorMultiplier: 5
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
@@ -2382,9 +2432,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1513151599}
-        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
-        m_MethodName: playPowerUp
+      - m_Target: {fileID: 689238946}
+        m_TargetAssemblyTypeName: PowerUpSlider, Assembly-CSharp
+        m_MethodName: PlayDebugPowerUp
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2392,6 +2442,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: revealcol
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1513151599}
+        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
+        m_MethodName: UnflipCurrentlyFlippedCards
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1089345758
@@ -2938,6 +3000,9 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6198606537372954031, guid: 3195a51a299c964499939d37c0c29d0f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1007053791}
     - targetCorrespondingSourceObject: {fileID: 9122252617654887181, guid: 3195a51a299c964499939d37c0c29d0f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 536404672}
@@ -3489,7 +3554,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -186.85, y: -472}
+  m_AnchoredPosition: {x: -188.85004, y: -667}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1537387537
@@ -3536,9 +3601,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1513151599}
-        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
-        m_MethodName: playPowerUp
+      - m_Target: {fileID: 689238946}
+        m_TargetAssemblyTypeName: PowerUpSlider, Assembly-CSharp
+        m_MethodName: PlayDebugPowerUp
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3546,6 +3611,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: revealrow
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1513151599}
+        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
+        m_MethodName: UnflipCurrentlyFlippedCards
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1537387538

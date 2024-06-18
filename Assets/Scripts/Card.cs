@@ -11,6 +11,7 @@ public class Card : GridObject
 
     private bool isFlipped;
 
+    public bool GetIsFlipped(){return isFlipped;}
     public Card(int id, int row, int col):base(id){
         this.rowPos = row;
         this.colPos = col;
@@ -23,7 +24,7 @@ public class Card : GridObject
 
     private List<int[]> wallConnections;
     public void IncreaseTimesSeen(){ timesSeen++;}
-    public void flipModelCard(bool flip){
+    public void SetIsFlipped(bool flip){
         if(flip){
             timesSeen++;
         }

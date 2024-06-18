@@ -10,14 +10,14 @@ public class View : MonoBehaviour
 {
     
     private Transform[,] gridViewItems;
+    private Transform[,] glassView;
     
     [Header ("Prefabs")]    
-    [SerializeField] private Transform prefab;
-    [SerializeField] private Transform wallPrefab;
+    [SerializeField] private Transform prefab, wallPrefab, glassPrefab;
     [Header ("Extra Elements")]
     [SerializeField] private GameObject LuckyMatchPrefab;
     [SerializeField] private GameObject PowerUpSlider;
-
+        
     
     [Header ("Adjustable Stats")]
 
@@ -32,6 +32,8 @@ public class View : MonoBehaviour
     [SerializeField] private RectTransform  pane;
     [SerializeField] private RectTransform  refPane;    //a pane that stretches with the screen size acts as a "size goal" for our grid
     [SerializeField] private Transform buttonParent;
+    [SerializeField] private Transform glassParent;
+
     [SerializeField] private RectTransform topRowHider;
     [SerializeField] private DynamicFontSizeAdjuster dynamicFontSizeAdjuster;
     private UnityEngine.Vector2 scaleFactor;
@@ -68,19 +70,34 @@ public class View : MonoBehaviour
     }
 
     public void InitializeView(Model model){
+
         int myRow = model.getRow();
         int myCol = model.getCol();
         gridViewItems = new Transform[myRow, myCol]; 
-            
+        if(model.isHasGlass()){
+            glassView = new Transform[myRow, myCol];
+        }    
         //calculate and set the perfect dimensions for the grid based on the card pixel size
         pane.sizeDelta = new UnityEngine.Vector2(myCol*cardSize.x, myRow*cardSize.y);
         localWidth = pane.rect.width;
         localHeight = pane.rect.height;
 
+
         //populate the grid perfect sized grid with cards
         for(int i=0; i<myRow; i++){
             for(int j=0; j<myCol; j++){
                 gridViewItems[i,j] = InstantiateCard(i,j,model);
+                //glass
+                if(model.isHasGlass()){
+                    if(model.GetGlassAtIndex(i,j)){
+                        float xOffset = localWidth/(model.getCol());
+                        float yOffset = localHeight/(model.getRow());
+                        glassView[i,j] = Instantiate(glassPrefab, glassParent);
+                        glassView[i,j].localPosition = new UnityEngine.Vector3(xOffset*(j), -yOffset*(i+1),-5);
+                    }else{
+                        glassView[i,j]=null;   
+                    }
+                }
                 //Debug.Log("Button " + i + ","+ j+ " is at" + gameObject.position);                
                 }
         }
@@ -243,6 +260,11 @@ public class View : MonoBehaviour
         go.GetComponent<GridObjectMono>().Die();
     }
 
+    public void DestroyGlassObject(int row, int col){
+        Die(glassView[row, col].gameObject);        
+        glassView[row, col]=null;
+
+    }
     public void ResetPowerUpSlider(PowerUp powerUp){
         PowerUpSlider.GetComponent<PowerUpSlider>().ResetSlider(powerUp);
     }
@@ -309,11 +331,11 @@ public class View : MonoBehaviour
     }
     IEnumerator RevealCard(CardMono card, float myRevealTime, bool playSound){
         card.ShowflipCard(playSound);
-        ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
+        ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(true);
         yield return new WaitForSeconds(myRevealTime);
         if(card!=null){
             card.ShowUnflipCard(false);
-            ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);
+            ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(false);
         }
     }
     private float AdjustRevealTime(int cardsToReveal){

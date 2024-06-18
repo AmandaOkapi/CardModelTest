@@ -104,13 +104,13 @@ public class Controller : MonoBehaviour
             if(cardsFlipped==0){
                 card.SetEnabled(false);
                 firstCard=card;
-                ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
+                ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(true);
                 card.ShowFrenzy(true);
                 cardsFlipped++;
             }else if(cardsFlipped==1){
                 card.SetEnabled(false);
                 secondCard=card;
-                ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
+                ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(true);
                 card.ShowFrenzy(true);
                 cardsFlipped++;
                 if(!model.isMatchThreeMode()){
@@ -119,7 +119,7 @@ public class Controller : MonoBehaviour
             }else{
                 //questionable match 3 code
                         card.SetEnabled(false);
-                        ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
+                        ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(true);
                         thirdCard=card;
                         card.ShowFrenzy(true);
                         cardsFlipped++;                    
@@ -137,13 +137,13 @@ public class Controller : MonoBehaviour
         if(cardsFlipped==0){
             card.SetEnabled(false);
             firstCard=card;
-            ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
+            ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(true);
             card.ShowflipCard();
             cardsFlipped++;
         }else if(cardsFlipped==1){
             card.SetEnabled(false);
             secondCard=card;
-            ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
+            ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(true);
             card.ShowflipCard();
             cardsFlipped++;
             if(!model.isMatchThreeMode()){
@@ -152,7 +152,7 @@ public class Controller : MonoBehaviour
         }else{
             //questionable match 3 code
                     card.SetEnabled(false);
-                    ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(true);
+                    ((Card)(card.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(true);
                     thirdCard=card;
                     card.ShowflipCard();
                     cardsFlipped++;                    
@@ -166,8 +166,6 @@ public class Controller : MonoBehaviour
 
         if(model.isMatchThreeMode()){
             if(!checkThreeFlippedCards()){
-                thirdCard.SetEnabled(true);
-                thirdCard.ShowUnflipCard(true);
                 ResetFlippedCards();
             }     
         }else{            
@@ -188,28 +186,30 @@ public class Controller : MonoBehaviour
 private void ResetFlippedCards(){
         if(view.IsFrenzy()){
             firstCard.SetEnabled(true);
-            ((Card)(firstCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);
+            ((Card)(firstCard.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(false);
             firstCard.ShowFrenzy(false);
             secondCard.SetEnabled(true);        
-            ((Card)(secondCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);    
+            ((Card)(secondCard.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(false);    
             secondCard.ShowFrenzy(false);
             if(thirdCard!=null){
                 thirdCard.SetEnabled(true);        
-                ((Card)(thirdCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);    
+                ((Card)(thirdCard.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(false);    
                 thirdCard.ShowFrenzy(false);
                 thirdCard=null;
             }
             return;            
         }
     firstCard.SetEnabled(true);
-    ((Card)(firstCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);
+    ((Card)(firstCard.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(false);
     firstCard.ShowUnflipCard(true);
+    firstCard=null;
     secondCard.SetEnabled(true);        
-    ((Card)(secondCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);    
+    ((Card)(secondCard.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(false);    
     secondCard.ShowUnflipCard(true);
+    secondCard=null;
     if(thirdCard!=null){
         thirdCard.SetEnabled(true);        
-        ((Card)(thirdCard.GetComponent<GridObjectMono>().getCardBase())).flipModelCard(false);    
+        ((Card)(thirdCard.GetComponent<GridObjectMono>().getCardBase())).SetIsFlipped(false);    
         thirdCard.ShowUnflipCard(true);
         thirdCard=null;
     }
@@ -258,6 +258,11 @@ private void ResetFlippedCards(){
 
     private void MatchFound(CardMono firstCard, CardMono secondCard){
             //code straight from hell            
+
+            //beofre all else gets fd up lets break the glass
+            CheckForGlass(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());     
+            CheckForGlass(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
+
             //must first be removed as the row, col positions are known, and updating the model will change them
             view.RemoveCard(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());            
             view.RemoveCard(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
@@ -286,7 +291,11 @@ private void ResetFlippedCards(){
             }
     }
 
-        private void MatchFound(CardMono firstCard, CardMono secondCard, CardMono thirdCard){
+    private void MatchFound(CardMono firstCard, CardMono secondCard, CardMono thirdCard){
+            //beofre all else gets fd up lets break the glass
+            CheckForGlass(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());     
+            CheckForGlass(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
+            CheckForGlass(thirdCard.gridObjectMono.getCardBase().getRowPos(), thirdCard.gridObjectMono.getCardBase().getColPos());
             //must first be removed as the row, col positions are known, and updating the model will change them
             view.RemoveCard(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());            
             view.RemoveCard(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
@@ -319,26 +328,44 @@ private void ResetFlippedCards(){
     }
 
 
-
+    private void CheckForGlass(int row, int col){
+        //beofre all else gets fd up lets break the glass
+        if(model.isHasGlass()){
+            if(model.GetGlassAtIndex(row, col)){
+                view.DestroyGlassObject(row, col);
+            }
+        }
+    }
 
     public void UnflipCurrentlyFlippedCards(){
-        //fix it so unflipped cards dont flip again for powerups
+        if(cardsFlipped==0){
+            return;
+        }
         if (firstCard != null && firstCard.gameObject != null)
         {
-            firstCard.ShowUnflipCard(false);
-            firstCard.SetEnabled(true);
+            if(((Card)firstCard.GetComponent<GridObjectMono>().getCardBase()).GetIsFlipped()){
+                firstCard.ShowUnflipCard(false);
+                firstCard.SetEnabled(true);
+                ((Card)firstCard.GetComponent<GridObjectMono>().getCardBase()).SetIsFlipped(false);;
+            }
         }
 
         if (secondCard != null && secondCard.gameObject != null)
         {
-            secondCard.ShowUnflipCard(false);
-            secondCard.SetEnabled(true);
+            if(((Card)secondCard.GetComponent<GridObjectMono>().getCardBase()).GetIsFlipped()){
+                secondCard.ShowUnflipCard(false);
+                secondCard.SetEnabled(true);
+                ((Card)secondCard.GetComponent<GridObjectMono>().getCardBase()).SetIsFlipped(false);;
+            } 
         }
 
         if (thirdCard != null && thirdCard.gameObject != null)
         {
-            thirdCard.ShowUnflipCard(false);
-            thirdCard.SetEnabled(true);
+            if(((Card)thirdCard.GetComponent<GridObjectMono>().getCardBase()).GetIsFlipped()){
+                thirdCard.ShowUnflipCard(false);
+                thirdCard.SetEnabled(true);
+                ((Card)thirdCard.GetComponent<GridObjectMono>().getCardBase()).SetIsFlipped(false);;
+            }
         }
         cardsFlipped=0;
     }
