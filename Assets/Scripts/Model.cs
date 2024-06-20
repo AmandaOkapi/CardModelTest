@@ -110,14 +110,18 @@ public abstract class Model{
             }
         }
     }
-//glass crap done
-    public virtual void RemoveGridObject(int row, int col){
-        cardGrid[row,col]=null;
+
+    public void breakGlass(int row, int col){
         if(hasGlass){
             if(glassMatrix[row, col]){
                 glassMatrix[row, col] =false;
             }
+            PrintArray(glassMatrix);
         }
+    }
+//glass crap done
+    public virtual void RemoveGridObject(int row, int col){
+        cardGrid[row,col]=null;
         TranslateDown(row, col);
     }
 
@@ -156,22 +160,20 @@ public abstract class Model{
             TranslateDown(row-1, col);
         }
     }
-    public void PrintArray()
-    {
-        String myString="";
-        for (int i = 0; i < cardGrid.GetLength(0); i++)
-        {
-            for (int j = 0; j < cardGrid.GetLength(1); j++)
-            {
-                if(cardGrid[i, j]==null){
-                    myString+="myArray[" + i + "," + j + "] = " + "null";
-                }else{
-                    myString+="myArray[" + i + "," + j + "] = " + cardGrid[i, j].name;
+    public void  PrintArray<T>(T[,] array){
+        string myString = "";
+        for (int i = 0; i < array.GetLength(0); i++){
+            for (int j = 0; j < array.GetLength(1); j++){
+                if (array[i, j] == null){
+                    myString += "array[" + i + "," + j + "] = null";
                 }
-
+                else{
+                    myString += "array[" + i + "," + j + "] = " + array[i, j].ToString();
+                }
+                myString += "\t"; // Adding tab for better readability
             }
-            myString+="\n";
-        } 
+            myString += "\n"; // New line after each row
+        }
         Debug.Log(myString);
     }
 }

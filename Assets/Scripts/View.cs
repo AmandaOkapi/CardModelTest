@@ -8,7 +8,8 @@ using UnityEngine;
 using UnityEngine.UI;
 public class View : MonoBehaviour
 {
-    
+    [SerializeField] public static UnityEngine.Vector2 cardSize = new UnityEngine.Vector2(150f,216f);
+
     private Transform[,] gridViewItems;
     private Transform[,] glassView;
     
@@ -28,7 +29,6 @@ public class View : MonoBehaviour
 
     [Header ("Scaling")]    
     [SerializeField] private bool maintainAspectRatio =true;
-    [SerializeField] public static UnityEngine.Vector2 cardSize = new UnityEngine.Vector2(100f,144f);
     [SerializeField] private RectTransform  pane;
     [SerializeField] private RectTransform  refPane;    //a pane that stretches with the screen size acts as a "size goal" for our grid
     [SerializeField] private Transform buttonParent;

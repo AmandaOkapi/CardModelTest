@@ -100,13 +100,27 @@ public class LevelDataBase : MonoBehaviour
             model = model8,
             score = new Score(2000, new GetXMatches(100), new GetXCombo(2))
         });
+
+        OriginalModel model9 = new OriginalModel(6, 3, false);
+        model9.SetPossibleCards((new List<int>{0,1,2,3}));
+        returnList.Add(new Level{
+            model = model9,
+            score = new Score(2000, new GetXMatches(8), new GetXCombo(2))
+        });
+
+        OriginalModel model10 = new OriginalModel(9, 7, false);
+        model10.SetPossibleCards((new List<int>{0,1,2,3}));
+        returnList.Add(new Level{
+            model = model10,
+            score = new Score(2000, new GetXMatches(8), new GetXCombo(2))
+        });
+        OriginalModel model11 = new OriginalModel(9, 6, false);
+        model11.SetPossibleCards((new List<int>{0,1,2,3}));
+        returnList.Add(new Level{
+            model = model11,
+            score = new Score(2000, new GetXMatches(8), new GetXCombo(2))
+        });
         return returnList;
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
 
 }

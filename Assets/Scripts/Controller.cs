@@ -332,6 +332,7 @@ private void ResetFlippedCards(){
         //beofre all else gets fd up lets break the glass
         if(model.isHasGlass()){
             if(model.GetGlassAtIndex(row, col)){
+                model.breakGlass(row,col);
                 view.DestroyGlassObject(row, col);
             }
         }
@@ -339,6 +340,10 @@ private void ResetFlippedCards(){
 
     public void UnflipCurrentlyFlippedCards(){
         if(cardsFlipped==0){
+            return;
+        }
+        if(resetFlipGuard.activeInHierarchy){
+            FlipGuardPressed();
             return;
         }
         if (firstCard != null && firstCard.gameObject != null)

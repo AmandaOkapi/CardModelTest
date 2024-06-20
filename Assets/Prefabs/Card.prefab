@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -0.000022888184}
-  m_SizeDelta: {x: 109.6376, y: 155.1204}
+  m_SizeDelta: {x: 165, y: 231}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2888226897250286456
 CanvasRenderer:
@@ -118,7 +118,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: -52.850708, y: -72}
-  m_SizeDelta: {x: 100, y: 144}
+  m_SizeDelta: {x: 150, y: 216}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &5453230756130626144
 CanvasRenderer:
@@ -220,7 +220,6 @@ MonoBehaviour:
   gridObjectMono: {fileID: 7217890551567380530}
   imageComponent: {fileID: 4445433392774608215}
   frenzy: {fileID: 17470711803629048}
-  timeToFlip: 0.1
   animator: {fileID: 6443738146599447166}
   audioSource: {fileID: -2706551505992145941}
 --- !u!114 &7217890551567380530
@@ -368,7 +367,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 144}
+  m_SizeDelta: {x: 150, y: 216}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3660921883967166015
 CanvasRenderer:
