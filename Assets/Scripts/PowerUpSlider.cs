@@ -39,6 +39,8 @@ public class PowerUpSlider : MonoBehaviour
         EventManager.MatchFoundEvent +=MatchFound;
         //EventManager.WallDestroyed +=WallsDestoryed;
         EventManager.MatchFailed +=MatchFailed;   
+        EventManager.MatchThreeFailedEvent +=MatchThreeFailedEvent;   
+
     }
 
     void OnDisable()
@@ -46,6 +48,8 @@ public class PowerUpSlider : MonoBehaviour
         EventManager.MatchFoundEvent -= MatchFound;
         //EventManager.WallDestroyed -= WallsDestoryed;
         EventManager.MatchFailed -= MatchFailed;   
+        EventManager.MatchThreeFailedEvent -=MatchThreeFailedEvent;   
+
     }
 
     private void MatchFound(int id1){
@@ -56,6 +60,12 @@ public class PowerUpSlider : MonoBehaviour
 
     
     private void MatchFailed(int id1, int id2){
+        if(!currentPowerUp.isPlaying){
+            IncreaseSliderValue(sliderNoMatch);
+        }
+    }
+
+    private void MatchThreeFailedEvent(int id1, int id2, int id3){
         if(!currentPowerUp.isPlaying){
             IncreaseSliderValue(sliderNoMatch);
         }

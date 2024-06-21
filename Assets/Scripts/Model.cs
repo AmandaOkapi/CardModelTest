@@ -5,6 +5,9 @@ using Unity.Mathematics;
 using UnityEngine;
 
 public abstract class Model{
+    public static int id;
+    protected bool hasWalls;
+
     private int rowsToHide;
     private bool matchThreeMode;
     private bool hasGlass;
@@ -26,6 +29,9 @@ public abstract class Model{
     public Score score;
     
     public Model(int row, int col, int rowsToHide, bool hideTopRows){
+        Debug.Log("Making "+id++);
+        Debug.Log("has walls is now false");
+        hasWalls=false;
         this.row=row;
         this.col=col;
         cardGrid= new GridObject[row,col];
@@ -55,14 +61,16 @@ public abstract class Model{
     private float glassRarity;
     protected int glassCount;    
     public void AddGlass(float glassRarity){
+        Debug.Log("Adding walls to " +id);
         hasGlass=true;
         this.glassRarity =glassRarity;
         glassCount=0;
-        CreateWallMatrix();        
+        CreateGlassMatrix();        
     }
     
 
     public void AddGlass(float glassRarity, bool[,] customGlassMatrix){
+        Debug.Log("Adding glass to " +(id-1));
         hasGlass=true;
         this.glassRarity =glassRarity;
         glassMatrix= customGlassMatrix;
@@ -80,6 +88,7 @@ public abstract class Model{
         }
     }
     private void CountGlass(){
+        glassCount=0;
         for(int i=0; i< glassMatrix.GetLength(0); i++){
             for(int j=0; j<glassMatrix.GetLength(1); j++){
                 if(glassMatrix[i,j]){
@@ -89,8 +98,9 @@ public abstract class Model{
         }
     }
 
-    private void CreateWallMatrix(){
+    private void CreateGlassMatrix(){
         Debug.Log("ROWS TO HIDE " + getRowsToHide());
+        Debug.Log("HAS WALLS " + hasWalls);
         glassMatrix = new bool[row,col];
 
         for (int i = getRowsToHide(); i < row; i++)
@@ -102,7 +112,14 @@ public abstract class Model{
                 // Set the cell to true with a 10% chance
                 if (randomNumber < glassRarity) {
                     glassMatrix[i, j] = true; 
-                    glassRarity++;
+                    glassCount++;
+                    if(hasWalls){
+                        if(((WallModel)this).IsWallAtIndex(i,j)){
+                            Debug.Log("wall detected at " + i +"," +j);
+                            glassMatrix[i, j] = false; 
+                            glassCount--;
+                        }
+                    }
                 }else{
                     glassMatrix[i, j] = false;
                 }
@@ -280,6 +297,7 @@ public abstract class WallModel : Model{
     static float wallRarity =0.25f;
     protected int wallCount;
 
+    public bool IsWallAtIndex(int row, int col){return wallMatrix[row, col];} 
     public int GetWallCount(){
         return wallCount;
     }
@@ -291,21 +309,29 @@ public abstract class WallModel : Model{
         }
     }
     public WallModel(int row, int col, bool[,] customWallMatrix) : base(row,col, rowsToHide, hideTopRows){
+        Debug.Log("Has Walls is now true");
+        hasWalls=true;
         wallMatrix= customWallMatrix;
         FixWallMatrix();
         CountWalls(); // set wallCount
     }
     public WallModel(int row, int col, bool matchThreeMode, bool[,] customWallMatrix) : base(row,col, rowsToHide,hideTopRows, matchThreeMode){
+        Debug.Log("Has Walls is now true");
+        hasWalls=true;
         wallMatrix =customWallMatrix;
         FixWallMatrix();
         CountWalls(); // set wallCount
     }
     public WallModel(int row, int col) : base(row,col, rowsToHide,hideTopRows){
+            Debug.Log("Has Walls is now true");
+        hasWalls=true;
         wallCount=0;
         CreateWallMatrix();
     }
 
     public WallModel(int row, int col, bool matchThreeMode) : base(row,col, rowsToHide,hideTopRows, matchThreeMode){
+        Debug.Log("Has Walls is now true");
+        hasWalls=true;
         wallCount=0;
         CreateWallMatrix();
     }

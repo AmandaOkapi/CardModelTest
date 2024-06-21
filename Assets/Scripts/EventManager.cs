@@ -22,9 +22,9 @@ public class EventManager : MonoBehaviour
         MatchFailed?.Invoke(id1, id2);
     }
 
-    public static event Action<int,int, int> MatchThreeFoundEvent;
+    public static event Action<int,int, int> MatchThreeFailedEvent;
     public static void StartMatchThreeFaileddEvent(int id1, int id2, int id3){
-        MatchThreeFoundEvent?.Invoke(id1, id2, id3);
+        MatchThreeFailedEvent?.Invoke(id1, id2, id3);
     }
     
     public static event Action LuckyMatchFound;
