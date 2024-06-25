@@ -50,7 +50,7 @@ public class GetXPoints :ScoreRequirements{
         return displayString;
     }
     public override bool CheckConditional(int finalAmount){
-        return points<=finalAmount;
+        return points>=finalAmount;
     }
     public override string ToString(){
         return "Get at least" + points + " points";
@@ -69,7 +69,7 @@ public class DestroyXWalls:ScoreRequirements{
         return displayString;
     }
     public override bool CheckConditional(int finalAmount){
-        return walls<=finalAmount;
+        return walls>=finalAmount;
     }
     public override string ToString(){
         return "Destroy at least" + walls + " walls";
@@ -88,7 +88,7 @@ public class DestroyAllXWalls:ScoreRequirements{
         return displayString;
     }
     public override bool CheckConditional(int finalAmount){
-        return walls<=finalAmount;
+        return walls>=finalAmount;
     }
     public override string ToString(){
         return "Destroy all " + walls + " walls";
@@ -106,7 +106,7 @@ public class GetXMatches:ScoreRequirements{
         return displayString;
     }
     public override bool CheckConditional(int finalAmount){
-        return matches<=finalAmount;
+        return matches>=finalAmount;
     }
     public override string ToString(){
         return "Get  " + matches + " matches";
@@ -125,9 +125,29 @@ public class GetXCombo:ScoreRequirements{
         return displayString;
     }
     public override bool CheckConditional(int finalAmount){
-        return combo<=finalAmount;
+        return combo>=finalAmount;
     }
     public override string ToString(){
         return "Get a comnbo of a least " + combo + " matches";
+    }
+}
+
+
+public class GetLessThanXMoves:ScoreRequirements{
+    int moves;
+    public GetLessThanXMoves(int x ){
+        moves=x;
+        displayString = "Moves:\n<size=150%>0</size>\n<size=50%>Min "+ moves.ToString() + "</size>";
+
+    }
+    public override string UpdateDisplayString(int newValue){
+        displayString ="Moves:\n<size=150%>"+newValue.ToString() +"</size>\n<size=50%>Min "+ moves.ToString() + "</size>";
+        return displayString;
+    }
+    public override bool CheckConditional(int finalAmount){
+        return moves<=finalAmount;
+    }
+    public override string ToString(){
+        return "Get a comnbo of a least " + moves + " matches";
     }
 }

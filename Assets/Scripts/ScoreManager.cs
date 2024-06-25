@@ -25,7 +25,7 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private GameObject earlyWin;
 
 
-    private int matchesFound, wallsDestoyed, combo;
+    private int matchesFound, wallsDestoyed, combo, moves;
     private float accuracy;
 
     private int points=0;
@@ -86,6 +86,7 @@ public class ScoreManager : MonoBehaviour
         Invoke("GameOver", 1f);
     } 
     private void MatchFound(int id1){
+        moves++;
         matchesFound++;
         combo++;
         points += scoreIncreaseAmount;
@@ -96,6 +97,8 @@ public class ScoreManager : MonoBehaviour
                 getXMatches.UpdateDisplayString(matchesFound);
             }else if (sr is GetXCombo getXCombo){
                 getXCombo.UpdateDisplayString(combo);
+            }else if (sr is GetLessThanXMoves getLessThanXMoves){
+                getLessThanXMoves.UpdateDisplayString(moves);
             }
         }
         UpdateScoreView();
@@ -146,6 +149,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     private void MatchFailed(int id1, int id2){
+        moves++;
         combo = 0;  
         if(myScoreRequirments==null){
             Debug.Log("Null score from match failed");
@@ -156,6 +160,8 @@ public class ScoreManager : MonoBehaviour
         foreach(ScoreRequirements sr in myScoreRequirments){
             if(sr is GetXCombo getXCombo){
                 getXCombo.UpdateDisplayString(matchesFound);
+            }else if (sr is GetLessThanXMoves getLessThanXMoves){
+                getLessThanXMoves.UpdateDisplayString(moves);
             }
             UpdateScoreView();
         }
