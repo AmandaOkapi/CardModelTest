@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class SceneManager : MonoBehaviour
+public class MySceneManager : MonoBehaviour
 {
     public void ChangeScene(string sceneName){
         PlayerPrefs.SetInt("levelNumber", -1);
@@ -16,4 +15,6 @@ public class SceneManager : MonoBehaviour
         PlayerPrefs.Save();
         UnityEngine.SceneManagement.SceneManager.LoadScene("GenerativeScene");
     }
+
+
 }

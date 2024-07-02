@@ -260,8 +260,8 @@ private void ResetFlippedCards(){
             //code straight from hell            
 
             //beofre all else gets fd up lets break the glass
-            CheckForGlass(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());     
-            CheckForGlass(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
+            CheckForAndDestroyGlass(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());     
+            CheckForAndDestroyGlass(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
 
             //must first be removed as the row, col positions are known, and updating the model will change them
             view.RemoveCard(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());            
@@ -293,9 +293,9 @@ private void ResetFlippedCards(){
 
     private void MatchFound(CardMono firstCard, CardMono secondCard, CardMono thirdCard){
             //beofre all else gets fd up lets break the glass
-            CheckForGlass(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());     
-            CheckForGlass(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
-            CheckForGlass(thirdCard.gridObjectMono.getCardBase().getRowPos(), thirdCard.gridObjectMono.getCardBase().getColPos());
+            CheckForAndDestroyGlass(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());     
+            CheckForAndDestroyGlass(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
+            CheckForAndDestroyGlass(thirdCard.gridObjectMono.getCardBase().getRowPos(), thirdCard.gridObjectMono.getCardBase().getColPos());
             //must first be removed as the row, col positions are known, and updating the model will change them
             view.RemoveCard(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos());            
             view.RemoveCard(secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
@@ -307,6 +307,7 @@ private void ResetFlippedCards(){
                                                                                 thirdCard.gridObjectMono.getCardBase().getRowPos(), thirdCard.gridObjectMono.getCardBase().getColPos());
                 for(int i=0; i<list.Count; i++){
                     view.RemoveCard(list[i][0], list[i][1]);
+                    CheckForAndDestroyGlass(list[i][0], list[i][1]);
                     print("DELTED");
                 }
                 
@@ -328,14 +329,16 @@ private void ResetFlippedCards(){
     }
 
 
-    private void CheckForGlass(int row, int col){
+    private bool CheckForAndDestroyGlass(int row, int col){
         //beofre all else gets fd up lets break the glass
         if(model.isHasGlass()){
             if(model.GetGlassAtIndex(row, col)){
                 model.breakGlass(row,col);
                 view.DestroyGlassObject(row, col);
+                return true;
             }
         }
+        return false;
     }
 
     public void UnflipCurrentlyFlippedCards(){

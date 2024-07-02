@@ -71,7 +71,7 @@ public class View : MonoBehaviour
 
     public void InitializeView(Model model){
 
-        int myRow = model.getRow();
+        int myRow = (model.getRow());
         int myCol = model.getCol();
         gridViewItems = new Transform[myRow, myCol]; 
         if(model.isHasGlass()){
@@ -104,7 +104,7 @@ public class View : MonoBehaviour
             
         //calculate scale factor based on the the refPane (want local*scalefactor = ref) and scale down the grid if needed
         scaleFactor.x = refWidth/localWidth;
-        scaleFactor.y = refHeight/localHeight;
+        scaleFactor.y = refHeight/(localHeight - (model.getRowsToHide() * cardSize.y ));
             
         float scaleFactorAverage = Mathf.Min(scaleFactor.x, scaleFactor.y, 1); //gives a max size
         if(maintainAspectRatio){
@@ -342,11 +342,24 @@ public class View : MonoBehaviour
         return Mathf.Max(revealTime, (delay * cardsToReveal) +Mathf.Min((cardsToReveal*0.15f), 1.5f));
     }
 
-    private int CardsInRow(int row){
+    public int CardsInRow(int row){
         int cnt=0;
         for(int i=0; i< gridViewItems.GetLength(1); i++){
-            if(gridViewItems[row, i].gameObject.tag =="Card"){
-                    cnt++;
+            if(gridViewItems[row, i]!=null){
+                if(gridViewItems[row, i].gameObject.tag =="Card"){
+                        cnt++;
+                }
+            }
+        }
+        return cnt;
+    }
+    public int CardsInCol(int col, Model model){
+        int cnt=0;
+        for(int i= model.getRowsToHide(); i< gridViewItems.GetLength(0); i++){
+            if(gridViewItems[i, col]!=null){
+                if(gridViewItems[i, col].gameObject.tag =="Card"){
+                        cnt++;
+                }
             }
         }
         return cnt;

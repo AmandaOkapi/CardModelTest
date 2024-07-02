@@ -11,7 +11,7 @@ public class RevealRow : PowerUp
     public override void Activate(View view, Model model, float delay)
     {
         isPlaying=true;
-        int row = Random.Range(model.getRowsToHide(), model.getRow());
+        int row = ModelSearchToolkit.FindRowWithCards(model);
         view.RevealRow(row, delay);
     }
 }

@@ -10,7 +10,7 @@ public class RevealCol : PowerUp
     public override void Activate(View view, Model model, float delay)
     {
         isPlaying=true;
-        int col = Random.Range(0, model.getCol());
+        int col = ModelSearchToolkit.FindColWithCards(model);
         view.RevealCol(col, model, delay);
     }
 }

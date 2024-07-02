@@ -21,6 +21,7 @@ public abstract class Model{
     public int getRow(){return row;}
     public int getCol(){return col;}
     public int getRowsToHide(){return rowsToHide;}
+    public Card[] getPossibleCards(){return possibleCards;}
 
     public bool isMatchThreeMode(){return matchThreeMode;}
     public bool isHideTopRows(){return hideTopRows;}

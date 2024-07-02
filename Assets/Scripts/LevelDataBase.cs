@@ -22,6 +22,7 @@ public class LevelDataBase : MonoBehaviour
 
     private void Awake(){
         InitializeDatabase();
+        DontDestroyOnLoad(gameObject);
     }
     private void InitializeDatabase()
     {
