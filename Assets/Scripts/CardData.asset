@@ -13,18 +13,33 @@ MonoBehaviour:
   m_Name: CardData
   m_EditorClassIdentifier: 
   cardImages:
+  - {fileID: -1968534731, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: -551978688, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: -1793927632, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
   - {fileID: 21300000, guid: 5df3e3fc858c8cc4b830b30de09a4aaa, type: 3}
-  - {fileID: 21300000, guid: b8de988e6ea2b494fbc7f67a954726a2, type: 3}
   - {fileID: 21300000, guid: 38d0e9d9b62e3694eab72da4a673e0b1, type: 3}
-  - {fileID: 21300000, guid: a8c16ccbf3862714cae0987c2e0fb93b, type: 3}
-  - {fileID: 21300000, guid: c57a0204b978e9a4cb4a801105921093, type: 3}
-  - {fileID: 21300000, guid: 38f092c9af4c72a42b654400b083bf3a, type: 3}
-  - {fileID: 2112878948, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: 21300000, guid: 079bc55337592fa4e84b9811b30cf546, type: 3}
+  - {fileID: 1665430997, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
   - {fileID: -1688728032, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
   - {fileID: -1003873724, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: 1763659534, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: 1165916088, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
   - {fileID: -2136538199, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: 936546262, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: -739441074, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: -751682001, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: 1763659534, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: -489460898, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: -1304570050, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
   - {fileID: 617712539, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -1450332772, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -1968534731, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  cardBack: {fileID: 21300000, guid: 332f6a25baf9e374999aeb4e466c5563, type: 3}
+  - {fileID: -974591387, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: 1874821319, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: 376923543, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: 2007685637, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: 1423649474, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: -1385841439, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: -1622083720, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: -442179257, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: -492726572, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  - {fileID: -1008661148, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
+  cardBack: {fileID: 21300000, guid: e3a1ffc150e492e44b0b628903a79e28, type: 3}
+  mysteryCardIcon: {fileID: 1111314460, guid: 8805656f75a52924eb1067039ca599d3, type: 3}

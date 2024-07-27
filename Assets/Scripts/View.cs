@@ -126,6 +126,7 @@ public class View : MonoBehaviour
             topRowHider.gameObject.SetActive(false);;
         } 
         dynamicFontSizeAdjuster?.AdjustFontSize(pane.sizeDelta.x);
+
     }
 
 
@@ -319,14 +320,15 @@ public class View : MonoBehaviour
         //powerUpPlaying=true;
         frenzy=true;
         yield return new WaitForSeconds(startDelay);
+        GridObjectMono.fallSpeed =GridObjectMono.frenzyFallspeed; 
         PowerUpSlider.GetComponent<PowerUpSlider>().StartDepleteSlider(frenzyTime);
-        GridObjectMono.fallSpeed = GridObjectMono.frenzyFallspeed;
         foreach(GameObject card in GameObject.FindGameObjectsWithTag("Card")){
             StartCoroutine(RevealCard(card.GetComponent<CardMono>(), frenzyTime, false));
         }
         yield return new WaitForSeconds(frenzyTime);
-        GridObjectMono.fallSpeed = GridObjectMono.defaultFallspeed;
+        GridObjectMono.fallSpeed =GridObjectMono.defaultFallspeed;
         frenzy=false;
+        
         //powerUpPlaying=false;
     }
     IEnumerator RevealCard(CardMono card, float myRevealTime, bool playSound){

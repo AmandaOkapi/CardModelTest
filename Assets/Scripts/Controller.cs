@@ -38,9 +38,12 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        levelNumber = PlayerPrefs.GetInt("levelNumber");
-
-        if(levelNumber<0){
+        levelNumber = PlayerPrefs.GetInt("levelNumber", -2);
+        if(levelNumber==-2){
+            Debug.Log("error");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
+            return;
+        }else if(levelNumber==-1){
             if(serializedCustomWall !=null && serializedCustomWall.GridSize.y>1 ){
                 bool[,] customWall = new bool[serializedCustomWall.GridSize.y, serializedCustomWall.GridSize.x];
                 Debug.Log("rows " + customWall.GetLength(0) + " cols " + customWall.GetLength(1));
@@ -96,7 +99,7 @@ public class Controller : MonoBehaviour
 
     //called by cardmono on click
     public void flipCard(CardMono card){        
-        if(View.cardsFalling>0 || view.IsPowerUpPlaying()){
+        if(view.IsPowerUpPlaying() || View.cardsFalling>0 ){
             return;
         }
 

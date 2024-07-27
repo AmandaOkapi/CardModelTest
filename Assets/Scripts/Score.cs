@@ -128,7 +128,7 @@ public class GetXCombo:ScoreRequirements{
         return combo>=finalAmount;
     }
     public override string ToString(){
-        return "Get a match comnbo of a least " + combo ;
+        return "Get a match combo of a least " + combo ;
     }
 }
 

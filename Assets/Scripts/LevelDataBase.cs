@@ -34,7 +34,7 @@ public class LevelDataBase : MonoBehaviour
         List<Level> returnList = new List<Level>();
         
         WallModelDestroyWalls model0 = new WallModelDestroyWalls(15, 6, true);
-        model0.SetPossibleCards(new List<int>{0,1,2,3,4,5,6,7,8,9,10});
+        model0.SetDeckSize(11);
         model0.AddGlass(0.3f);
         int wallCount = model0.GetWallCount();
         DestroyAllXWalls destroyAllXWalls = new DestroyAllXWalls(wallCount);
@@ -45,7 +45,7 @@ public class LevelDataBase : MonoBehaviour
         });
         
         OriginalModel model1 = new OriginalModel(12, 6, false);
-        model1.SetPossibleCards(new List<int>{0,1,2,3,4,5,6,7,8,9,10});
+        model1.SetDeckSize(8);
         model1.AddGlass(0.5f);
         returnList.Add(new Level{
             model = model1,
@@ -96,7 +96,7 @@ public class LevelDataBase : MonoBehaviour
             score = new Score(169, new GetXMatches(30), new GetXCombo(2))
         });
 
-        OriginalModel model8 = new OriginalModel(32, 20, false);
+        OriginalModel model8 = new OriginalModel(100, 100, false);
         model8.SetPossibleCards((new List<int>{0,1,2,3,4,5,6,7,8,9,10,11}));
         returnList.Add(new Level{
             model = model8,

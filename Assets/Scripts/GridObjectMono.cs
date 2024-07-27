@@ -9,13 +9,14 @@ public class GridObjectMono : MonoBehaviour
     public static float fallSpeed =500f;
     public static float defaultFallspeed =500f;
     public static float frenzyFallspeed =1000f;
+    public static float skipForwardFallspeed =1f;
 
     [SerializeField] private GridObject gridObjectBase;
     public void SetCardBase(GridObject gridObjectBase){ this.gridObjectBase=gridObjectBase;}
 
     public GridObject getCardBase(){return gridObjectBase;}
     private void Start(){
-        fallSpeed = defaultFallspeed;
+        //fallSpeed = defaultFallspeed;
         gridObjectAppearance = GetComponent<IGridObjectAppearance>();
     }
 
@@ -56,4 +57,7 @@ public class GridObjectMono : MonoBehaviour
     public void Die(){
         gridObjectAppearance.Die();
     }
+
+
+
 }

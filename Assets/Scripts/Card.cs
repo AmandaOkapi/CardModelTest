@@ -49,7 +49,7 @@ public abstract class GridObject
     private int id;    
     public int getId(){return id;}
 
-    public static float fallSpeed = 0.5f; 
+    //public static float fallSpeed = 0.5f; 
     protected int rowPos;
     protected int colPos;
     

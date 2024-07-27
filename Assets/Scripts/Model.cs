@@ -12,6 +12,8 @@ public abstract class Model{
     private bool matchThreeMode;
     private bool hasGlass;
     private bool hideTopRows;
+
+    private bool hasCustomDeck;
     protected GridObject[,] cardGrid;
     protected Card[] possibleCards;
 
@@ -25,13 +27,14 @@ public abstract class Model{
 
     public bool isMatchThreeMode(){return matchThreeMode;}
     public bool isHideTopRows(){return hideTopRows;}
-
     public bool isHasGlass(){return hasGlass;}
+
+    public bool isHasCustomDeck(){return hasCustomDeck;}
     public Score score;
     
     public Model(int row, int col, int rowsToHide, bool hideTopRows){
-        Debug.Log("Making "+id++);
-        Debug.Log("has walls is now false");
+        //Debug.Log("Making "+id++);
+        //Debug.Log("has walls is now false");
         hasWalls=false;
         this.row=row;
         this.col=col;
@@ -43,14 +46,27 @@ public abstract class Model{
         hasGlass=false;
     }
 
+    public void SetDeckSize(int size){
+        List<int> newDeck = new List<int>();
+
+        for(int i =0; i<size; i++){
+            newDeck.Add(i);
+        }
+        SetPossibleCards(newDeck);
+        hasCustomDeck =false;
+    }
     public void SetPossibleCards(List<int> customPossibleCards){
+        SetPossibleCards(customPossibleCards, true);
+    }
+    public void SetPossibleCards(List<int> customPossibleCards, bool isCustom){
+        hasCustomDeck = isCustom;
         Card[] newArr = new Card[customPossibleCards.Count];
         for(int i=0; i<customPossibleCards.Count; i++){
             newArr[i]=new Card(customPossibleCards[i]);
         }
         SetPossibleCards(newArr);
     }
-    public virtual void SetPossibleCards(Card[] possibleCards){
+    protected virtual void SetPossibleCards(Card[] possibleCards){
         this.possibleCards=possibleCards;
     }
     public Model(int row, int col, int rowsToHide, bool hideTopRows, bool matchThreeMode) : this(row, col, rowsToHide, hideTopRows){
@@ -237,7 +253,7 @@ public class EliminationModel : Model{
         ContructDictionary();
     }
 
-    public override void SetPossibleCards(Card[] possibleCards){
+    protected override void SetPossibleCards(Card[] possibleCards){
         cardUsgae = new Dictionary<Card, int>();
         ContructDictionary();
     }
@@ -473,7 +489,7 @@ public class WallModelElimination : WallModel{
 
     }
 
-    public override void SetPossibleCards(Card[] possibleCards){
+    protected override void SetPossibleCards(Card[] possibleCards){
         this.possibleCards=possibleCards;
     }
     private void ContructDictionary(){
