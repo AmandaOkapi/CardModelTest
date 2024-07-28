@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UIImageHoldHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
+public class UIImageHoldHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     private bool isHolding = false;
 
@@ -14,10 +14,8 @@ public class UIImageHoldHandler : MonoBehaviour, IPointerDownHandler, IPointerUp
     public void OnPointerUp(PointerEventData eventData)
     {
         isHolding = false;
-    }
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        isHolding = false;
         GridObjectMono.fallSpeed = GridObjectMono.defaultFallspeed;
+
     }
+
 }

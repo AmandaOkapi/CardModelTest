@@ -39,8 +39,8 @@ public class DeckEditor : MonoBehaviour
         canvas.SetActive(true);
         List<int> currentList = PlayerPrefsUtility.GetIntList(PlayerPrefsUtility.keyCurrentLevelDeck);
         editedDeck = new List<int>();
-        Debug.Log("enabling wiith this list");
-        GeneralToolbox.PrintListToConsole(currentList);        
+        //Debug.Log("enabling wiith this list");
+        //GeneralToolbox.PrintListToConsole(currentList);        
         //turn on the correct cards
         for (int i = 0; i < deckEditorGrid.transform.childCount; i++){
             // Get the child at index i
@@ -52,13 +52,6 @@ public class DeckEditor : MonoBehaviour
                 childDeckEditorIcon.ForcedIconEnable(false);
             }
         }
-        //since there is some weird bug where things arent initialized properly the first time when you open this shit...
-        //i present the nuclear option (time to move on)
-        // if(firstTimeOpened){
-        //     firstTimeOpened=false;
-        //     SaveAndExitView();
-        //     EnableDeckEditorWindow();
-        // }
     }
 
     private void Update(){
@@ -79,12 +72,13 @@ public class DeckEditor : MonoBehaviour
             } 
         }
         List<int> finalList = new List<int>();
-        editedDeck.Sort();
+        editedDeck.Sort();        
         finalList.AddRange(editedDeck);
         finalList.AddRange(secondList); 
-        Debug.Log("Final list to be saved");
-        GeneralToolbox.PrintListToConsole(finalList);
+        //Debug.Log("Final list to be saved");
+        //GeneralToolbox.PrintListToConsole(finalList);
         PlayerPrefsUtility.SaveIntCollection(PlayerPrefsUtility.keyPrefferedDeck,finalList);
+
         ExitView();
     }
 }

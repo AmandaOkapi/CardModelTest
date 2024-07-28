@@ -41,7 +41,6 @@ public class DeckEditorIcon : MonoBehaviour
     }
 
     public void Toggle(){
-        Debug.Log("toggle()ing");
         IconEnable(!isEnabled);
     }
     public void IconEnable(bool x){
@@ -49,7 +48,7 @@ public class DeckEditorIcon : MonoBehaviour
             Debug.LogError("DeckEditor not found");
             return;
         }
-        if(x && deckEditor.editedDeck.Count ==  PlayerPrefsUtility.GetIntList(PlayerPrefsUtility.keyPrefferedDeck).Count){
+        if(x && deckEditor.editedDeck.Count ==  PlayerPrefsUtility.GetIntList(PlayerPrefsUtility.keyCurrentLevelDeck).Count){
             return;
         }
         isEnabled = x;
@@ -59,9 +58,7 @@ public class DeckEditorIcon : MonoBehaviour
         AddOrRemoveSelfFromNewDeck();
     }
     public void ForcedIconEnable(bool x){
-        Debug.Log("hello enabling: " + x+""+id);
         isEnabled = x;
-        Debug.Log("toggle time? "+id);
         ToggleBlocker();
         AddOrRemoveSelfFromNewDeck();   
     }
@@ -79,7 +76,6 @@ public class DeckEditorIcon : MonoBehaviour
     }
 
     private void ToggleBlocker(){
-        Debug.Log("Set active: " + !isEnabled + " for id " + id);
         if (childObject == null && transform.childCount > 0)
         {
             childObject = transform.GetChild(0).gameObject;

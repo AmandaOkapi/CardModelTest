@@ -34,6 +34,7 @@ public class View : MonoBehaviour
     [SerializeField] private Transform buttonParent;
     [SerializeField] private Transform glassParent;
 
+    [SerializeField] private RectTransform mask;
     [SerializeField] private RectTransform topRowHider;
     [SerializeField] private DynamicFontSizeAdjuster dynamicFontSizeAdjuster;
     private UnityEngine.Vector2 scaleFactor;
@@ -117,19 +118,38 @@ public class View : MonoBehaviour
         float newPosY = (model.isHideTopRows()) ? (pane.rect.height * pane.localScale.y +(model.getRowsToHide())*(cardSize.y * pane.localScale.y ))/2: (pane.rect.height *pane.localScale.y )/2;
         pane.localPosition = new UnityEngine.Vector3(newPosX, newPosY);
 
+        mask.sizeDelta = pane.sizeDelta *pane.localScale;
         if(model.getRowsToHide()>0){
-            //UnityEngine.Vector2 newSize = new UnityEngine.Vector2(topRowHider.sizeDelta.x , ((model.getRowsToHide()) * cardSize.y* pane.localScale.y));
-            topRowHider.offsetMin = new UnityEngine.Vector2(topRowHider.offsetMin.x, model.getRow()*cardSize.y -((model.getRowsToHide()) * cardSize.y));
+            mask.sizeDelta= new UnityEngine.Vector2(mask.sizeDelta.x, mask.sizeDelta. y -(((model.getRowsToHide()) * cardSize.y* pane.localScale.y)));
+        }
+        //center the mask
+        //AlignToBottom(mask);
 
-            //topRowHider.sizeDelta = newSize;
-        }else{
-            topRowHider.gameObject.SetActive(false);;
-        } 
+        // if(model.getRowsToHide()>0){
+        //     //UnityEngine.Vector2 newSize = new UnityEngine.Vector2(topRowHider.sizeDelta.x , ((model.getRowsToHide()) * cardSize.y* pane.localScale.y));
+        //     topRowHider.offsetMin = new UnityEngine.Vector2(topRowHider.offsetMin.x, model.getRow()*cardSize.y -((model.getRowsToHide()) * cardSize.y));
+
+        //     //topRowHider.sizeDelta = newSize;
+        // }else{
+        //     topRowHider.gameObject.SetActive(false);;
+        // } 
+        
         dynamicFontSizeAdjuster?.AdjustFontSize(pane.sizeDelta.x);
 
     }
 
+    private void AlignToBottom(RectTransform rt)
+    {
+        // Set anchor to bottom
+        rt.anchorMin = new UnityEngine.Vector2(0.5f, 0);
+        rt.anchorMax = new UnityEngine.Vector2(0.5f, 0);
 
+        // Set pivot to bottom
+        rt.pivot = new UnityEngine.Vector2(0.5f, 0);
+
+        // Set anchored position to zero
+        rt.anchoredPosition = new UnityEngine.Vector2(rt.anchoredPosition.x, 0);
+    }
     private void ClearView(){
         GameObject[] cards = GameObject.FindGameObjectsWithTag("Card");
 

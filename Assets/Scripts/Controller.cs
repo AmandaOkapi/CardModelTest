@@ -38,7 +38,7 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        levelNumber = PlayerPrefs.GetInt("levelNumber", -2);
+        levelNumber = PlayerPrefs.GetInt("levelNumber", -2); //-2 is deafult value if failed
         if(levelNumber==-2){
             Debug.Log("error");
             UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
@@ -92,10 +92,10 @@ public class Controller : MonoBehaviour
         }     
 
     }
-    private void RunAfterStart(){
-        EventManager.StartGameTimer(model.score.GetGameTime());
-        EventManager.StartInitializeView(model.score);
-    }
+    // private void RunAfterStart(){
+    //     EventManager.StartGameTimer(model.score.GetGameTime());
+    //     EventManager.StartInitializeView(model.score);
+    // }
 
     //called by cardmono on click
     public void flipCard(CardMono card){        
@@ -166,7 +166,7 @@ public class Controller : MonoBehaviour
     public void FlipGuardPressed(){
         resetFlipGuard.SetActive(false);
         cardsFlipped=0;
-
+        
         if(model.isMatchThreeMode()){
             if(!checkThreeFlippedCards()){
                 ResetFlippedCards();

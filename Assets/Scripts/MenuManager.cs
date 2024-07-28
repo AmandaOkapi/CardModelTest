@@ -133,9 +133,8 @@ public class MenuManager : MonoBehaviour
             newGridItem.GetComponent<Image>().sprite = (cardData.cardImages[myPrefferedDeck[i]]);    
             newDeckFromPrefs.Add(myPrefferedDeck[i]);
         }
+        //Update the model with the edited deck
         model.SetPossibleCards(newDeckFromPrefs, false);
-        Debug.Log("Saving this list");
-        GeneralToolbox.PrintListToConsole(newDeckFromPrefs);
         PlayerPrefsUtility.SaveIntCollection(PlayerPrefsUtility.keyCurrentLevelDeck, newDeckFromPrefs);
         deckPreviewEditButton.SetActive(true);
     }

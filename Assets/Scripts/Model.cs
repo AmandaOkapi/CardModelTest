@@ -58,8 +58,10 @@ public abstract class Model{
     public void SetPossibleCards(List<int> customPossibleCards){
         SetPossibleCards(customPossibleCards, true);
     }
-    public void SetPossibleCards(List<int> customPossibleCards, bool isCustom){
-        hasCustomDeck = isCustom;
+    public void SetPossibleCards(List<int> customPossibleCards, bool isCustomPredetermined){
+        Debug.Log("Saving via Set Possible Cards");
+        GeneralToolbox.PrintListToConsole(customPossibleCards);
+        hasCustomDeck = isCustomPredetermined;
         Card[] newArr = new Card[customPossibleCards.Count];
         for(int i=0; i<customPossibleCards.Count; i++){
             newArr[i]=new Card(customPossibleCards[i]);
@@ -69,6 +71,7 @@ public abstract class Model{
     protected virtual void SetPossibleCards(Card[] possibleCards){
         this.possibleCards=possibleCards;
     }
+
     public Model(int row, int col, int rowsToHide, bool hideTopRows, bool matchThreeMode) : this(row, col, rowsToHide, hideTopRows){
         this.matchThreeMode=matchThreeMode;
     }
@@ -161,7 +164,7 @@ public abstract class Model{
 
     protected virtual GridObject CreateNewGridObject(int row, int col){
         //Debug.Log("Hello from WallModel CreateNewGridObject");
-        cardGrid[row,col] = new Card(UnityEngine.Random.Range(0, possibleCards.Length), row, col);
+        cardGrid[row,col] = new Card(possibleCards[UnityEngine.Random.Range(0, possibleCards.Length)].getId(), row, col);
         return cardGrid[row,col];
     }
 
@@ -169,11 +172,31 @@ public abstract class Model{
         return cardGrid[row,col];
     }    
     public void PopulateGrid(){
+        Debug.Log("HELLO FROM POPULATE GRID");
+        foreach(Card c in possibleCards){
+            Debug.Log(c.name);
+        }
         for(int i=cardGrid.GetLength(0)-1; i>=0; i--){
             for(int j=cardGrid.GetLength(1)-1; j>=0; j--){
                 cardGrid[i,j]=CreateNewGridObject(i,j);
             }
         }
+        Debug.Log("GRid isssssssssss");
+             // Get the dimensions of the array
+        int rows = cardGrid.GetLength(0);
+        int columns = cardGrid.GetLength(1);
+
+        // Build the string representation of the array
+        string arrayString = "";
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                arrayString += cardGrid[i, j].name +""+ cardGrid[i, j].getId() +  "\t"; // Tab space for better formatting
+            }
+            arrayString += "\n"; // New line at the end of each row
+        }
+        Debug.Log(arrayString);
 
     }    
     
@@ -224,7 +247,7 @@ public class OriginalModel :Model {
     }
 
     private void InitializeOriginalModel(){
-        possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5)};
+        //possibleCards= new Card[] {new Card(0), new Card(1), new Card(2), new Card(3),new Card(4), new Card(5)};
     }
     public override void RemoveGridObject(int row, int col){
         base.RemoveGridObject(row, col);
@@ -491,6 +514,7 @@ public class WallModelElimination : WallModel{
 
     protected override void SetPossibleCards(Card[] possibleCards){
         this.possibleCards=possibleCards;
+        ContructDictionary();
     }
     private void ContructDictionary(){
         //this code can be better

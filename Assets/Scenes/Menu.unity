@@ -10851,7 +10851,7 @@ MonoBehaviour:
   scoreRequirmentsText: {fileID: 1212235226}
   button: {fileID: 1744598966}
   mySceneManager: {fileID: 1216300522}
-  resetDefaultPrefferedDeck: 1
+  resetDefaultPrefferedDeck: 0
 --- !u!4 &2072458194
 Transform:
   m_ObjectHideFlags: 0

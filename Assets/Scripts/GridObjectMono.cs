@@ -9,7 +9,7 @@ public class GridObjectMono : MonoBehaviour
     public static float fallSpeed =500f;
     public static float defaultFallspeed =500f;
     public static float frenzyFallspeed =1000f;
-    public static float skipForwardFallspeed =1f;
+    public static float skipForwardFallspeed =800f;
 
     [SerializeField] private GridObject gridObjectBase;
     public void SetCardBase(GridObject gridObjectBase){ this.gridObjectBase=gridObjectBase;}
@@ -22,7 +22,7 @@ public class GridObjectMono : MonoBehaviour
 
     public void FallToPos(UnityEngine.Vector3 target){
         View.cardsFalling++;
-        StartCoroutine(TranslateConstantSpeed(target, fallSpeed));
+        StartCoroutine(TranslateConstantSpeed(target));
     }
 
 
@@ -45,9 +45,9 @@ public class GridObjectMono : MonoBehaviour
     }           
 
 
-    IEnumerator TranslateConstantSpeed(UnityEngine.Vector3 target, float speed){
+    IEnumerator TranslateConstantSpeed(UnityEngine.Vector3 target){
         while(UnityEngine.Vector3.Distance(transform.localPosition, target) > 0.001f){
-            transform.localPosition =UnityEngine.Vector3.MoveTowards(transform.localPosition, target, speed * Time.deltaTime);
+            transform.localPosition =UnityEngine.Vector3.MoveTowards(transform.localPosition, target, fallSpeed * Time.deltaTime);
             yield return null;
         }
         transform.localPosition = target;
