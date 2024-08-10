@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 1991921758898839568}
   - component: {fileID: 7217890551567380530}
   - component: {fileID: -2706551505992145941}
-  - component: {fileID: -1796120429825840327}
+  - component: {fileID: -2791892229786220398}
   m_Layer: 5
   m_Name: Card
   m_TagString: Card
@@ -542,7 +542,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &-1796120429825840327
+--- !u!114 &-2791892229786220398
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

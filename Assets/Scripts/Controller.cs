@@ -29,7 +29,7 @@ public class Controller : MonoBehaviour
     [Header ("Score")]
     [SerializeField] private float gameTime;
     private Score score;
-
+    private int localCombo =0;
 
 
 
@@ -43,7 +43,7 @@ public class Controller : MonoBehaviour
             Debug.Log("error");
             UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
             return;
-        }else if(levelNumber==-1){
+        }else if(levelNumber==-1){ //-1 is used for custom scenes made in the inspector
             if(serializedCustomWall !=null && serializedCustomWall.GridSize.y>1 ){
                 bool[,] customWall = new bool[serializedCustomWall.GridSize.y, serializedCustomWall.GridSize.x];
                 Debug.Log("rows " + customWall.GetLength(0) + " cols " + customWall.GetLength(1));
@@ -92,10 +92,11 @@ public class Controller : MonoBehaviour
         }     
 
     }
-    // private void RunAfterStart(){
-    //     EventManager.StartGameTimer(model.score.GetGameTime());
-    //     EventManager.StartInitializeView(model.score);
-    // }
+    private void RunAfterStart(){
+        EventManager.StartStartGame(model);
+        //EventManager.StartGameTimer(model.score.GetGameTime());
+        EventManager.StartInitializeView(model.score);
+    }
 
     //called by cardmono on click
     public void flipCard(CardMono card){        
@@ -228,12 +229,19 @@ private void ResetFlippedCards(){
                 view.InstantiateLuckyMatch(secondCard.transform.position);
                 EventManager.StartLuckyMatchFound();
             }
+            //check for combo
+            if(++localCombo>1){
+                ComboTextAppearance.comboTextValue =localCombo;
+                view.InstantiateComboText(secondCard.transform.position);
+            }
+
             MatchFound(firstCard, secondCard);
             //Debug.Log("hello from check flipped cards");
             EventManager.StartMatchFoundEvent(firstCard.gridObjectMono.getCardBase().getId());
 
             return true;
         }
+        localCombo=0;
         EventManager.StartMatchFailed(firstCard.gridObjectMono.getCardBase().getId(), secondCard.gridObjectMono.getCardBase().getId());
         return false;
     }
@@ -249,12 +257,18 @@ private void ResetFlippedCards(){
                 view.InstantiateLuckyMatch(thirdCard.transform.position);
                 EventManager.StartLuckyMatchFound();
             }
+            //check for combo
+            if(++localCombo>1){
+                ComboTextAppearance.comboTextValue =localCombo;
+                view.InstantiateComboText(secondCard.transform.position);
+            }
             MatchFound(firstCard, secondCard, thirdCard);
             Debug.Log("hello from check 3 flipped cards");
             EventManager.StartMatchFoundEvent(firstCard.gridObjectMono.getCardBase().getId() );
 
             return true;
         }
+        localCombo=0;
         EventManager.StartMatchThreeFaileddEvent(firstCard.gridObjectMono.getCardBase().getId(), secondCard.gridObjectMono.getCardBase().getId(), thirdCard.gridObjectMono.getCardBase().getId());
         return false;
     }
@@ -274,7 +288,6 @@ private void ResetFlippedCards(){
                 for(int i=0; i<list.Count; i++){
                     view.RemoveCard(list[i][0], list[i][1]);
                     EventManager.StartWallDestroyedEvent();
-                    print("DELETED "+ list[i][0] + " "+ list[i][1]);
                 }
                 
                 ((WallModel)model).RemoveWalls();

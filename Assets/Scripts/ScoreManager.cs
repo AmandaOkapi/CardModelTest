@@ -12,31 +12,36 @@ public class ScoreManager : MonoBehaviour
 
     // [SerializeField] private TextMeshProUGUI comboText;
 
-    [SerializeField] private TextMeshProUGUI accuracyText;
-
     [SerializeField] private TextMeshProUGUI scoreText;
 
     [SerializeField] private TextMeshProUGUI timeText;
 
-    [SerializeField] private TextMeshProUGUI textPrefab;
+    [SerializeField] private GameObject textRequirementPrefab, timerPrefab, iconRequirementPrefab, scorePrefab, movesPrefab;
+    [SerializeField] private GameObject textGoalGrid, iconGoalGrid;
 
     [Header ("Canvas elements")]
     [SerializeField] private GameObject timerOver;
     [SerializeField] private GameObject earlyWin;
 
 
-    private int matchesFound, wallsDestoyed, combo, moves;
-    private float accuracy;
+    private int matchesFound, wallsDestoyed, currentCombo, moves;
 
-    private int points=0;
+    private int comboHighScore = 0;
+    private int truePoints=0;
+    private int displayedPoints=0;
     private float gameTime;
 
     private float timePassed;
 
 
     [Header ("Adjustabe points amounts")]
-
-    [SerializeField] private int scoreIncreaseAmount;
+    [SerializeField] private Vector2 scoreIncreaseAmountRange;
+    private int scoreIncreaseAmount{
+        get
+        {
+            return (int)Random.Range(scoreIncreaseAmountRange.x, scoreIncreaseAmountRange.y);
+        }
+    }
     [SerializeField] private int wallScoreIncreaseAmount;
 
     public Dictionary<int, int> cardsSeen = new Dictionary<int, int>();
@@ -45,8 +50,15 @@ public class ScoreManager : MonoBehaviour
     //private Score myScore;
 
     private ScoreRequirements[] myScoreRequirments;  
+    private ScoreRequirements[] textGoals;  
+    private ScoreRequirements[] iconGoals;  
 
-    
+    //fun text increase curve shennanigans
+    private float myBase =1.1f;
+    private bool scoreCurveFlag= true;
+    private float index =0;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -55,6 +67,10 @@ public class ScoreManager : MonoBehaviour
         EventManager.MatchFailed +=MatchFailed;   
         EventManager.GameTimer +=GameTimer;   
         EventManager.InitializeView+=SetupScoreView;
+        movesPrefab.SetActive(false);
+        iconGoalGrid.SetActive(false);
+        textGoalGrid.SetActive(false);
+        UpdateMainScoreText();
     }
 
     void OnDisable()
@@ -65,11 +81,36 @@ public class ScoreManager : MonoBehaviour
         EventManager.GameTimer -= GameTimer;   
         EventManager.InitializeView -= SetupScoreView;
     }
+
+    private void Update(){
+        if(displayedPoints < truePoints){
+            if(scoreCurveFlag){
+                index=0;
+                scoreCurveFlag=false;
+            }
+            //LMAO exponential curve 
+            displayedPoints+=(int) Mathf.Pow(myBase, index);
+            index++;
+            UpdateMainScoreText(Mathf.Clamp(displayedPoints, 0, truePoints));
+        }else{
+            scoreCurveFlag =true;
+        }
+        
+    }
     private void GameTimer(float time){
         gameTime=time;
         Debug.Log("Time Start!!");
         if(time>0){
+            GameObject textPart = timerPrefab.transform.GetChild(0).gameObject;
+            textPart.SetActive(true);
+            GameObject infinity  = timerPrefab.transform.GetChild(1).gameObject;
+            infinity.SetActive(false);
             StartCoroutine(timer());   
+        }else{
+            GameObject textPart = timerPrefab.transform.GetChild(0).gameObject;
+            textPart.SetActive(false);
+            GameObject infinity  = timerPrefab.transform.GetChild(1).gameObject;
+            infinity.SetActive(true);
         }
     }
 
@@ -88,15 +129,16 @@ public class ScoreManager : MonoBehaviour
     private void MatchFound(int id1){
         moves++;
         matchesFound++;
-        combo++;
-        points += scoreIncreaseAmount;
-        UpdateMainScoreText();
+        currentCombo++;
+        comboHighScore = Mathf.Max(comboHighScore, currentCombo);
+        truePoints += scoreIncreaseAmount;
+        //UpdateMainScoreText();
 
         foreach(ScoreRequirements sr in myScoreRequirments){
             if(sr is GetXMatches getXMatches){
                 getXMatches.UpdateDisplayString(matchesFound);
             }else if (sr is GetXCombo getXCombo){
-                getXCombo.UpdateDisplayString(combo);
+                getXCombo.UpdateDisplayString(comboHighScore);
             }else if (sr is GetLessThanXMoves getLessThanXMoves){
                 getLessThanXMoves.UpdateDisplayString(moves);
             }
@@ -105,52 +147,12 @@ public class ScoreManager : MonoBehaviour
         if(CheckWinConditions()){
             earlyWin.SetActive(true);
         }
-        //accurracy shit
-        if (cardsSeen.ContainsKey(id1)){
-            if(cardsSeen[id1]>1){
-                cardsSeen[id1]-=2;
-            }
-
-        }
-        int total=0;
-        int missedCards=0;
-        foreach (int cardSeen in cardsSeen.Values)
-        {                
-            total+=cardSeen;
-            if(cardSeen>1){
-                missedCards+=cardSeen;
-            }
-        }
-
-        if(total>0){
-            accuracy = (total-missedCards) / (float)total;
-
-        }else{
-            accuracy=1;
-        }
-        if(accuracyText!=null){
-            accuracyText.text = (accuracy*100).ToString() + "%";
-        }else{
-        }
 
     }
-
-    private void WallsDestoryed(){
-        wallsDestoyed++;
-        points+=wallScoreIncreaseAmount;
-        UpdateMainScoreText();
-        foreach(ScoreRequirements sr in myScoreRequirments){
-            if(sr is DestroyAllXWalls destroyAllXWalls){
-                destroyAllXWalls.UpdateDisplayString(wallsDestoyed);
-            }else if(sr is DestroyXWalls destroyXWalls){
-                destroyXWalls.UpdateDisplayString(wallsDestoyed);
-            }
-        }
-    }
-
     private void MatchFailed(int id1, int id2){
         moves++;
-        combo = 0;  
+        comboHighScore = Mathf.Max(comboHighScore, currentCombo);
+        currentCombo = 0;  
         if(myScoreRequirments==null){
             Debug.Log("Null score from match failed");
             return;
@@ -169,61 +171,74 @@ public class ScoreManager : MonoBehaviour
         UpdateScoreView();
         Debug.Log("updated2");
 
-        //accuracy shit
-        int total=0;
-        int missedCards=0;
-        if (!cardsSeen.ContainsKey(id1)){
-            cardsSeen.Add(id1, 1);
-        }
-        else{
-            cardsSeen[id1]++;
-        }
-        if (!cardsSeen.ContainsKey(id2)){
-            cardsSeen.Add(id2, 1);
-        }
-
-        foreach (int cardSeen in cardsSeen.Values)
-        {                
-            total+=cardSeen;
-            if(cardSeen>1){
-                missedCards+=cardSeen;
+    }
+    private void WallsDestoryed(){
+        wallsDestoyed++;
+        truePoints+=wallScoreIncreaseAmount;
+        //UpdateMainScoreText();
+        foreach(ScoreRequirements sr in myScoreRequirments){
+            if(sr is DestroyAllXWalls destroyAllXWalls){
+                destroyAllXWalls.UpdateDisplayString(wallsDestoyed);
+            }else if(sr is DestroyXWalls destroyXWalls){
+                destroyXWalls.UpdateDisplayString(wallsDestoyed);
             }
         }
-        if(total>0){
-            accuracy = (total-missedCards) / (float)total;
-
-        }
-        if(accuracyText!=null){
-            accuracyText.text = (accuracy*100).ToString() + "%";
-        }else{
-            Debug.Log("acc text problem");
-        }
-
     }
+
+
 
     public void SetupScoreView(Score score){
         myScoreRequirments =score.GetScoreRequirments();
+
         foreach(ScoreRequirements sr in  myScoreRequirments){
-            TextMeshProUGUI newText = Instantiate(textPrefab, gameObject.transform);
+            switch(sr.iconType){
+                case IconType.Moves:
+                    movesPrefab.SetActive(true);
+                    break;
+                case IconType.TextRequirement:
+                    textGoalGrid.SetActive(true);
+                    Instantiate(textRequirementPrefab, textGoalGrid.transform);
+                    break; 
+                case IconType.IconRequirement:
+                    iconGoalGrid.SetActive(true);
+                    Instantiate(iconRequirementPrefab, iconGoalGrid.transform);
+                    break;
+            }
         }
-        UpdateScoreView();
+        //redo me later
+        //UpdateScoreView();
     }
 
     public void UpdateScoreView(){
-        int childCount = transform.childCount;
-        // Populate the array with the children
-        for (int i = 0; i < childCount; i++)
-        {
-            transform.GetChild(i).GetComponent<TextMeshProUGUI>().text  = myScoreRequirments[i].getDisplayString();
+        int goalIndex=0; 
+        int textIndex=0;
+        foreach(ScoreRequirements sr in  myScoreRequirments){
+            switch(sr.iconType){
+                case IconType.Moves:
+                    movesPrefab.GetComponent<ITextPrefab>().GetText().text  = sr.getDisplayString();                    
+                    break;
+                case IconType.TextRequirement:
+                    Debug.Log(textGoalGrid.transform);
+                    Debug.Log(textGoalGrid.transform.GetChild(textIndex));
+                    textGoalGrid.transform.GetChild(textIndex).GetComponent<TextMeshProUGUI>().text  = sr.getDisplayString();        
+                    textIndex++;
+                    break; 
+                case IconType.IconRequirement:
+                    iconGoalGrid.transform.GetChild(goalIndex).GetComponent<ITextPrefab>().GetText().text  = sr.getDisplayString();
+                    goalIndex++;
+                    break;
+            }
         }
     }
 
     private void UpdateMainScoreText(){
+        UpdateMainScoreText(truePoints);
+    }
+    private void UpdateMainScoreText(int points){
         if(scoreText!=null){
             scoreText.text = points.ToString();
         }
     }
-
     private void GameOver(){
         timerOver.SetActive(true);
 
@@ -239,7 +254,7 @@ public class ScoreManager : MonoBehaviour
         foreach(ScoreRequirements sr in myScoreRequirments){
             switch(sr){
                 case(GetXPoints getXPoints):
-                    win= getXPoints.CheckConditional(points);
+                    win= getXPoints.CheckConditional(truePoints);
                     break;
                 case(DestroyXWalls destroyXWalls):
                     win= destroyXWalls.CheckConditional(wallsDestoyed);
@@ -251,7 +266,10 @@ public class ScoreManager : MonoBehaviour
                     win= getXMatches.CheckConditional(matchesFound);
                     break;
                 case(GetXCombo getXCombo):
-                    win= getXCombo.CheckConditional(combo);
+                    win= getXCombo.CheckConditional(currentCombo);
+                    break;
+                case(GetLessThanXMoves getLessThanXMoves):
+                    win= getLessThanXMoves.CheckConditional(moves);
                     break;
             }       
             if(win== false){

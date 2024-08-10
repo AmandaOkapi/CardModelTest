@@ -35,7 +35,10 @@ public class EventManager : MonoBehaviour
     public static void StartGameTimer(float time){
         GameTimer?.Invoke(time);
     }
-
+    public static event Action<Model> StartGame;
+    public static void StartStartGame(Model model){
+        StartGame?.Invoke(model);
+    }
     public static event Action<Score> InitializeView;
     public static void StartInitializeView(Score score){
         InitializeView?.Invoke(score);

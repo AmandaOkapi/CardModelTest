@@ -16,7 +16,7 @@ public class View : MonoBehaviour
     [Header ("Prefabs")]    
     [SerializeField] private Transform prefab, wallPrefab, glassPrefab;
     [Header ("Extra Elements")]
-    [SerializeField] private GameObject LuckyMatchPrefab;
+    [SerializeField] private GameObject LuckyMatchPrefab, comboTextPrefab;
     [SerializeField] private GameObject PowerUpSlider;
         
     
@@ -113,6 +113,8 @@ public class View : MonoBehaviour
         }else{
             pane.localScale = new UnityEngine.Vector3(scaleFactor.x, scaleFactor.y, 1f);
         }
+        //for the falling  text luckymatch/ combo
+        LuckyMatchAppearance.scaleFactor =scaleFactorAverage;
         //center the screen
         float newPosX = -(pane.rect.width *pane.localScale.x)/2;
         float newPosY = (model.isHideTopRows()) ? (pane.rect.height * pane.localScale.y +(model.getRowsToHide())*(cardSize.y * pane.localScale.y ))/2: (pane.rect.height *pane.localScale.y )/2;
@@ -394,7 +396,14 @@ public class View : MonoBehaviour
     }
 
     public void InstantiateLuckyMatch(UnityEngine.Vector3 pos){
-        GameObject luckyMatch = Instantiate(LuckyMatchPrefab, pos, UnityEngine.Quaternion.identity, transform );
+        InstantiateDisplayText(LuckyMatchPrefab, pos);
+    }
+    public void InstantiateComboText(UnityEngine.Vector3 pos){
+        InstantiateDisplayText(comboTextPrefab, pos);
+    }
+
+    private void InstantiateDisplayText(GameObject prefab, UnityEngine.Vector3 pos){
+        GameObject luckyMatch = Instantiate(prefab, pos, UnityEngine.Quaternion.identity, transform );
         float scaleFactorAverage = Mathf.Min(scaleFactor.x, scaleFactor.y, 1); //gives a max size
         if(maintainAspectRatio){
             luckyMatch.transform.localScale = new UnityEngine.Vector3(scaleFactorAverage, scaleFactorAverage, 1f);
@@ -402,5 +411,4 @@ public class View : MonoBehaviour
             luckyMatch.transform.localScale = new UnityEngine.Vector3(scaleFactor.x, scaleFactor.y, 1f);
         }    
     }
-
 }

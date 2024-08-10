@@ -34,15 +34,19 @@ public class ModelSearchToolkit
         //going right to left
         for(int i = col; i>= 0; i--){
             for(int j =0; j<model.getRow(); j++){
-                if(model.getObjectAtIndex(i,j) is Card){
-                    Debug.Log("valid col found " + i);
-                    return i;
-                }
+                Debug.Log(i + " , "+ j);
+                    if( model.getObjectAtIndex(j,i) is Card){
+                        Debug.Log("valid col found " + i);
+                        return i;
+                    }
+                
             }
         }
+            // Wrap around and continue from the rightmost column to the initial column
+
         for(int i = model.getCol()-1; i>col; i--){
             for(int j =0; j<model.getRow(); j++){
-                if(model.getObjectAtIndex(i,j) is Card){
+                if(model.getObjectAtIndex(j,i) is Card){
                     Debug.Log("valid col found " + i);
                     return i;
                 }

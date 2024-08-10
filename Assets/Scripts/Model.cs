@@ -59,8 +59,6 @@ public abstract class Model{
         SetPossibleCards(customPossibleCards, true);
     }
     public void SetPossibleCards(List<int> customPossibleCards, bool isCustomPredetermined){
-        Debug.Log("Saving via Set Possible Cards");
-        GeneralToolbox.PrintListToConsole(customPossibleCards);
         hasCustomDeck = isCustomPredetermined;
         Card[] newArr = new Card[customPossibleCards.Count];
         for(int i=0; i<customPossibleCards.Count; i++){
@@ -185,18 +183,6 @@ public abstract class Model{
              // Get the dimensions of the array
         int rows = cardGrid.GetLength(0);
         int columns = cardGrid.GetLength(1);
-
-        // Build the string representation of the array
-        string arrayString = "";
-        for (int i = 0; i < rows; i++)
-        {
-            for (int j = 0; j < columns; j++)
-            {
-                arrayString += cardGrid[i, j].name +""+ cardGrid[i, j].getId() +  "\t"; // Tab space for better formatting
-            }
-            arrayString += "\n"; // New line at the end of each row
-        }
-        Debug.Log(arrayString);
 
     }    
     
@@ -367,6 +353,7 @@ public abstract class WallModel : Model{
         hasWalls=true;
         wallCount=0;
         CreateWallMatrix();
+        CountWalls();
     }
 
     public WallModel(int row, int col, bool matchThreeMode) : base(row,col, rowsToHide,hideTopRows, matchThreeMode){
@@ -374,6 +361,7 @@ public abstract class WallModel : Model{
         hasWalls=true;
         wallCount=0;
         CreateWallMatrix();
+        CountWalls();
     }
 
 
@@ -405,7 +393,6 @@ public abstract class WallModel : Model{
                 // Set the cell to true with a 10% chance
                 if (randomNumber < wallRarity) {
                     wallMatrix[i, j] = true; 
-                    wallCount++;
                 }else{
                     wallMatrix[i, j] = false;
                 }
@@ -517,6 +504,7 @@ public class WallModelElimination : WallModel{
         ContructDictionary();
     }
     private void ContructDictionary(){
+        cardUsgae = new Dictionary<Card, int>();
         //this code can be better
             int totalCards = getCol()* getRow();
             int setsSize = this.isMatchThreeMode()==true ? 3 : 2;
@@ -545,13 +533,21 @@ public class WallModelElimination : WallModel{
                 remainder-=setsSize;
             }
             Debug.Log("got here3");
+            PrintDictionary(cardUsgae);
     }
-
+    void PrintDictionary(Dictionary<Card, int> dictionary)
+    {
+                    Debug.Log("---PRINTING---------------");
+        foreach (KeyValuePair<Card, int> kvp in dictionary)
+        {
+            Debug.Log("Key: " + kvp.Key.name + ", Value: " + kvp.Value);
+        }
+    }
     protected override GridObject CreateNewGridObject(int row, int col)
     {
         
         if(wallMatrix[row,col] ){
-            wallMatrix[row, col]=false;
+            //wallMatrix[row, col]=false;
             return new Wall(row, col);
         }
         return CreateNewCardFromDict(row, col);

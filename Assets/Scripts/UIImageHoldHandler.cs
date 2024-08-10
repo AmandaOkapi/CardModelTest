@@ -3,17 +3,17 @@ using UnityEngine.EventSystems;
 
 public class UIImageHoldHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    private bool isHolding = false;
+    //private bool isHolding = false;
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        isHolding = true;
+        //isHolding = true;
         GridObjectMono.fallSpeed = GridObjectMono.skipForwardFallspeed;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        isHolding = false;
+        //isHolding = false;
         GridObjectMono.fallSpeed = GridObjectMono.defaultFallspeed;
 
     }
