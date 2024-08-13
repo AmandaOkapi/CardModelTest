@@ -7,6 +7,7 @@ public class CardData : ScriptableObject
 {
     public Sprite[] cardImages;
     public Sprite cardBack;
+    public Sprite[] gridObjectIcons;
 
     public Sprite mysteryCardIcon;
 

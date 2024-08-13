@@ -287,6 +287,8 @@ private void ResetFlippedCards(){
                 List<int[]> list =((WallModel)model).CalculateWallsToDestroy(firstCard.gridObjectMono.getCardBase().getRowPos(), firstCard.gridObjectMono.getCardBase().getColPos(), secondCard.gridObjectMono.getCardBase().getRowPos(), secondCard.gridObjectMono.getCardBase().getColPos());
                 for(int i=0; i<list.Count; i++){
                     view.RemoveCard(list[i][0], list[i][1]);
+                    CheckForAndDestroyGlass(list[i][0], list[i][1]);
+                    Debug.Log("attempting to call event");
                     EventManager.StartWallDestroyedEvent();
                 }
                 
@@ -325,6 +327,8 @@ private void ResetFlippedCards(){
                     view.RemoveCard(list[i][0], list[i][1]);
                     CheckForAndDestroyGlass(list[i][0], list[i][1]);
                     print("DELTED");
+                    Debug.Log("attempting to call event");
+                    EventManager.StartWallDestroyedEvent();
                 }
                 
                 ((WallModel)model).RemoveWalls();
@@ -351,6 +355,7 @@ private void ResetFlippedCards(){
             if(model.GetGlassAtIndex(row, col)){
                 model.breakGlass(row,col);
                 view.DestroyGlassObject(row, col);
+                EventManager.StartGlassDestroyedEvent();
                 return true;
             }
         }

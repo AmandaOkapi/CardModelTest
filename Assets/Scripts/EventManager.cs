@@ -17,6 +17,10 @@ public class EventManager : MonoBehaviour
     public static void StartWallDestroyedEvent(){
         WallDestroyed?.Invoke();
     }
+    public static event Action GlassDestroyed;
+    public static void StartGlassDestroyedEvent(){
+        GlassDestroyed?.Invoke();
+    }
     public static event Action<int,int> MatchFailed;
     public static void StartMatchFailed(int id1, int id2){
         MatchFailed?.Invoke(id1, id2);

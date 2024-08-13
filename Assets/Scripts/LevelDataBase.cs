@@ -39,9 +39,11 @@ public class LevelDataBase : MonoBehaviour
         int wallCount = model0.GetWallCount();
         DestroyAllXWalls destroyAllXWalls = new DestroyAllXWalls(wallCount);
         GetXMatches getXMatches = new GetXMatches(20);
+        int glassCount = model0.GetGlassCount();
+        DestroyXGlass getXGlass = new DestroyXGlass(glassCount);
         returnList.Add(new Level{
             model = model0,
-            score = new Score(0, destroyAllXWalls, getXMatches)
+            score = new Score(0, destroyAllXWalls, getXMatches, getXGlass)
         });
         
         OriginalModel model1 = new OriginalModel(12, 6, false);

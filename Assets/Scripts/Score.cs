@@ -32,158 +32,150 @@ public class Score
 
 public abstract class ScoreRequirements{
     public IconType iconType; 
+    public int photoID;
+
+    public int gameValue;
+    public int myGoal;
 
     protected string displayString;
+    protected string name;
     public string getDisplayString(){
         return displayString;
     }
 
     public virtual string UpdateDisplayString(int newValue){
-        displayString= "Debug:\n<size=150%>"+newValue.ToString() +"</size><size=50%>Min 0 </size>";
+        gameValue =newValue;
+        displayString= SetNewValueToDisplayString(newValue);
+        return displayString;
+    }
+    public virtual string SetNewValueToDisplayString(int newValue){
+        if(iconType == IconType.TextRequirement){
+            displayString= name +":\n<size=150%>"+newValue.ToString() +"</size><size=50%>\nMin "+ myGoal.ToString() + "</size>";
+        }else if(iconType == IconType.IconRequirement){
+            displayString = (Mathf.Max(myGoal - newValue, 0)).ToString();
+        }
         return displayString;
     }
     public virtual bool CheckConditional(int finalAmount){
-        return true;
+        gameValue=finalAmount;
+        if(iconType == IconType.IconRequirement){
+            return (myGoal-finalAmount)<=0;
+        }
+        return myGoal <= finalAmount;
+    }
+
+    public virtual void Reset(){
+        gameValue =0;
+        if(iconType == IconType.TextRequirement){
+            displayString= name +":\n<size=150%>"+gameValue.ToString() +"</size><size=50%>\nMin "+ myGoal.ToString() + "</size>";
+        }else if(iconType == IconType.IconRequirement){
+            displayString = gameValue.ToString();
+        }
+
     }
 }
 
 public class GetXPoints :ScoreRequirements{
-    private int points;
-    public GetXPoints(int x){
-        points =x;
-        iconType = IconType.TextRequirement;
-        displayString = "Points:\n<size=150%>0</size><size=50%>Min "+ points.ToString() + "</size>";
-    }
 
-    public override string UpdateDisplayString(int newValue){
-        displayString ="Points:\n<size=150%>"+newValue.ToString() +"</size><size=50%>Min "+ points.ToString() + "</size>";
-        return displayString;
-    }
-    public override bool CheckConditional(int finalAmount){
-        return points>=finalAmount;
+    public GetXPoints(int x){
+        myGoal =x;
+        iconType = IconType.TextRequirement;
+        displayString = "Points:\n<size=150%>0</size><size=50%>Min "+ myGoal.ToString() + "</size>";
+        name = "Points";
+        gameValue =0;
     }
     public override string ToString(){
-        return "Get at least" + points + " points";
+        return "Get at least " + myGoal + " points";
     }
 }
 
 public class DestroyXWalls:ScoreRequirements{
-    private int walls;
     public DestroyXWalls(int x){
-        walls =x;
+        myGoal =x;
         iconType = IconType.IconRequirement;
+        photoID =0;
         //displayString = "Walls:\n<size=150%>0</size><size=50%>Min "+ walls.ToString() + "</size>";
-        displayString = walls.ToString();
+        displayString = x.ToString();
+        gameValue = 0;
     }
-    public override string UpdateDisplayString(int newValue){
-        //displayString ="Walls:\n<size=150%>"+newValue.ToString() +"</size><size=50%>Min "+ walls.ToString() + "</size>";
-        displayString = walls.ToString();
-        return displayString;
-    }
-    public override bool CheckConditional(int finalAmount){
-        return walls>=finalAmount;
-    }
+    
     public override string ToString(){
-        return "Destroy at least" + walls + " walls";
+        return "Destroy at least " + myGoal + " walls";
     }
 }
 
 public class DestroyXGlass:ScoreRequirements{
-    private int glass;
     public DestroyXGlass(int x){
-        glass =x;
+        myGoal =x;
         iconType = IconType.IconRequirement;
+        photoID =1;
         //displayString = "Glass:\n<size=150%>0</size><size=50%>Min "+ glass.ToString() + "</size>";
-        displayString = glass.ToString(); 
+        displayString = x.ToString(); 
+        gameValue =0;
     }
-    public override string UpdateDisplayString(int newValue){
-        //displayString ="Glass:\n<size=150%>"+newValue.ToString() +"</size><size=50%>Min "+ glass.ToString() + "</size>";
-        displayString = glass.ToString();
-        return displayString;
-    }
-    public override bool CheckConditional(int finalAmount){
-        return glass>=finalAmount;
-    }
+    
     public override string ToString(){
-        return "Destroy at least" + glass + " glass";
+        return "Destroy at least " + myGoal + " glass";
     }
 }
 public class DestroyAllXWalls:ScoreRequirements{
-    private int walls;
     public DestroyAllXWalls(int x){
-        walls =x;
+        myGoal =x;
         iconType = IconType.IconRequirement;
+        photoID =0;
         //displayString = "Walls:\n<size=150%>0</size><size=50%>0/"+ walls.ToString() + "</size>";
-        displayString =walls.ToString();
-    }
-    public override string UpdateDisplayString(int newValue){
-        //displayString = "Walls:\n<size=150%>"+newValue.ToString() +"</size><size=50%>"+ newValue.ToString()+"/"+ walls.ToString() + "</size>";
-        displayString =walls.ToString();
-        return displayString;
-    }
-    public override bool CheckConditional(int finalAmount){
-        return walls>=finalAmount;
+        displayString =x.ToString();
+        gameValue =0;
     }
     public override string ToString(){
-        return "Destroy all " + walls + " walls";
+        return "Destroy all " + myGoal + " walls";
     }
 }
 public class GetXMatches:ScoreRequirements{
-    private int matches;
     public GetXMatches(int x){
-        matches=x;
+        myGoal=x;
         iconType = IconType.TextRequirement;
-        displayString = "Matches:\n<size=150%>0</size><size=50%>\nMin "+ matches + "</size>";
-
+        displayString = "Matches:\n<size=150%>0</size><size=50%>\nMin "+ myGoal + "</size>";
+        gameValue =0;
+        name = "Matches";
     }
-    public override string UpdateDisplayString(int newValue){
-        displayString ="Matches:\n<size=150%>"+newValue.ToString() +"</size><size=50%>\nMin "+ matches.ToString() + "</size>";
-        return displayString;
-    }
-    public override bool CheckConditional(int finalAmount){
-        return matches>=finalAmount;
-    }
+    
     public override string ToString(){
-        return "Get  " + matches + " matches";
+        return "Get " + myGoal + " matches";
     }
 }
 
 public class GetXCombo:ScoreRequirements{
-    int combo;
     public GetXCombo(int x ){
-        combo=x;
+        myGoal=x;
         iconType = IconType.TextRequirement;
-        displayString = "Combo:\n<size=150%>0</size><size=50%>\nMin "+ combo.ToString() + "</size>";
-
+        displayString = "Combo:\n<size=150%>0</size><size=50%>\nMin "+ myGoal.ToString() + "</size>";
+        gameValue =0;
+        name = "Combo";
     }
-    public override string UpdateDisplayString(int newValue){
-        displayString ="Combo:\n<size=150%>"+newValue.ToString() +"</size><size=50%>\nMin "+ combo.ToString() + "</size>";
-        return displayString;
-    }
-    public override bool CheckConditional(int finalAmount){
-        return combo>=finalAmount;
-    }
+    
     public override string ToString(){
-        return "Get a match combo of a least " + combo ;
+        return "Get a match combo of a least " + myGoal ;
     }
 }
 
-
 public class GetLessThanXMoves:ScoreRequirements{
-    int maxMoves;
-    public GetLessThanXMoves(int x ){
+    int maxMoves=0;
+    public GetLessThanXMoves(int x){
         maxMoves=x;
-        iconType = IconType.TextRequirement;
-        displayString = "Moves Remaining:\n<size=150%>0</size><size=50%>\nMin "+ maxMoves.ToString() + "</size>";
+        myGoal=0;
+        iconType = IconType.Moves;
+        displayString = "Moves Remaining:\n<size=150%>0</size><size=50%>\nMax "+ myGoal.ToString() + "</size>";
+        gameValue = maxMoves;
+    }
 
-    }
-    public override string UpdateDisplayString(int newValue){
-        int movesLeft = maxMoves - newValue;
-        displayString ="Moves:\n<size=150%>"+newValue.ToString() +"</size><size=50%>\nMin "+ movesLeft.ToString() + "</size>";
-        return displayString;
-    }
     public override bool CheckConditional(int finalAmount){
-        return maxMoves<finalAmount;
+        return false;
+    }
+    
+    public override void Reset(){
+        gameValue =maxMoves;
+        displayString = gameValue.ToString();
     }
     public override string ToString(){
         return "Complete the goal is in less than " + maxMoves + " moves";

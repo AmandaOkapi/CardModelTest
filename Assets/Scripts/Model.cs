@@ -78,6 +78,7 @@ public abstract class Model{
     protected bool[,] glassMatrix;
     private float glassRarity;
     protected int glassCount;    
+    public int GetGlassCount(){return glassCount;}
     public void AddGlass(float glassRarity){
         Debug.Log("Adding walls to " +id);
         hasGlass=true;

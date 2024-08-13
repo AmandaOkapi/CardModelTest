@@ -42,4 +42,7 @@ MonoBehaviour:
   - {fileID: -492726572, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
   - {fileID: -1008661148, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
   cardBack: {fileID: 21300000, guid: e3a1ffc150e492e44b0b628903a79e28, type: 3}
+  gridObjectIcons:
+  - {fileID: 21300000, guid: 60dff2ca3f23aae46b57c966f4172b9d, type: 3}
+  - {fileID: 21300000, guid: 079bc55337592fa4e84b9811b30cf546, type: 3}
   mysteryCardIcon: {fileID: 1111314460, guid: 8805656f75a52924eb1067039ca599d3, type: 3}

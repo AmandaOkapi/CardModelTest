@@ -10,5 +10,7 @@ public interface IGridObjectAppearance
 }
 public interface ITextPrefab{
         public TextMeshProUGUI GetText();
+        public void GoalMet();
+
 } 
 
