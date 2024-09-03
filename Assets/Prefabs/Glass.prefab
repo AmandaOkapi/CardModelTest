@@ -40,8 +40,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -46.9, y: -67.4}
-  m_SizeDelta: {x: 130, y: 196}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 150, y: 215}
   m_Pivot: {x: 0.000000067055225, y: 0.00000014062971}
 --- !u!222 &2441633223161575686
 CanvasRenderer:
@@ -63,16 +63,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.6933962, g: 0.9163807, b: 1, a: 0.5019608}
+  m_Material: {fileID: 2100000, guid: 0c65c00647d577646be2f04803d7e5fe, type: 2}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 808b11aec7577194589b98c005ed9ff7, type: 3}
+  m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
@@ -225,6 +225,9 @@ MonoBehaviour:
   animator: {fileID: 7685946643309258040}
   audioSource: {fileID: 5304418831405063637}
   destructionTime: 0.5
+  glassVariations:
+  - {fileID: 21300000, guid: 808b11aec7577194589b98c005ed9ff7, type: 3}
+  - {fileID: 21300000, guid: be5640b8908c4554d8ba3c6c7beeb9cf, type: 3}
 --- !u!82 &7542609772500215357
 AudioSource:
   m_ObjectHideFlags: 0

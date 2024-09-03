@@ -53,6 +53,8 @@ public abstract class ScoreRequirements{
             displayString= name +":\n<size=150%>"+newValue.ToString() +"</size><size=50%>\nMin "+ myGoal.ToString() + "</size>";
         }else if(iconType == IconType.IconRequirement){
             displayString = (Mathf.Max(myGoal - newValue, 0)).ToString();
+        }else if(iconType == IconType.Moves){
+            displayString = (newValue).ToString();
         }
         return displayString;
     }
@@ -160,7 +162,7 @@ public class GetXCombo:ScoreRequirements{
 }
 
 public class GetLessThanXMoves:ScoreRequirements{
-    int maxMoves=0;
+    public int maxMoves=0;
     public GetLessThanXMoves(int x){
         maxMoves=x;
         myGoal=0;

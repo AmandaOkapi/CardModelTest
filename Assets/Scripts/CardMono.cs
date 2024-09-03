@@ -28,16 +28,44 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource audioSource;
 
+    [SerializeField] private Color defaultDesignCol, defaultBackCol;       
+    private Color designCol;
+    private Color backCol;
     private Controller controllerLink;
 
     void Start()
     {
+        SetUpColours();
         controllerLink=GameObject.FindGameObjectWithTag("Controller").GetComponent<Controller>();        
         if (cardData != null)
             {
             imageComponent.sprite = cardData.cardBack;
+            backCol.a =1f;
+            imageComponent.color = backCol;
         }else{
             Debug.LogError("cardData is null! ");
+        }
+
+    }
+
+    private void SetUpColours(){
+        if (PlayerPrefs.HasKey("BackCol_r") && PlayerPrefs.HasKey("BackCol_g") && PlayerPrefs.HasKey("BackCol_b") && PlayerPrefs.HasKey("BackCol_a"))
+        {
+            backCol = PlayerPrefsUtility.LoadColor("BackCol", Color.white);
+        }
+        else
+        {
+            // Convert hex string to Color
+            backCol = defaultBackCol;
+        }
+        if (PlayerPrefs.HasKey("DesignCol_r") && PlayerPrefs.HasKey("DesignCol_g") && PlayerPrefs.HasKey("DesignCol_b") && PlayerPrefs.HasKey("DesignCol_a"))
+        {
+            designCol = PlayerPrefsUtility.LoadColor("DesignCol", Color.white);
+        }
+        else
+        {
+            // Convert hex string to Color
+            backCol = defaultDesignCol;
         }
 
     }
@@ -49,7 +77,7 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
     //     controllerLink.flipCard(rowPos, colPos);
     // }
     public void ShowflipCard(bool playSound){    
-        StartCoroutine(changeCardImage(cardData.cardImages[((Card)gridObjectMono.getCardBase()).getId()]));    
+        StartCoroutine(changeCardImage(cardData.cardImages[((Card)gridObjectMono.getCardBase()).getId()], Color.white));    
         AnimFlipCard();
         if(playSound){
             PlayFlip();
@@ -61,13 +89,13 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
     }
 
     public void ShowUnflipCard(bool playSound){    
-        StartCoroutine(changeCardImage(cardData.cardBack));    
+        StartCoroutine(changeCardImage(cardData.cardBack, backCol));    
         AnimUnflipCard();
         if(playSound){
             PlayFlip();
         }    
     }
-    private IEnumerator changeCardImage(Sprite image){
+    private IEnumerator changeCardImage(Sprite image, Color col ){
         float time = 0f;
 
         while (time < Time_To_Flip)
@@ -76,6 +104,8 @@ public class CardMono : MonoBehaviour, IGridObjectAppearance
             yield return null;
         }
         imageComponent.sprite= image;        
+        imageComponent.color= col;        
+
     }
 
     

@@ -7,6 +7,7 @@ TagManager:
   - Controller
   - Card
   - Glass
+  - Start
   layers:
   - Default
   - TransparentFX

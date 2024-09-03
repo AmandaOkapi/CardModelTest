@@ -320,9 +320,14 @@ private void ContructDictionary(){
 public abstract class WallModel : Model{
     protected bool[,] wallMatrix;
     static bool hideTopRows=true;
-    static int rowsToHide =4;
-    static float wallRarity =0.25f;
+    static int rowsToHide =7;
+    protected float wallRarity =0.25f;
     protected int wallCount;
+
+    public void SetWallRarity(float wr){
+        CreateWallMatrix();
+        wallRarity =wr;
+    }   
 
     public bool IsWallAtIndex(int row, int col){return wallMatrix[row, col];} 
     public int GetWallCount(){

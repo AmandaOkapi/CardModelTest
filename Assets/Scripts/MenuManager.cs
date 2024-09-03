@@ -52,6 +52,24 @@ public static class PlayerPrefsUtility
         // Return an empty array if the key does not exist
         return new int[0];
     }
+
+    public static void SaveColor(string key, Color color)
+    {
+        PlayerPrefs.SetFloat(key + "_r", color.r);
+        PlayerPrefs.SetFloat(key + "_g", color.g);
+        PlayerPrefs.SetFloat(key + "_b", color.b);
+        PlayerPrefs.SetFloat(key + "_a", color.a);
+    }
+
+    public static Color LoadColor(string key, Color defaultColor)
+    {
+        float r = PlayerPrefs.GetFloat(key + "_r", defaultColor.r);
+        float g = PlayerPrefs.GetFloat(key + "_g", defaultColor.g);
+        float b = PlayerPrefs.GetFloat(key + "_b", defaultColor.b);
+        float a = PlayerPrefs.GetFloat(key + "_a", defaultColor.a);
+        return new Color(r, g, b, a);
+    }
+
 }
 public class MenuManager : MonoBehaviour
 {
@@ -188,38 +206,5 @@ public class MenuManager : MonoBehaviour
         return minutes.ToString("F2");
     }
 
-    //modifiers preview
-    // private void ShowModifiers(int level){
-    //     ShowModifiers(LevelDataBase.levels[level].model);
-    // }
-
-    // private void ShowModifiers(Model model){
-    //     //reset
-    //     glassPreviewBlocker.SetActive(true);
-    //     match3PreviewBlocker.SetActive(true);
-    //     wallsPreviewBlocker.SetActive(true);
-    //     eliminationPreviewBlocker.SetActive(true);
-    //     if(model.isHasGlass()){
-    //         glassPreviewBlocker.SetActive(false);
-    //     }
-    //     if(model.isMatchThreeMode()){
-    //         match3PreviewBlocker.SetActive(false);
-    //     }
-    //     if(model is WallModel){
-    //         wallsPreviewBlocker.SetActive(false);
-    //     }
-
-    //     if((model is EliminationModel) ||(model is WallModelElimination)){
-    //         eliminationPreviewBlocker.SetActive(false);
-    //     }
-    // }
-
-    // //show size
-    // private void SetSizeText(int level){
-    //     SetSizeText(LevelDataBase.levels[level].model);
-    // }
-    // private void SetSizeText(Model model){
-    //     sizePreviewText.text = (model.getRow() -model.getRowsToHide()).ToString() +"x"+ model.getCol();
-    // }
     
 }

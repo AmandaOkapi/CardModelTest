@@ -227,6 +227,7 @@ public class ScoreManager : MonoBehaviour
             sr.Reset();
             switch(sr.iconType){
                 case IconType.Moves:
+                    movesLeft = sr.gameValue;
                     movesPrefab.SetActive(true);
                     break;
                 case IconType.TextRequirement:

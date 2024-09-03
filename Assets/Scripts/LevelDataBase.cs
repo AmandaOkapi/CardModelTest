@@ -19,10 +19,23 @@ notes
 public class LevelDataBase : MonoBehaviour
 {
     public static List<Level> levels;
+    public static LevelDataBase Instance { get; private set; }
 
     private void Awake(){
+
+
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject); // Destroy duplicate instances
+        }
+    
+
         InitializeDatabase();
-        DontDestroyOnLoad(gameObject);
     }
     private void InitializeDatabase()
     {
@@ -62,7 +75,8 @@ public class LevelDataBase : MonoBehaviour
         });
 
         WallModelOriginal model3= new WallModelOriginal(16,6,false);
-        model3.SetPossibleCards(new List<int>{0,1,2,3,4,5,6,7,8});
+        model3.SetPossibleCards(new List<int>{0,1,2});
+        model3.SetWallRarity(0.8f);
         returnList.Add(new Level{
             model = model3,
             score = new Score(153, new DestroyXWalls(13), new GetXMatches(20))
@@ -72,7 +86,7 @@ public class LevelDataBase : MonoBehaviour
         model4.SetPossibleCards(new List<int>{0,1,2,3,4,5,6,7,8});
         returnList.Add(new Level{
             model = model4,
-            score = new Score(0,new GetXMatches(25))
+            score = new Score(0,new GetXMatches(25), new GetLessThanXMoves(36))
         });
 
         EliminationModel model5= new EliminationModel(13,5,true);

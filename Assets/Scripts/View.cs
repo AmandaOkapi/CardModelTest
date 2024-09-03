@@ -33,13 +33,13 @@ public class View : MonoBehaviour
     [SerializeField] private RectTransform  refPane;    //a pane that stretches with the screen size acts as a "size goal" for our grid
     [SerializeField] private Transform buttonParent;
     [SerializeField] private Transform glassParent;
-
     [SerializeField] private RectTransform mask;
-    [SerializeField] private RectTransform topRowHider;
     [SerializeField] private DynamicFontSizeAdjuster dynamicFontSizeAdjuster;
     private UnityEngine.Vector2 scaleFactor;
     private float localWidth, localHeight;
     private float refWidth, refHeight;
+
+    [SerializeField] private float scoreHeightOffest;
     
     //gameState
     public static float cardsFalling;
@@ -69,7 +69,17 @@ public class View : MonoBehaviour
             buttonParent= GameObject.Find("GridPane").transform;
         }
     }
-
+private IEnumerator DelayedGlassInstantiation(int row, int col, float xOffset, float yOffset, float delay)
+{
+    yield return new WaitForSeconds(delay);
+    InstantiateGlassAfter(row, col, xOffset, yOffset);
+}
+public void InstantiateGlassAfter(int row, int col, float xOffset, float yOffset)
+{
+    Transform gm = Instantiate(glassPrefab, glassParent);
+    glassView[row, col] = gm;
+    gm.localPosition = new UnityEngine.Vector3(xOffset * col, -yOffset * (row + 1), -5);
+}
     public void InitializeView(Model model){
 
         int myRow = (model.getRow());
@@ -93,8 +103,11 @@ public class View : MonoBehaviour
                     if(model.GetGlassAtIndex(i,j)){
                         float xOffset = localWidth/(model.getCol());
                         float yOffset = localHeight/(model.getRow());
+                        
+                        //StartCoroutine(DelayedGlassInstantiation(i, j, xOffset, yOffset, 1f));
                         glassView[i,j] = Instantiate(glassPrefab, glassParent);
                         glassView[i,j].localPosition = new UnityEngine.Vector3(xOffset*(j), -yOffset*(i+1),-5);
+                        glassView[i,j].position= new UnityEngine.Vector3(glassView[i,j].position.x,  glassView[i,j].position.y , 100);
                     }else{
                         glassView[i,j]=null;   
                     }
@@ -118,24 +131,20 @@ public class View : MonoBehaviour
         //center the screen
         float newPosX = -(pane.rect.width *pane.localScale.x)/2;
         float newPosY = (model.isHideTopRows()) ? (pane.rect.height * pane.localScale.y +(model.getRowsToHide())*(cardSize.y * pane.localScale.y ))/2: (pane.rect.height *pane.localScale.y )/2;
+        //newPosY -=scoreHeightOffest;
         pane.localPosition = new UnityEngine.Vector3(newPosX, newPosY);
 
         mask.sizeDelta = pane.sizeDelta *pane.localScale;
         if(model.getRowsToHide()>0){
             mask.sizeDelta= new UnityEngine.Vector2(mask.sizeDelta.x, mask.sizeDelta. y -(((model.getRowsToHide()) * cardSize.y* pane.localScale.y)));
         }
+
         //center the mask
-        //AlignToBottom(mask);
-
-        // if(model.getRowsToHide()>0){
-        //     //UnityEngine.Vector2 newSize = new UnityEngine.Vector2(topRowHider.sizeDelta.x , ((model.getRowsToHide()) * cardSize.y* pane.localScale.y));
-        //     topRowHider.offsetMin = new UnityEngine.Vector2(topRowHider.offsetMin.x, model.getRow()*cardSize.y -((model.getRowsToHide()) * cardSize.y));
-
-        //     //topRowHider.sizeDelta = newSize;
-        // }else{
-        //     topRowHider.gameObject.SetActive(false);;
-        // } 
-        
+        mask.localPosition = new UnityEngine.Vector2(0, 0);
+        Debug.Log(mask.sizeDelta.y +" + " + Screen.height +" + " +  (Screen.height*0.70f) );
+        if(mask.sizeDelta.y > Screen.height - (Screen.height*0.70f)){
+            mask.localPosition = new UnityEngine.Vector2(0, -scoreHeightOffest);
+        }
         dynamicFontSizeAdjuster?.AdjustFontSize(pane.sizeDelta.x);
 
     }

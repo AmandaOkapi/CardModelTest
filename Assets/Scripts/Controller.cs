@@ -12,7 +12,7 @@ public class Controller : MonoBehaviour
     public View view;
 
     public GameObject resetFlipGuard;
-    [SerializeField] private float timeToFlip;
+    //[SerializeField] private float timeToFlip;
     public int cardsFlipped;
     public CardMono firstCard=null;
     public CardMono secondCard=null;
@@ -25,9 +25,16 @@ public class Controller : MonoBehaviour
     [SerializeField] private int serializedRow=4;
     [SerializeField] private int serializedCol=4;
     [SerializeField] private bool isMatchThreeMode;
+
+    [SerializeField] private bool matchFailedBufferOn =false;
+
+    private float matchFailedBufferTime;
+
     
     [Header ("Score")]
     [SerializeField] private float gameTime;
+    [SerializeField] private float sceneTransitionTime;
+
     private Score score;
     private int localCombo =0;
 
@@ -73,6 +80,7 @@ public class Controller : MonoBehaviour
     }
 
     void Start(){
+        matchFailedBufferTime = CardMono.Time_To_Flip + 0.2f;
         resetFlipGuard.SetActive(false);
         Debug.Log("Game sStart");
         if(levelNumber>=0){
@@ -88,7 +96,7 @@ public class Controller : MonoBehaviour
             if (score.GetGameTime()>0){
                 Debug.Log("Event Start!!");
             }       
-            Invoke("RunAfterStart", 0f);
+            Invoke("RunAfterStart", sceneTransitionTime);
         }     
 
     }
@@ -100,7 +108,7 @@ public class Controller : MonoBehaviour
 
     //called by cardmono on click
     public void flipCard(CardMono card){        
-        if(view.IsPowerUpPlaying() || View.cardsFalling>0 ){
+        if(view.IsPowerUpPlaying() || View.cardsFalling>0 || matchFailedBufferOn ){
             return;
         }
 
@@ -219,6 +227,9 @@ private void ResetFlippedCards(){
     }
 }
 
+private void MatchBufferReset(){
+    matchFailedBufferOn =false;
+}
     public bool checkFlippedCards(){
         Card fc = (Card)firstCard.gridObjectMono.getCardBase();
         Card sc = (Card)secondCard.gridObjectMono.getCardBase();
@@ -241,8 +252,11 @@ private void ResetFlippedCards(){
 
             return true;
         }
+        //match failed
         localCombo=0;
         EventManager.StartMatchFailed(firstCard.gridObjectMono.getCardBase().getId(), secondCard.gridObjectMono.getCardBase().getId());
+        matchFailedBufferOn =true;
+        Invoke("MatchBufferReset", matchFailedBufferTime); 
         return false;
     }
 
@@ -268,8 +282,11 @@ private void ResetFlippedCards(){
 
             return true;
         }
+        //match failed
         localCombo=0;
         EventManager.StartMatchThreeFaileddEvent(firstCard.gridObjectMono.getCardBase().getId(), secondCard.gridObjectMono.getCardBase().getId(), thirdCard.gridObjectMono.getCardBase().getId());
+        matchFailedBufferOn =true;
+        Invoke("MatchBufferReset", matchFailedBufferTime); 
         return false;
     }
 

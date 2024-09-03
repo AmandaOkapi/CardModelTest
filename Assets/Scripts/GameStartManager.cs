@@ -5,18 +5,17 @@ using UnityEngine;
 public class GameStartManager : MonoBehaviour
 {
     [SerializeField] private GameObject match3Canvas; 
-    [SerializeField] private GameObject readyCanvas;
-    [SerializeField] private GameObject goCanvas;
+    [SerializeField] private GameObject countdownPanel;
     [SerializeField] private float match3Time, readyTime, goTime;
 
+    private float gameTime;
     void Start()
     {
         //events
         EventManager.StartGame += StartGame;
 
         match3Canvas.SetActive(false);
-        readyCanvas.SetActive(false);
-        goCanvas.SetActive(false);
+        countdownPanel.SetActive(false);
     }
 
     void OnDisable()
@@ -26,26 +25,30 @@ public class GameStartManager : MonoBehaviour
 
 
     private void StartGame(Model model){
+        gameTime = model.score.GetGameTime();
         if(model.isMatchThreeMode()){
-            StartCoroutine(Match3Animation(model));
+            StartCoroutine(Match3Animation());
         }else{
-            StartCoroutine(ReadyGo(model));
+            DisplayCountdown();
         }
     }
 
-    private IEnumerator Match3Animation(Model model){
+    private IEnumerator Match3Animation(){
         match3Canvas.SetActive(true);
         yield return new WaitForSeconds(match3Time);
         match3Canvas.SetActive(false);
-        StartCoroutine(ReadyGo(model));
+        DisplayCountdown();
     }
-    private IEnumerator ReadyGo(Model model){
-        readyCanvas.SetActive(true);
-        yield return new WaitForSeconds(readyTime);
-        readyCanvas.SetActive(false);
-        goCanvas.SetActive(true);
-        yield return new WaitForSeconds(goTime);
-        goCanvas.SetActive(false);
-        EventManager.StartGameTimer(model.score.GetGameTime());
+
+    private void DisplayCountdown(){
+            countdownPanel.SetActive(true);
+            countdownPanel.GetComponent<Animator>().Play("Countdown");
+            Invoke("HideCountdownPanel", 4.1f);
     }
+
+    public void HideCountdownPanel(){
+        countdownPanel.SetActive(false);
+        EventManager.StartGameTimer(gameTime);
+    }
+
 }

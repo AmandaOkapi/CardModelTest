@@ -13,35 +13,31 @@ MonoBehaviour:
   m_Name: CardData
   m_EditorClassIdentifier: 
   cardImages:
-  - {fileID: -1968534731, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -551978688, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -1793927632, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: 21300000, guid: 5df3e3fc858c8cc4b830b30de09a4aaa, type: 3}
-  - {fileID: 21300000, guid: 38d0e9d9b62e3694eab72da4a673e0b1, type: 3}
-  - {fileID: 1665430997, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -1688728032, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -1003873724, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: 1763659534, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: 1165916088, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -2136538199, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: 936546262, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -739441074, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -751682001, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: 1763659534, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -489460898, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -1304570050, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: 617712539, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -974591387, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: 1874821319, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: 376923543, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: 2007685637, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: 1423649474, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -1385841439, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -1622083720, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -442179257, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -492726572, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  - {fileID: -1008661148, guid: 8805656f75a52924eb1067039ca599d3, type: 3}
-  cardBack: {fileID: 21300000, guid: e3a1ffc150e492e44b0b628903a79e28, type: 3}
+  - {fileID: 671418172, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: -507140730, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: -425091170, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: 550084989, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: 220140758, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: 1543445709, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: -749307750, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: 1076112629, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: -1919588568, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: -1342579661, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: -1037370087, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: -2147103327, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: 1288214497, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: 300635699, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: -1742711759, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: 1916505997, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: 1581618833, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: -504424724, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: -522742312, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: -890783458, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: -78871140, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: 600360267, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: 1915525366, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  - {fileID: -320334079, guid: 851d06fc589fcf04ea6bd27c67aa45b5, type: 3}
+  cardBack: {fileID: 21300000, guid: 7a8b863115135334c864f0248a715504, type: 3}
   gridObjectIcons:
   - {fileID: 21300000, guid: 60dff2ca3f23aae46b57c966f4172b9d, type: 3}
   - {fileID: 21300000, guid: 079bc55337592fa4e84b9811b30cf546, type: 3}

@@ -46,7 +46,7 @@ public class GridObjectMono : MonoBehaviour
 
 
     IEnumerator TranslateConstantSpeed(UnityEngine.Vector3 target){
-        while(UnityEngine.Vector3.Distance(transform.localPosition, target) > 0.001f){
+        while(UnityEngine.Vector3.Distance(transform.localPosition, target) > 0.002f){
             transform.localPosition =UnityEngine.Vector3.MoveTowards(transform.localPosition, target, fallSpeed * Time.deltaTime);
             yield return null;
         }
