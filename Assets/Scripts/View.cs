@@ -34,6 +34,7 @@ public class View : MonoBehaviour
     [SerializeField] private Transform buttonParent;
     [SerializeField] private Transform glassParent;
     [SerializeField] private RectTransform mask;
+    [SerializeField] private RectTransform maskOutline;
     [SerializeField] private DynamicFontSizeAdjuster dynamicFontSizeAdjuster;
     private UnityEngine.Vector2 scaleFactor;
     private float localWidth, localHeight;
@@ -127,6 +128,7 @@ public void InstantiateGlassAfter(int row, int col, float xOffset, float yOffset
             pane.localScale = new UnityEngine.Vector3(scaleFactor.x, scaleFactor.y, 1f);
         }
         //for the falling  text luckymatch/ combo
+        //static var
         LuckyMatchAppearance.scaleFactor =scaleFactorAverage;
         //center the screen
         float newPosX = -(pane.rect.width *pane.localScale.x)/2;
@@ -139,6 +141,10 @@ public void InstantiateGlassAfter(int row, int col, float xOffset, float yOffset
             mask.sizeDelta= new UnityEngine.Vector2(mask.sizeDelta.x, mask.sizeDelta. y -(((model.getRowsToHide()) * cardSize.y* pane.localScale.y)));
         }
 
+        //float newYScale = (maskOutline.rect.height - ((model.getRowsToHide() )* cardSize.y )) /maskOutline.rect.height ;
+        //maskOutline.localScale = new UnityEngine.Vector2(maskOutline.localScale.x, maskOutline.localScale.y* newYScale);
+        //maskOutline.localPosition = new UnityEngine.Vector2(maskOutline.localPosition.x, maskOutline.localPosition.y - ((model.getRowsToHide()-1) * cardSize.y ));
+
         //center the mask
         mask.localPosition = new UnityEngine.Vector2(0, 0);
         Debug.Log(mask.sizeDelta.y +" + " + Screen.height +" + " +  (Screen.height*0.70f) );
@@ -146,6 +152,7 @@ public void InstantiateGlassAfter(int row, int col, float xOffset, float yOffset
             mask.localPosition = new UnityEngine.Vector2(0, -scoreHeightOffest);
         }
         dynamicFontSizeAdjuster?.AdjustFontSize(pane.sizeDelta.x);
+
 
     }
 
@@ -279,7 +286,7 @@ public void InstantiateGlassAfter(int row, int col, float xOffset, float yOffset
                     gridViewItems[row,col].localPosition = tempPos;
                     //play the falling sequence
                     //Debug.Log("THE TARGET POS IS " + targetPos + " FROM "+ tempPos );
-                    gridViewItems[row,col].GetComponent<GridObjectMono>().FallToPos(targetPos);                    
+                    gridViewItems[row,col].GetComponent<GridObjectMono>().FallToPosPopIn(targetPos);                    
                     index++;
                 }
             }

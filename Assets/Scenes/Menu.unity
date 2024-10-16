@@ -2073,6 +2073,7 @@ MonoBehaviour:
   animator: {fileID: 1998721371}
   animTime: 1.4
   myCanvas: {fileID: 0}
+  CampaignMenu: {fileID: 0}
 --- !u!1 &235413977
 GameObject:
   m_ObjectHideFlags: 0
@@ -2127,6 +2128,7 @@ MonoBehaviour:
   animator: {fileID: 1998721371}
   animTime: 1.5
   myCanvas: {fileID: 1067557568}
+  CampaignMenu: {fileID: 0}
 --- !u!114 &235413980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2448,6 +2450,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2072458193}
+    - target: {fileID: 7086776185019448865, guid: f5729e08e23302249a61135e482bb587, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 7359630302049559307, guid: f5729e08e23302249a61135e482bb587, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -3731,6 +3737,7 @@ MonoBehaviour:
   animator: {fileID: 1998721371}
   animTime: 1.5
   myCanvas: {fileID: 0}
+  CampaignMenu: {fileID: 1067557568}
 --- !u!1 &347118637
 GameObject:
   m_ObjectHideFlags: 0
@@ -7922,6 +7929,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2072458193}
+    - target: {fileID: 7086776185019448865, guid: f5729e08e23302249a61135e482bb587, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7359630302049559307, guid: f5729e08e23302249a61135e482bb587, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -8165,9 +8176,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df3f1f815900f8348ac90b41b0ba0dc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  animTime: 0
+  animator: {fileID: 1998721371}
+  animTime: 1.5
   myCanvas: {fileID: 0}
+  CampaignMenu: {fileID: 1067557568}
 --- !u!1001 &1028829290
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8184,6 +8196,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2072458193}
+    - target: {fileID: 7086776185019448865, guid: f5729e08e23302249a61135e482bb587, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7359630302049559307, guid: f5729e08e23302249a61135e482bb587, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -8280,13 +8296,14 @@ GameObject:
   - component: {fileID: 1067557569}
   - component: {fileID: 1067557571}
   - component: {fileID: 1067557570}
+  - component: {fileID: 1067557572}
   m_Layer: 5
   m_Name: CampaignMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1067557569
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8348,6 +8365,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1067557568}
   m_CullTransparentMesh: 1
+--- !u!114 &1067557572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067557568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f222c16670d12242af706167f9aa812, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 999208005}
 --- !u!1 &1079252510
 GameObject:
   m_ObjectHideFlags: 0
@@ -8494,6 +8524,7 @@ GameObject:
   - component: {fileID: 1080424279}
   - component: {fileID: 1080424278}
   - component: {fileID: 1080424277}
+  - component: {fileID: 1080424281}
   m_Layer: 5
   m_Name: CampaignButton
   m_TagString: Untagged
@@ -8517,8 +8548,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00000095367, y: -243.73773}
-  m_SizeDelta: {x: 482.7798, y: 221.7832}
+  m_AnchoredPosition: {x: -0.00000095367, y: -218}
+  m_SizeDelta: {x: 482.7798, y: 211.8379}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1080424277
 MonoBehaviour:
@@ -8535,6 +8566,7 @@ MonoBehaviour:
   animator: {fileID: 1998721371}
   animTime: 1.5
   myCanvas: {fileID: 134524098}
+  CampaignMenu: {fileID: 0}
 --- !u!114 &1080424278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8629,6 +8661,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1080424275}
   m_CullTransparentMesh: 1
+--- !u!114 &1080424281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1080424275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.07058824}
+  m_EffectDistance: {x: -5, y: -6}
+  m_UseGraphicAlpha: 1
 --- !u!1 &1098438185
 GameObject:
   m_ObjectHideFlags: 0
@@ -8894,6 +8941,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   animTime: 0
   myCanvas: {fileID: 1200565552}
+  CampaignMenu: {fileID: 0}
 --- !u!114 &1117316584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9146,9 +9194,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df3f1f815900f8348ac90b41b0ba0dc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  animTime: 0
+  animator: {fileID: 1998721371}
+  animTime: 1.5
   myCanvas: {fileID: 0}
+  CampaignMenu: {fileID: 1067557568}
 --- !u!1 &1150650837
 GameObject:
   m_ObjectHideFlags: 0
@@ -10845,6 +10894,7 @@ GameObject:
   - component: {fileID: 1402249210}
   - component: {fileID: 1402249209}
   - component: {fileID: 1402249208}
+  - component: {fileID: 1402249212}
   m_Layer: 5
   m_Name: QuickPlayButton
   m_TagString: Untagged
@@ -10868,8 +10918,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000014305, y: 50}
-  m_SizeDelta: {x: 482.7798, y: 221.7832}
+  m_AnchoredPosition: {x: -0.000014305, y: 59}
+  m_SizeDelta: {x: 482.7798, y: 211.8379}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1402249208
 MonoBehaviour:
@@ -10886,6 +10936,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   animTime: 0
   myCanvas: {fileID: 0}
+  CampaignMenu: {fileID: 0}
 --- !u!114 &1402249209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10980,6 +11031,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1402249206}
   m_CullTransparentMesh: 1
+--- !u!114 &1402249212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1402249206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.07058824}
+  m_EffectDistance: {x: -5, y: -6}
+  m_UseGraphicAlpha: 1
 --- !u!1 &1413088323
 GameObject:
   m_ObjectHideFlags: 0
@@ -12333,6 +12399,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   animTime: 0
   myCanvas: {fileID: 2014596881}
+  CampaignMenu: {fileID: 0}
 --- !u!1 &1676288108
 GameObject:
   m_ObjectHideFlags: 0
@@ -13012,7 +13079,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: -0.00012207}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1754978166
@@ -13202,6 +13269,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2072458193}
+    - target: {fileID: 7086776185019448865, guid: f5729e08e23302249a61135e482bb587, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7359630302049559307, guid: f5729e08e23302249a61135e482bb587, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -13303,6 +13374,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2072458193}
+    - target: {fileID: 7086776185019448865, guid: f5729e08e23302249a61135e482bb587, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7359630302049559307, guid: f5729e08e23302249a61135e482bb587, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -13805,7 +13880,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: -0.00012207}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1913738506
@@ -13862,6 +13937,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2072458193}
+    - target: {fileID: 7086776185019448865, guid: f5729e08e23302249a61135e482bb587, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7359630302049559307, guid: f5729e08e23302249a61135e482bb587, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -13963,6 +14042,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2072458193}
+    - target: {fileID: 7086776185019448865, guid: f5729e08e23302249a61135e482bb587, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7359630302049559307, guid: f5729e08e23302249a61135e482bb587, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -14273,6 +14356,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2072458193}
+    - target: {fileID: 7086776185019448865, guid: f5729e08e23302249a61135e482bb587, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 7359630302049559307, guid: f5729e08e23302249a61135e482bb587, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

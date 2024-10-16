@@ -9,16 +9,25 @@ public class MenuCanvasManager : MonoBehaviour
 
     public static GameObject currentCanvas;
     public GameObject myCanvas;
+    public GameObject CampaignMenu;
 
+    private bool otherRunning=false;
     public void DisableMyCanvas(){
         if(myCanvas!=null){
             myCanvas.SetActive(false);
         }else if(currentCanvas!=null){
-            currentCanvas.SetActive(false);
+            if(currentCanvas == CampaignMenu){
+                StartCoroutine(OtherTransitionAnimation());
+            }else{
+                currentCanvas.SetActive(false);
+            }
+            
         }
     }
     public void TurnonNewCanvas(GameObject canvas){
-        canvas.SetActive(true);
+        if(!otherRunning){
+            canvas.SetActive(true);     
+        }
         currentCanvas = canvas;
     }
 
@@ -40,5 +49,16 @@ public class MenuCanvasManager : MonoBehaviour
         
         DisableMyCanvas();
         TurnonNewCanvas(canvas);
+    }
+
+    private IEnumerator OtherTransitionAnimation(){
+        otherRunning =true;
+        PlayAnimation();
+        yield return new WaitForSeconds(animTime);
+        
+        CampaignMenu.SetActive(false);
+        currentCanvas.SetActive(true);
+
+        otherRunning = false;
     }
 }

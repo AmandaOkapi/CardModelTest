@@ -24,7 +24,10 @@ public class GridObjectMono : MonoBehaviour
         View.cardsFalling++;
         StartCoroutine(TranslateConstantSpeed(target));
     }
-
+    public void FallToPosPopIn(UnityEngine.Vector3 target){
+        View.cardsFalling++;
+        StartCoroutine(TranslateOverTime(target, 0.3f));
+    }
 
     IEnumerator TranslateOverTime(UnityEngine.Vector3 target, float time) //0 references
     {

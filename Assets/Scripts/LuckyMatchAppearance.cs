@@ -7,7 +7,7 @@ public class LuckyMatchAppearance : MonoBehaviour
 {
     //currently instatiated by the controller/view
     [SerializeField] private Vector2 offset = new Vector2(-10f, -36f);
-    [SerializeField] private float fallSpeed =5;
+    [SerializeField] private float fallSpeed;
     [SerializeField] private float fadeSpeed =1.5f; 
     [SerializeField] private float startingAlpha =2.5f; 
 
@@ -27,7 +27,7 @@ public class LuckyMatchAppearance : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("hello from the lucky appearance script" + transform.position + " " + transform.localPosition);
+        //Debug.Log("hello from the lucky appearance script" + transform.position + " " + transform.localPosition);
         //transform.position = new Vector3(transform.position.x + View.cardSize.x+ offset.x, transform.position.y + offset.y, transform.position.z);
         transform.localPosition = new Vector3(transform.localPosition.x + (View.cardSize.x+ offset.x)*transform.localScale.x, 
                                                 transform.localPosition.y + (View.cardSize.y+ offset.y)*transform.localScale.y, transform.localPosition.z);
@@ -35,7 +35,7 @@ public class LuckyMatchAppearance : MonoBehaviour
         string chosenWord =DisplayString();
 
         //sizing
-        extraScaleFactor = Mathf.Max(extraScaleFactor, 1); //just in case
+        scaleFactor = Mathf.Max(scaleFactor, 1); //just in case
         rectTransform = GetComponent<RectTransform>();
         rectTransform.localScale = new UnityEngine.Vector3(scaleFactor*extraScaleFactor, scaleFactor*extraScaleFactor, 1f);
 
@@ -44,6 +44,14 @@ public class LuckyMatchAppearance : MonoBehaviour
         }
 
         fallSpeed*=scaleFactor;
+        if (transform.childCount > 0)
+        {
+            // Get the last child
+            Transform lastChild = transform.GetChild((int)UnityEngine.Random.Range(1, transform.childCount - 1));
+
+            // Set the last child as the first sibling
+            lastChild.SetAsLastSibling();
+        }
         StartCoroutine(Decay());
     }
 

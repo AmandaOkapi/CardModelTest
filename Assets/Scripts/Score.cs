@@ -43,6 +43,9 @@ public abstract class ScoreRequirements{
         return displayString;
     }
 
+    public string MakeDisplayString(string topWord, int collected, int goal){
+        return "<color=#222222>"+topWord+":</color>\n<size=200%>" +collected.ToString() + "</size><size=70%><voffset=1em><space=0.2em>/" + goal.ToString() +"</voffset></size>";
+    }
     public virtual string UpdateDisplayString(int newValue){
         gameValue =newValue;
         displayString= SetNewValueToDisplayString(newValue);
@@ -50,7 +53,7 @@ public abstract class ScoreRequirements{
     }
     public virtual string SetNewValueToDisplayString(int newValue){
         if(iconType == IconType.TextRequirement){
-            displayString= name +":\n<size=150%>"+newValue.ToString() +"</size><size=50%>\nMin "+ myGoal.ToString() + "</size>";
+            displayString= MakeDisplayString(name, newValue, myGoal);
         }else if(iconType == IconType.IconRequirement){
             displayString = (Mathf.Max(myGoal - newValue, 0)).ToString();
         }else if(iconType == IconType.Moves){
@@ -69,7 +72,7 @@ public abstract class ScoreRequirements{
     public virtual void Reset(){
         gameValue =0;
         if(iconType == IconType.TextRequirement){
-            displayString= name +":\n<size=150%>"+gameValue.ToString() +"</size><size=50%>\nMin "+ myGoal.ToString() + "</size>";
+            displayString= MakeDisplayString(name, gameValue, myGoal);
         }else if(iconType == IconType.IconRequirement){
             displayString = gameValue.ToString();
         }
@@ -82,8 +85,8 @@ public class GetXPoints :ScoreRequirements{
     public GetXPoints(int x){
         myGoal =x;
         iconType = IconType.TextRequirement;
-        displayString = "Points:\n<size=150%>0</size><size=50%>Min "+ myGoal.ToString() + "</size>";
         name = "Points";
+        displayString = MakeDisplayString(name, 0, myGoal);
         gameValue =0;
     }
     public override string ToString(){
@@ -137,9 +140,10 @@ public class GetXMatches:ScoreRequirements{
     public GetXMatches(int x){
         myGoal=x;
         iconType = IconType.TextRequirement;
-        displayString = "Matches:\n<size=150%>0</size><size=50%>\nMin "+ myGoal + "</size>";
-        gameValue =0;
         name = "Matches";
+        displayString = MakeDisplayString(name, 0, myGoal);
+        gameValue =0;
+        
     }
     
     public override string ToString(){
@@ -151,9 +155,10 @@ public class GetXCombo:ScoreRequirements{
     public GetXCombo(int x ){
         myGoal=x;
         iconType = IconType.TextRequirement;
-        displayString = "Combo:\n<size=150%>0</size><size=50%>\nMin "+ myGoal.ToString() + "</size>";
-        gameValue =0;
         name = "Combo";
+        MakeDisplayString(name, 0, myGoal);
+        gameValue =0;
+        
     }
     
     public override string ToString(){
@@ -167,7 +172,7 @@ public class GetLessThanXMoves:ScoreRequirements{
         maxMoves=x;
         myGoal=0;
         iconType = IconType.Moves;
-        displayString = "Moves Remaining:\n<size=150%>0</size><size=50%>\nMax "+ myGoal.ToString() + "</size>";
+        displayString = MakeDisplayString("Moves Remaining", 0, myGoal);
         gameValue = maxMoves;
     }
 

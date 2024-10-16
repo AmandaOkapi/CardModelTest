@@ -6,6 +6,8 @@ using UnityEngine;
 public class CardData : ScriptableObject
 {
     public Sprite[] cardImages;
+    public Sprite[] cardBacks;
+
     public Sprite cardBack;
     public Sprite[] gridObjectIcons;
 

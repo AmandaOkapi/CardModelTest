@@ -118,7 +118,7 @@ public class ScoreManager : MonoBehaviour
                 scoreCurveFlag=false;
             }
             //LMAO exponential curve 
-            displayedPoints+=(int)( Mathf.Pow(myBase, index) *spd);
+            displayedPoints+=(int)( Mathf.Pow(myBase, index) *spd *Time.deltaTime);
             index++;
             UpdateMainScoreText(Mathf.Clamp(displayedPoints, 0, truePoints));
         }else{
@@ -242,8 +242,45 @@ public class ScoreManager : MonoBehaviour
             }
         }
         UpdateScoreView();
+        ResizeGridLayout();
     }
+    private void ResizeGridLayout(){
+        int childCount;
+    if (textGoalGrid.activeSelf)
+            {
+                RectTransform textRect = textGoalGrid.GetComponent<RectTransform>();
+                // Get all child Transforms
+                Transform[] children = textGoalGrid.GetComponentsInChildren<Transform>();
 
+                // Count only direct children, not the parent itself
+                childCount = textGoalGrid.transform.childCount;
+
+                // Get current size of a single child for width scaling
+                if (childCount > 0)
+                {
+                    RectTransform firstChildRect = children[1].GetComponent<RectTransform>();
+                    // Resize the UI based on the number of children
+                    textRect.sizeDelta = new Vector2(firstChildRect.sizeDelta.x * childCount, textRect.sizeDelta.y);
+                }
+            }
+    if (iconGoalGrid.activeSelf)
+            {
+                RectTransform iconRect = iconGoalGrid.GetComponent<RectTransform>();
+                // Get all child Transforms
+                Transform[] children = iconGoalGrid.GetComponentsInChildren<Transform>();
+
+                // Count only direct children, not the parent itself
+                childCount = iconGoalGrid.transform.childCount;
+
+                // Get current size of a single child for width scaling
+                if (childCount > 0)
+                {
+                    RectTransform firstChildRect = children[1].GetComponent<RectTransform>();
+                    // Resize the UI based on the number of children
+                    iconRect.sizeDelta = new Vector2(firstChildRect.sizeDelta.x * childCount, iconRect.sizeDelta.y);
+                }
+            }
+    }
     public void UpdateScoreView(){
         int goalIndex=0; 
         int textIndex=0;
